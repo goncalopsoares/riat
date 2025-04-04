@@ -28,6 +28,7 @@ const SurveyAdmin = () => {
     const [editingDimensionDescription, setEditingDimensionDescription] = useState(false);
     const [editingDimensionName, setEditingDimensionName] = useState(false);
     const [updateDimensionDescription, setUpdateDimensionDescription] = useState(false);
+    const [currentDimensionForStatement,setCurrentDimensionForStatement] = useState(null); 
 
     //STATEMENTS DATA
     const [allScales, setAllScales] = useState([]);
@@ -35,6 +36,7 @@ const SurveyAdmin = () => {
     const [editingStatementName, setEditingStatementName] = useState(false);
     const [updateStatementDescription, setUpdateStatementDescription] = useState(false);
     const [updateStatementName, setUpdateStatementName] = useState(false);
+    const [addStatement, setAddStatement] = useState(false);
 
     const dialogRef = useRef(null);
 
@@ -264,8 +266,10 @@ const SurveyAdmin = () => {
             } else {
 
                 await api.post(`/api/statement/create/${id}/`, {
-                    statement_name: statementName,
-                    statement_description: statementDescription,
+                    statement_name: formData.get('statement_name'),
+                    statement_description: formData.get('statement_description'),
+                    scales_id_scales: 1,
+                    dimensions_id_dimensions: id,
                 });
 
                 setSuccess("Statement created successfully");
@@ -298,7 +302,7 @@ const SurveyAdmin = () => {
                     <p>Loading...</p>
                 ) : (
                     <SurveyAdminDimensions allDimensions={allDimensions} editing={editing} setEditing={setEditing} isShowing={isShowing} setIsShowing={setIsShowing} setUpdateDimensionDescription={setUpdateDimensionDescription} editingDimensionDescription={editingDimensionDescription} setEditingDimensionDescription={setEditingDimensionDescription} handleDimensionSubmit={handleDimensionSubmit} editingDimensionName={editingDimensionName} setEditingDimensionName={setEditingDimensionName} allScales={allScales} editingStatementDescription={editingStatementDescription} setEditingStatementDescription={setEditingStatementDescription} editingStatementName={editingStatementName} setEditingStatementName={setEditingStatementName}
-                        setUpdateStatementDescription={setUpdateStatementDescription} setUpdateStatementName={setUpdateStatementName} handleStatementSubmit={handleStatementSubmit} />
+                        setUpdateStatementDescription={setUpdateStatementDescription} setUpdateStatementName={setUpdateStatementName} handleStatementSubmit={handleStatementSubmit} addStatement={addStatement} setAddStatement={setAddStatement} currentDimensionForStatement={currentDimensionForStatement} setCurrentDimensionForStatement={setCurrentDimensionForStatement} dialogRef={dialogRef} />
                 )}
             </div>
             <div>
