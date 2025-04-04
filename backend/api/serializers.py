@@ -313,21 +313,21 @@ class StatementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Statements
         fields = [
-        'id_statements',
-        'dimensions_id_dimensions',
-        'scales_id_scales',
-        'statement_name',
-        'statement_description',
-        'statement_created_by',
-        'statement_modified_by',
-        'statement_last_modified_by_date'
+            'id_statements',
+            'dimensions_id_dimensions',
+            'scales_id_scales',
+            'statement_name',
+            'statement_description',
+            'statement_created_by',
+            'statement_modified_by',
+            'statement_last_modified_by_date'
         ]
         extra_kwargs = {
-        'statement_created_by': {'read_only': True},
-        'statement_modified_by': {'read_only': True},
-        'statement_last_modfied_by_date': {'read_only': True},
+            'statement_created_by': {'read_only': True},
+            'statement_modified_by': {'read_only': True},
+            'statement_last_modified_by_date': {'read_only': True},
         }
-            
+
     def create(self, validated_data):
         return self.update_or_create(validated_data)
 
@@ -335,28 +335,39 @@ class StatementSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         user = request.user if request else None
 
+        dimensions_id_dimensions = validated_data.get('dimensions_id_dimensions')
         statement_name = validated_data.get('statement_name')
 
+        if not statement_name or not dimensions_id_dimensions:
+            raise serializers.ValidationError({"error": "Both statement_name and dimensions_id_dimensions are required."})
+
         try:
-            statement = Dimensions.objects.get(statement_name=statement_name)
-            exists = True
+            statement = Statements.objects.get(statement_name=statement_name, dimensions_id_dimensions=dimensions_id_dimensions)
         except Statements.DoesNotExist:
-            exists = False
+            # Criar novo statement se não existir
+            statement = Statements.objects.create(
+                statement_name=statement_name,
+                dimensions_id_dimensions=dimensions_id_dimensions,
+                scales_id_scales=validated_data.get('scales_id_scales'),
+                statement_description=validated_data.get('statement_description', ''),
+                statement_created_by=f"{user.user_first_name} {user.user_last_name}",
+                statement_modified_by=f"{user.user_first_name} {user.user_last_name}",
+                statement_last_modified_by_date=now()
+            )
+            return statement
 
-        defaults = {
-            'statement_description': validated_data.get('dimension_description'),
-            'statement_modified_by':  user.user_first_name + ' ' + user.user_last_name,
-            'statement_last_modfied_by_date': now(),
+        # Campos a atualizar
+        update_fields = {
+            'statement_modified_by': f"{user.user_first_name} {user.user_last_name}",
+            'statement_last_modified_by_date': now(),
         }
-        if not exists:
-            defaults.update({
-                'statement_modified_by': user.user_first_name + ' ' + user.user_last_name,
-                'statement_last_modfied_by_date': now(),
-            })
 
-        statement, created = Surveys.objects.update_or_create(
-            statement_name=statement_name,
-            defaults=defaults
-        )
+        if 'statement_description' in validated_data:
+            update_fields['statement_description'] = validated_data['statement_description']
+        if 'scales_id_scales' in validated_data:
+            update_fields['scales_id_scales'] = validated_data['scales_id_scales']
 
+        Statements.objects.filter(id_statements=statement.id_statements).update(**update_fields)
+
+        statement.refresh_from_db()
         return statement

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api';
 import SurveyAdminInfo from '../components/SurveyAdminInfo';
@@ -6,24 +6,36 @@ import SurveyAdminDimensions from '../components/SurveyAdminDimensions';
 
 const SurveyAdmin = () => {
 
+    //GENERAL
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [editing, setEditing] = useState(false);
+    const [isShowing, setIsShowing] = useState(false);
 
+    //SURVEY DATA
     const [surveyName, setSurveyName] = useState('');
     const [surveyDescription, setSurveyDescription] = useState('');
     const [surveyCreatedBy, setSurveyCreatedBy] = useState('');
     const [surveyCreationTime, setSurveyCreationTime] = useState('');
     const [surveyModifiedBy, setSurveyModifiedBy] = useState('');
     const [surveyLastModifiedByDate, setSurveyLastModifiedByDate] = useState('');
-    const [allDimensions, setAllDimensions] = useState([]);
-
     const [editingDescription, setEditingDescription] = useState(false);
-    const [editingDimensionDescription, setEditingDimensionDescription] = useState(false);
 
-    const [editing, setEditing] = useState(false);
-    const [isShowing, setIsShowing] = useState(false);
+    //DIMENSIONS DATA
+    const [allDimensions, setAllDimensions] = useState([]);
+    const [editingDimensionDescription, setEditingDimensionDescription] = useState(false);
+    const [editingDimensionName, setEditingDimensionName] = useState(false);
     const [updateDimensionDescription, setUpdateDimensionDescription] = useState(false);
+    
+   //STATEMENTS DATA
+    const [allScales, setAllScales] = useState([]);
+    const [editingStatementDescription, setEditingStatementDescription] = useState(false);
+    const [editingStatementName, setEditingStatementName] = useState(false);
+    const [updateStatementDescription, setUpdateStatementDescription] = useState(false);
+
+    
+
 
     const formatDate = (dateString) => {
         const options = { year: "numeric", month: "long", day: "numeric" }
@@ -32,7 +44,9 @@ const SurveyAdmin = () => {
 
     const { id } = useParams();
 
-    const dialogRef = useRef(null);
+    //GET SURVEY DATA
+    //GET DIMENSIONS DATA
+    //GET SCALES DATA
 
     useEffect(() => {
 
@@ -101,6 +115,28 @@ const SurveyAdmin = () => {
 
     }, [id, success]);
 
+
+    useEffect(() => {
+        const getAllScales = async () => {
+            setLoading(true);
+            try {
+                const response = await api.get('/api/scale/get/');
+                setAllScales(response.data);
+            } catch (error) {
+                alert(error);
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getAllScales();
+
+    }, []);
+
+
+    //UPDATE SURVEY DESCRIPTION
+
     const handleSurveySubmit = async (e) => {
         e.preventDefault();
         console.log("Survey ID:", id);
@@ -123,6 +159,7 @@ const SurveyAdmin = () => {
         }
     }
 
+    //CREATE/UPDATE DIMENSION NAME AND DESCRIPTION
 
     const handleDimensionSubmit = async (e, id, exisitingData) => {
         e.preventDefault();
@@ -130,6 +167,9 @@ const SurveyAdmin = () => {
 
         let dimensionName;
         let dimensionDescription;
+        let dimensionScale;
+
+        console.log(updateDimensionDescription, exisitingData);
 
         if (updateDimensionDescription) {
             dimensionName = exisitingData;
@@ -139,10 +179,6 @@ const SurveyAdmin = () => {
             dimensionDescription = exisitingData;
         }
 
-        console.log("Dimension ID:", id);
-        console.log("Dimension Name:", dimensionName);
-        console.log("Dimension Description:", dimensionDescription);
-
         try {
             if (exisitingData) {
                 await api.put(`/api/dimension/update/${id}/`, {
@@ -151,6 +187,7 @@ const SurveyAdmin = () => {
                 });
 
                 setSuccess("Dimension updated successfully");
+                setEditingDimensionDescription(false);
                 setTimeout(() => setSuccess(''), 4000);
 
             } else {
@@ -172,6 +209,56 @@ const SurveyAdmin = () => {
         }
     }
 
+    //CREATE/UPDATE STATEMENT NAME, DESCRIPTION AND SCALE
+
+    const handleStatementSubmit = async (e, id, exisitingData) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+
+        let statementName;
+        let statementDescription;
+
+        console.log(updateStatementDescription, exisitingData);
+
+        if (updateStatementDescription) {
+            statementName = exisitingData;
+            statementDescription = formData.get('statement_description');
+        } else {
+            statementName = formData.get('statement_name');
+            statementDescription = exisitingData;
+        }
+
+        console.log(statementName, statementDescription)
+
+        try {
+            if (exisitingData) {
+                await api.put(`/api/statement/update/${id}/`, {
+                    statement_name: statementName,
+                    statement_description: statementDescription,
+                });
+
+                setSuccess("Statement updated successfully");
+                setEditingDimensionDescription(false);
+                setTimeout(() => setSuccess(''), 4000);
+
+            } else {
+                await api.post(`/api/statement/create/${id}/`, {
+                    statement_name: statementName,
+                    statement_description: statementDescription,
+                });
+
+                setSuccess("Statement created successfully");
+                setTimeout(() => setSuccess(''), 4000);
+
+            }
+            setEditing(false);
+            setError('');
+        } catch (error) {
+            alert(error);
+            console.error(error);
+            setError("An error occurred while saving the statement.");
+        }
+    }
 
     return (
         <>
@@ -187,7 +274,8 @@ const SurveyAdmin = () => {
                 {loading ? (
                     <p>Loading...</p>
                 ) : (
-                    <SurveyAdminDimensions allDimensions={allDimensions} editing={editing} setEditing={setEditing} isShowing={isShowing} setIsShowing={setIsShowing} setUpdateDimensionDescription={setUpdateDimensionDescription} editingDimensionDescription={editingDimensionDescription} setEditingDimensionDescription={setEditingDimensionDescription} handleDimensionSubmit={handleDimensionSubmit} />
+                    <SurveyAdminDimensions allDimensions={allDimensions} editing={editing} setEditing={setEditing} isShowing={isShowing} setIsShowing={setIsShowing} setUpdateDimensionDescription={setUpdateDimensionDescription} editingDimensionDescription={editingDimensionDescription} setEditingDimensionDescription={setEditingDimensionDescription} handleDimensionSubmit={handleDimensionSubmit} editingDimensionName={editingDimensionName} setEditingDimensionName={setEditingDimensionName} allScales={allScales} editingStatementDescription={editingStatementDescription} setEditingStatementDescription={setEditingStatementDescription} editingStatementName={editingStatementName} setEditingStatementName={setEditingStatementName}
+                    setUpdateStatementDescription={setUpdateStatementDescription} handleStatementSubmit={handleStatementSubmit}/>
                 )}
             </div>
             <div>

@@ -164,7 +164,20 @@ class GetStatementView(generics.ListAPIView):
 
     def get_queryset(self):
         dimensions_id_dimensions = self.kwargs.get("dimensions_id_dimensions")
-        return Statements.objects.filter( dimensions_id_dimensions=dimensions_id_dimensions)
+        return Statements.objects.filter(dimensions_id_dimensions=dimensions_id_dimensions)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        statements = []
+        for statement in queryset:
+            statement_data = StatementSerializer(statement).data
+            if statement.scales_id_scales:
+                scale_data = ScaleSerializer(statement.scales_id_scales).data
+                statement_data['scale'] = scale_data
+            else:
+                statement_data['scale'] = None
+            statements.append(statement_data)
+        return Response(statements, status=status.HTTP_200_OK)
 
 class CreateStatementView(generics.CreateAPIView):
     
@@ -178,6 +191,21 @@ class CreateStatementView(generics.CreateAPIView):
         statement = serializer.save()
 
         return Response(StatementSerializer(statement).data, status=status.HTTP_201_CREATED)
+    
+class UpdateStatementView(UpdateAPIView):
+    
+    permission_classes = [IsAuthenticated, IsAdminUser]
+    serializer_class = StatementSerializer
+    
+    queryset = Statements.objects.all()
+    lookup_field = 'id_statements'
+    
+    def update(self, request, *args, **kwargs):
+        statement = self.get_object()
+        serializer = self.get_serializer(statement, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Dimension updated successfully"}, status=status.HTTP_200_OK)
 
 
 # SCALES

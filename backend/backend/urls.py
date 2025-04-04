@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView
+from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView  
 
 urlpatterns = [
@@ -22,7 +22,9 @@ urlpatterns = [
     path('api/dimension/update/<int:id_dimensions>/', UpdateDimensionView.as_view(), name='update_dimension'),
     #STATEMENTS
     path('api/statement/get/<int:dimensions_id_dimensions>/', GetStatementView.as_view(), name='view_statement'),
-    path('api/statement/create', CreateStatementView.as_view(), name='create_statement'),
+    path('api/statement/create/<int:dimensions_id_dimensions>/', CreateStatementView.as_view(), name='create_statement'),
+    path('api/statement/update/<int:id_statements>/', UpdateStatementView.as_view(), name='update_statement'),
+    #STATEMENTS
     #SCALES
     path('api/scale/get/', GetScaleView.as_view(), name='view_scale'),
     path('api/scale/create/', CreateScaleView.as_view(), name='create_scale'),
