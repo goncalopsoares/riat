@@ -281,11 +281,16 @@ class DimensionSerializer(serializers.ModelSerializer):
         if not dimension_name or not surveys_id_surveys:
             raise serializers.ValidationError({"error": "Both dimension_name and surveys_id_surveys are required."})
 
-    # Try to find the existing dimension
-        try:
-            dimension = Dimensions.objects.get(dimension_name=dimension_name, surveys_id_surveys=surveys_id_surveys)
-        except Dimensions.DoesNotExist:
-            raise serializers.ValidationError({"error": "Dimension not found."})
+    # Try to find the existing dimension or create a new one if it doesn't exist
+        dimension, created = Dimensions.objects.get_or_create(
+            dimension_name=dimension_name,
+            surveys_id_surveys=surveys_id_surveys,
+            defaults={
+                'dimension_created_by': f"{user.user_first_name} {user.user_last_name}",
+                'dimension_last_modified_by': f"{user.user_first_name} {user.user_last_name}",
+                'dimension_last_modified_by_date': now(),
+            }
+        )
 
     # Prepare update fields
         update_fields = {

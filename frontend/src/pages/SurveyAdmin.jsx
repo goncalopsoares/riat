@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api';
 import SurveyAdminInfo from '../components/SurveyAdminInfo';
 import SurveyAdminDimensions from '../components/SurveyAdminDimensions';
+import SurveyDimensionDialog from '../components/SurveyDimensionDialog';
 
 const SurveyAdmin = () => {
 
@@ -27,15 +28,14 @@ const SurveyAdmin = () => {
     const [editingDimensionDescription, setEditingDimensionDescription] = useState(false);
     const [editingDimensionName, setEditingDimensionName] = useState(false);
     const [updateDimensionDescription, setUpdateDimensionDescription] = useState(false);
-    
-   //STATEMENTS DATA
+
+    //STATEMENTS DATA
     const [allScales, setAllScales] = useState([]);
     const [editingStatementDescription, setEditingStatementDescription] = useState(false);
     const [editingStatementName, setEditingStatementName] = useState(false);
     const [updateStatementDescription, setUpdateStatementDescription] = useState(false);
 
-    
-
+    const dialogRef = useRef(null);
 
     const formatDate = (dateString) => {
         const options = { year: "numeric", month: "long", day: "numeric" }
@@ -167,9 +167,6 @@ const SurveyAdmin = () => {
 
         let dimensionName;
         let dimensionDescription;
-        let dimensionScale;
-
-        console.log(updateDimensionDescription, exisitingData);
 
         if (updateDimensionDescription) {
             dimensionName = exisitingData;
@@ -180,7 +177,7 @@ const SurveyAdmin = () => {
         }
 
         try {
-            if (exisitingData) {
+            if (exisitingData !== undefined) {
                 await api.put(`/api/dimension/update/${id}/`, {
                     dimension_name: dimensionName,
                     dimension_description: dimensionDescription,
@@ -192,8 +189,9 @@ const SurveyAdmin = () => {
 
             } else {
                 await api.post(`/api/dimension/create/${id}/`, {
-                    dimension_name: dimensionName,
-                    dimension_description: dimensionDescription,
+                    dimension_name: formData.get('dimension_name'),
+                    dimension_description: formData.get('dimension_description'),
+                    dimension_phase: 1,
                 });
 
                 setSuccess("Dimension created successfully");
@@ -275,12 +273,15 @@ const SurveyAdmin = () => {
                     <p>Loading...</p>
                 ) : (
                     <SurveyAdminDimensions allDimensions={allDimensions} editing={editing} setEditing={setEditing} isShowing={isShowing} setIsShowing={setIsShowing} setUpdateDimensionDescription={setUpdateDimensionDescription} editingDimensionDescription={editingDimensionDescription} setEditingDimensionDescription={setEditingDimensionDescription} handleDimensionSubmit={handleDimensionSubmit} editingDimensionName={editingDimensionName} setEditingDimensionName={setEditingDimensionName} allScales={allScales} editingStatementDescription={editingStatementDescription} setEditingStatementDescription={setEditingStatementDescription} editingStatementName={editingStatementName} setEditingStatementName={setEditingStatementName}
-                    setUpdateStatementDescription={setUpdateStatementDescription} handleStatementSubmit={handleStatementSubmit}/>
+                        setUpdateStatementDescription={setUpdateStatementDescription} handleStatementSubmit={handleStatementSubmit} />
                 )}
             </div>
             <div>
-                <button onClick={() => { setEditing(true); setUpdateDimension(false); }}>Add New Dimension</button>
+                <button onClick={() => { setEditing(true); }}>Add New Dimension</button>
             </div>
+            {editing ? (
+                <SurveyDimensionDialog dialogRef={dialogRef} setEditing={setEditing} id={id} handleDimensionSubmit={handleDimensionSubmit}
+                />) : null}
             <div>
                 {error && <p className="error">{error}</p>}
                 {success && <p className="success">{success}</p>}
