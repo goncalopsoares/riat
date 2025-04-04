@@ -1,6 +1,6 @@
 import SurveyAdminStatements from "./SurveyAdminStatements";
 
-const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editingDimensionDescription, setEditingDimensionDescription, handleDimensionSubmit, setUpdateDimensionDescription, editingDimensionName, setEditingDimensionName, allScales, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, handleStatementSubmit}) => {
+const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editingDimensionDescription, setEditingDimensionDescription, handleDimensionSubmit, setUpdateDimensionDescription, editingDimensionName, setEditingDimensionName, allScales, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName, handleStatementSubmit}) => {
 
     return (
         <div>
@@ -59,7 +59,7 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                 </p>
                             )
                         )}
-                        {isShowing === dimension.id_dimensions && <SurveyAdminStatements statements={dimension.statements} allScales={allScales} handleDimensionSubmit={handleDimensionSubmit} editingStatementName={editingStatementName} setEditingStatementName={setEditingStatementName} editingStatementDescription={editingStatementDescription} setEditingStatementDescription={setEditingStatementDescription} setUpdateStatementDescription={setUpdateStatementDescription} handleStatementSubmit={handleStatementSubmit} />}
+                        {isShowing === dimension.id_dimensions && <SurveyAdminStatements statements={dimension.statements} allScales={allScales} handleDimensionSubmit={handleDimensionSubmit} editingStatementName={editingStatementName} setEditingStatementName={setEditingStatementName} editingStatementDescription={editingStatementDescription} setEditingStatementDescription={setEditingStatementDescription} setUpdateStatementDescription={setUpdateStatementDescription} handleStatementSubmit={handleStatementSubmit} setUpdateStatementName={setUpdateStatementName} />}
                     </li>
                 ))}
             </ul>

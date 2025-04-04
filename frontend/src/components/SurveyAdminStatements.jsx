@@ -1,4 +1,4 @@
-const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription }) => {
+const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName }) => {
 
     return (
         <div>
@@ -21,7 +21,10 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                             </form>
                         ) : (
                             <h3
-                                onDoubleClick={() => setEditingStatementName(statement.id_statements)}
+                                onDoubleClick={() => {
+                                    setEditingStatementName(statement.id_statements);
+                                    setUpdateStatementName(true);
+                                }}
                             >
                                 {statement.statement_name}
                             </h3>
@@ -59,7 +62,11 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                             <select
                                 name="statement_scale"
                                 defaultValue={statement.scale.id_scales}
-                                onChange={(e) => handleStatementSubmit(statement.id_statements, e.target.value)}
+                                onChange={(e) => { 
+                                    const newScale = e.target.value;
+                                    handleStatementSubmit(e, statement.id_statements, statement.statement_name, statement.statement_description, newScale);
+                                }
+                                }
                             >
                                 <option value="" disabled>Select scale</option>
                                 {allScales.map(scale => (

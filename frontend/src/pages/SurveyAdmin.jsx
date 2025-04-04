@@ -34,6 +34,7 @@ const SurveyAdmin = () => {
     const [editingStatementDescription, setEditingStatementDescription] = useState(false);
     const [editingStatementName, setEditingStatementName] = useState(false);
     const [updateStatementDescription, setUpdateStatementDescription] = useState(false);
+    const [updateStatementName, setUpdateStatementName] = useState(false);
 
     const dialogRef = useRef(null);
 
@@ -209,37 +210,59 @@ const SurveyAdmin = () => {
 
     //CREATE/UPDATE STATEMENT NAME, DESCRIPTION AND SCALE
 
-    const handleStatementSubmit = async (e, id, exisitingData) => {
+    const handleStatementSubmit = async (e, id, existingData, existingDataExtra, selectedScale) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
+
+        let formData;
+
+        if (selectedScale === undefined) {
+            formData = new FormData(e.target);
+        }
 
         let statementName;
         let statementDescription;
-
-        console.log(updateStatementDescription, exisitingData);
+        let statementScale;
 
         if (updateStatementDescription) {
-            statementName = exisitingData;
+            statementName = existingData;
             statementDescription = formData.get('statement_description');
-        } else {
+        } else if (updateStatementName) {
             statementName = formData.get('statement_name');
-            statementDescription = exisitingData;
+            statementDescription = existingData;
+        } else {
+            statementName = existingData;
+            statementDescription = existingDataExtra;
+            statementScale = selectedScale;
         }
 
-        console.log(statementName, statementDescription)
-
         try {
-            if (exisitingData) {
+            if (existingData !== undefined && existingDataExtra === undefined) {
                 await api.put(`/api/statement/update/${id}/`, {
                     statement_name: statementName,
                     statement_description: statementDescription,
                 });
 
+                console.log(existingDataExtra, "chegou 1");
+
                 setSuccess("Statement updated successfully");
                 setEditingDimensionDescription(false);
                 setTimeout(() => setSuccess(''), 4000);
 
+            } else if (existingDataExtra !== undefined) {
+
+                console.log(statementScale, "chegou 2");
+
+                await api.put(`/api/statement/update/${id}/`, {
+                    statement_name: statementName,
+                    statement_description: statementDescription,
+                    scales_id_scales: statementScale,
+                });
+
+                setSuccess("Scale updated successfully");
+                setTimeout(() => setSuccess(''), 4000);
+
             } else {
+
                 await api.post(`/api/statement/create/${id}/`, {
                     statement_name: statementName,
                     statement_description: statementDescription,
@@ -251,7 +274,9 @@ const SurveyAdmin = () => {
             }
             setEditing(false);
             setError('');
+
         } catch (error) {
+
             alert(error);
             console.error(error);
             setError("An error occurred while saving the statement.");
@@ -273,7 +298,7 @@ const SurveyAdmin = () => {
                     <p>Loading...</p>
                 ) : (
                     <SurveyAdminDimensions allDimensions={allDimensions} editing={editing} setEditing={setEditing} isShowing={isShowing} setIsShowing={setIsShowing} setUpdateDimensionDescription={setUpdateDimensionDescription} editingDimensionDescription={editingDimensionDescription} setEditingDimensionDescription={setEditingDimensionDescription} handleDimensionSubmit={handleDimensionSubmit} editingDimensionName={editingDimensionName} setEditingDimensionName={setEditingDimensionName} allScales={allScales} editingStatementDescription={editingStatementDescription} setEditingStatementDescription={setEditingStatementDescription} editingStatementName={editingStatementName} setEditingStatementName={setEditingStatementName}
-                        setUpdateStatementDescription={setUpdateStatementDescription} handleStatementSubmit={handleStatementSubmit} />
+                        setUpdateStatementDescription={setUpdateStatementDescription} setUpdateStatementName={setUpdateStatementName} handleStatementSubmit={handleStatementSubmit} />
                 )}
             </div>
             <div>
