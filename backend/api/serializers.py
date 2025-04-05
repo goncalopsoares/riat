@@ -248,6 +248,8 @@ class ScaleSerializer(serializers.ModelSerializer):
     
 # DIMENSIONS
 
+from django.utils.timezone import now
+
 class DimensionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dimensions
@@ -281,36 +283,45 @@ class DimensionSerializer(serializers.ModelSerializer):
         if not dimension_name or not surveys_id_surveys:
             raise serializers.ValidationError({"error": "Both dimension_name and surveys_id_surveys are required."})
 
-    # Try to find the existing dimension or create a new one if it doesn't exist
+        # Try to find the existing dimension or create a new one if it doesn't exist
         dimension, created = Dimensions.objects.get_or_create(
             dimension_name=dimension_name,
+            dimension_description=validated_data.get('dimension_description'),
+            dimension_phase=validated_data.get('dimension_phase'),
             surveys_id_surveys=surveys_id_surveys,
-            defaults={
+            defaults={  # Only used if the object doesn't exist
                 'dimension_created_by': f"{user.user_first_name} {user.user_last_name}",
                 'dimension_last_modified_by': f"{user.user_first_name} {user.user_last_name}",
                 'dimension_last_modified_by_date': now(),
             }
         )
 
-    # Prepare update fields
-        update_fields = {
-            'dimension_last_modified_by': f"{user.user_first_name} {user.user_last_name}",
-            'dimension_last_modified_by_date': now(),
-        }
+        # If the dimension was not created, update it
+        if not created:
+            # Prepare update fields
+            update_fields = {
+                'dimension_last_modified_by': f"{user.user_first_name} {user.user_last_name}",
+                'dimension_last_modified_by_date': now(),  # Update the last modified date
+            }
 
-    # Update only the fields that were provided
-        if 'dimension_description' in validated_data:
-            update_fields['dimension_description'] = validated_data['dimension_description']
-        if 'dimension_phase' in validated_data:
-            update_fields['dimension_phase'] = validated_data['dimension_phase']
+            # Only update the fields that were provided in the request
+            if 'dimension_description' in validated_data:
+                update_fields['dimension_description'] = validated_data['dimension_description']
+            if 'dimension_phase' in validated_data:
+                update_fields['dimension_phase'] = validated_data['dimension_phase']
 
-        # Perform the update
-        Dimensions.objects.filter(id_dimensions=dimension.id_dimensions).update(**update_fields)
+            # Perform the update (using update_fields for optimized update)
+            Dimensions.objects.filter(id_dimensions=dimension.id_dimensions).update(**update_fields)
 
-    # Return the updated dimension
-        dimension.refresh_from_db()
+            # No need to re-assign or call save on dimension_last_modified_by and dimension_last_modified_by_date 
+            # because they are already being updated in update_fields.
+
+            # Refresh the object from the database to get the latest values
+            dimension.refresh_from_db()
+
+        # Return the dimension, either newly created or updated
         return dimension
- 
+
  
 #STATEMENTS
 
@@ -371,6 +382,10 @@ class StatementSerializer(serializers.ModelSerializer):
             update_fields['statement_description'] = validated_data['statement_description']
         if 'scales_id_scales' in validated_data:
             update_fields['scales_id_scales'] = validated_data['scales_id_scales']
+            
+        # Always update statement_last_modified_by and statement_last_modified_by_date
+        update_fields['statement_last_modified_by'] = f"{user.user_first_name} {user.user_last_name}"
+        update_fields['statement_last_modified_by_date'] = now()
 
         Statements.objects.filter(id_statements=statement.id_statements).update(**update_fields)
 
