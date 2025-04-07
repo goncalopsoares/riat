@@ -43,17 +43,28 @@ class GetProjectView(generics.ListAPIView):
     def get_queryset(self):
         users_id_users = self.kwargs.get("users_id_users")
         # Get project IDs associated with the user from user_has_projects
-        project_ids = UsersHasProjects.objects.filter(users_id_users=users_id_users).values_list('projects_id_projects', flat=True)
+        user_projects = UsersHasProjects.objects.filter(users_id_users=users_id_users)
+        project_ids = user_projects.values_list('projects_id_projects', flat=True)
         # Get project info from Projects using the retrieved project IDs
-        return Projects.objects.filter(id_projects__in=project_ids)
+        return Projects.objects.filter(id_projects__in=project_ids), user_projects
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+        projects_queryset, user_projects = self.get_queryset()
         projects = []
-        for project in queryset:
+        for project in projects_queryset:
             project_data = ProjectSerializer(project).data
+            # Get submissions associated with the user's project
+            user_project = user_projects.filter(projects_id_projects=project.id_projects).first()
+            if user_project:
+                submissions = user_project.submissions_set.all()
+                project_data['submissions'] = [
+                    {"id_submissions": submission.id_submissions, "submission_state": submission.submission_state} for submission in submissions
+                ]
+            else:
+                project_data['submissions'] = []
             projects.append(project_data)
         return Response(projects, status=status.HTTP_200_OK)
+    
     
 class CreateProjectView(generics.CreateAPIView):
     

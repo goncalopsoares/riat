@@ -21,7 +21,7 @@ const Projects = () => {
             try {
                 const response = await api.get(`/api/project/get/${id_user}/`);
                 setAllProjects(response.data);
-                console.log(allProjects);
+                console.log(response.data);
 
             } catch (error) {
 
@@ -62,19 +62,28 @@ const Projects = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {allProjects.map(project => (
-                                <tr key={project.id_projects}>
-                                    <td>{project.project_name}</td>
-                                    <td>{project.project_phase}</td>
-                                    <td>lorem</td>
-                                    <td>lorem</td>
-                                    <td>
-                                        <a href={`/${project.id_projects}`}>
-                                            Lorem
-                                        </a>
-                                    </td>
-                                </tr>
-                            ))}
+                            {allProjects.map(project => {
+
+                                const lastSubmission = project.submissions[project.submissions.length - 1];
+
+                                return (
+                                    <tr key={project.id_projects}>
+                                        <td>{project.project_name}</td>
+                                        <td>{project.project_phase}</td>
+                                        <td>lorem</td>
+                                        <td>lorem</td>
+                                        <td>
+                                            <a href={`/${project.id_projects}`}>
+                                                {lastSubmission && lastSubmission.submission_state === 1 ? (
+                                                    <p>Resume Latest Assessment</p>
+                                                ) : (
+                                                    <p>New Assessment</p>
+                                                )}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 )}
