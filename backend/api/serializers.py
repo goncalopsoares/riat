@@ -270,60 +270,41 @@ class DimensionSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        return self.update_or_create(validated_data)
-
-    def update_or_create(self, validated_data):
         request = self.context.get('request')
-        user = request.user if request else None
+        user = request.user if request and request.user.is_authenticated else None
 
-        surveys_id_surveys = validated_data.get('surveys_id_surveys')
-        dimension_name = validated_data.get('dimension_name')  # Used for lookup
-
-        # Ensure that dimension_name and surveys_id_surveys exist
-        if not dimension_name or not surveys_id_surveys:
-            raise serializers.ValidationError({"error": "Both dimension_name and surveys_id_surveys are required."})
-
-        # Try to find the existing dimension or create a new one if it doesn't exist
-        dimension, created = Dimensions.objects.get_or_create(
-            dimension_name=dimension_name,
-            dimension_description=validated_data.get('dimension_description'),
+        dimension = Dimensions(
+            surveys_id_surveys=validated_data.get('surveys_id_surveys'),
+            dimension_name=validated_data.get('dimension_name'),
+            dimension_description=validated_data.get('dimension_description', ''),
             dimension_phase=validated_data.get('dimension_phase'),
-            surveys_id_surveys=surveys_id_surveys,
-            defaults={  # Only used if the object doesn't exist
-                'dimension_created_by': f"{user.user_first_name} {user.user_last_name}",
-                'dimension_last_modified_by': f"{user.user_first_name} {user.user_last_name}",
-                'dimension_last_modified_by_date': now(),
-            }
+            dimension_created_by=f"{user.user_first_name} {user.user_last_name}" if user else "Unknown",
+            dimension_last_modified_by=f"{user.user_first_name} {user.user_last_name}" if user else "Unknown",
+            dimension_last_modified_by_date=now()
         )
-
-        # If the dimension was not created, update it
-        if not created:
-            # Prepare update fields
-            update_fields = {
-                'dimension_last_modified_by': f"{user.user_first_name} {user.user_last_name}",
-                'dimension_last_modified_by_date': now(),  # Update the last modified date
-            }
-
-            # Only update the fields that were provided in the request
-            if 'dimension_description' in validated_data:
-                update_fields['dimension_description'] = validated_data['dimension_description']
-            if 'dimension_phase' in validated_data:
-                update_fields['dimension_phase'] = validated_data['dimension_phase']
-
-            # Perform the update (using update_fields for optimized update)
-            Dimensions.objects.filter(id_dimensions=dimension.id_dimensions).update(**update_fields)
-
-            # No need to re-assign or call save on dimension_last_modified_by and dimension_last_modified_by_date 
-            # because they are already being updated in update_fields.
-
-            # Refresh the object from the database to get the latest values
-            dimension.refresh_from_db()
-
-        # Return the dimension, either newly created or updated
+        dimension.save()
         return dimension
+
+    def update(self, instance, validated_data):
+        request = self.context.get('request')
+        user = request.user if request and request.user.is_authenticated else None
+
+        instance.dimension_name = validated_data.get('dimension_name', instance.dimension_name)
+        instance.dimension_description = validated_data.get('dimension_description', instance.dimension_description)
+        instance.dimension_phase = validated_data.get('dimension_phase', instance.dimension_phase)
+
+        instance.dimension_last_modified_by = f"{user.user_first_name} {user.user_last_name}" if user else "Unknown"
+        instance.dimension_last_modified_by_date = now()
+
+        instance.save()
+        return instance
 
  
 #STATEMENTS
+
+from rest_framework import serializers
+from django.utils.timezone import now
+from .models import Statements
 
 class StatementSerializer(serializers.ModelSerializer):
     class Meta:
@@ -345,49 +326,31 @@ class StatementSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        return self.update_or_create(validated_data)
-
-    def update_or_create(self, validated_data):
         request = self.context.get('request')
-        user = request.user if request else None
+        user = request.user if request and request.user.is_authenticated else None
 
-        dimensions_id_dimensions = validated_data.get('dimensions_id_dimensions')
-        statement_name = validated_data.get('statement_name')
-
-        if not statement_name or not dimensions_id_dimensions:
-            raise serializers.ValidationError({"error": "Both statement_name and dimensions_id_dimensions are required."})
-
-        try:
-            statement = Statements.objects.get(statement_name=statement_name, dimensions_id_dimensions=dimensions_id_dimensions)
-        except Statements.DoesNotExist:
-            # Criar novo statement se não existir
-            statement = Statements.objects.create(
-                statement_name=statement_name,
-                dimensions_id_dimensions=dimensions_id_dimensions,
-                scales_id_scales=validated_data.get('scales_id_scales'),
-                statement_description=validated_data.get('statement_description', ''),
-                statement_created_by=f"{user.user_first_name} {user.user_last_name}",
-                statement_modified_by=f"{user.user_first_name} {user.user_last_name}",
-                statement_last_modified_by_date=now()
-            )
-            return statement
-
-        # Campos a atualizar
-        update_fields = {
-            'statement_modified_by': f"{user.user_first_name} {user.user_last_name}",
-            'statement_last_modified_by_date': now(),
-        }
-
-        if 'statement_description' in validated_data:
-            update_fields['statement_description'] = validated_data['statement_description']
-        if 'scales_id_scales' in validated_data:
-            update_fields['scales_id_scales'] = validated_data['scales_id_scales']
-            
-        # Always update statement_last_modified_by and statement_last_modified_by_date
-        update_fields['statement_last_modified_by'] = f"{user.user_first_name} {user.user_last_name}"
-        update_fields['statement_last_modified_by_date'] = now()
-
-        Statements.objects.filter(id_statements=statement.id_statements).update(**update_fields)
-
-        statement.refresh_from_db()
+        statement = Statements(
+            dimensions_id_dimensions=validated_data.get('dimensions_id_dimensions'),
+            scales_id_scales=validated_data.get('scales_id_scales'),
+            statement_name=validated_data.get('statement_name'),
+            statement_description=validated_data.get('statement_description', ''),
+            statement_created_by=f"{user.user_first_name} {user.user_last_name}" if user else "Unknown",
+            statement_modified_by=f"{user.user_first_name} {user.user_last_name}" if user else "Unknown",
+            statement_last_modified_by_date=now()
+        )
+        statement.save()
         return statement
+
+    def update(self, instance, validated_data):
+        request = self.context.get('request')
+        user = request.user if request and request.user.is_authenticated else None
+
+        instance.statement_name = validated_data.get('statement_name', instance.statement_name)
+        instance.statement_description = validated_data.get('statement_description', instance.statement_description)
+        instance.scales_id_scales = validated_data.get('scales_id_scales', instance.scales_id_scales)
+
+        instance.statement_modified_by = f"{user.user_first_name} {user.user_last_name}" if user else "Unknown"
+        instance.statement_last_modified_by_date = now()
+
+        instance.save()
+        return instance
