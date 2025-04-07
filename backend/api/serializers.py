@@ -290,6 +290,7 @@ class DimensionSerializer(serializers.ModelSerializer):
             'surveys_id_surveys',
             'dimension_name',
             'dimension_description',
+            'dimension_order',
             'dimension_created_by',
             'dimension_last_modified_by',
             'dimension_last_modified_by_date'
@@ -321,7 +322,6 @@ class DimensionSerializer(serializers.ModelSerializer):
 
         instance.dimension_name = validated_data.get('dimension_name', instance.dimension_name)
         instance.dimension_description = validated_data.get('dimension_description', instance.dimension_description)
-
         instance.dimension_last_modified_by = f"{user.user_first_name} {user.user_last_name}" if user else "Unknown"
         instance.dimension_last_modified_by_date = now()
 

@@ -29,6 +29,7 @@ const SurveyAdmin = () => {
     const [editingDimensionName, setEditingDimensionName] = useState(false);
     const [updateDimensionDescription, setUpdateDimensionDescription] = useState(false);
     const [currentDimensionForStatement, setCurrentDimensionForStatement] = useState(null);
+    const [dimensionsNumber, setDimensionsNumber] = useState(0);
 
     //STATEMENTS DATA
     const [allScales, setAllScales] = useState([]);
@@ -105,6 +106,7 @@ const SurveyAdmin = () => {
                 );
 
                 setAllDimensions(dimensionsWithStatements);
+                setDimensionsNumber(dimensionsWithStatements.length);
                 console.log(dimensionsWithStatements);
             } catch (error) {
                 alert(error);
@@ -170,6 +172,7 @@ const SurveyAdmin = () => {
 
         let dimensionName;
         let dimensionDescription;
+        const dimensionOrder = dimensionsNumber + 1;
 
         if (updateDimensionDescription) {
             dimensionName = exisitingData;
@@ -185,6 +188,7 @@ const SurveyAdmin = () => {
                 await api.put(`/api/dimension/update/${id}/`, {
                     dimension_name: dimensionName,
                     dimension_description: dimensionDescription,
+                    dimension_order: dimensionOrder,
                 });
 
                 setSuccess("Dimension updated successfully");
@@ -199,6 +203,7 @@ const SurveyAdmin = () => {
                 await api.post(`/api/dimension/create/${id}/`, {
                    dimension_name: dimensionName,
                    dimension_description: dimensionDescription,
+                   dimension_order: dimensionOrder,
                 });
 
                 setSuccess("Dimension created successfully");
