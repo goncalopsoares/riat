@@ -199,8 +199,40 @@ class SurveySerializer(serializers.ModelSerializer):
         )
 
         return survey  
+
+# SUBMISSIONS
+
+from rest_framework import serializers
+from django.utils.timezone import now
+from .models import Submissions
+
+class SubmissionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Submissions
+        fields = [
+            'id_submissions',
+            'surveys_id_surveys',
+            'users_has_projects_id_users_has_projects',
+            'submission_starting_time',
+            'submission_ending_time'
+        ]
+        extra_kwargs = {
+            'submission_starting_time': {'read_only': True},
+        }
+
+    def create(self, validated_data):
+        # Define o tempo de início automaticamente no momento da criação
+        validated_data['submission_starting_time'] = now()
+        return Submissions.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        # Apenas permite atualizar o ending_time (exemplo típico)
+        instance.submission_ending_time = validated_data.get('submission_ending_time', instance.submission_ending_time)
+        instance.save()
+        return instance
+
     
-    # SCALES
+# SCALES
     
 class ScaleSerializer(serializers.ModelSerializer):
     
@@ -258,7 +290,6 @@ class DimensionSerializer(serializers.ModelSerializer):
             'surveys_id_surveys',
             'dimension_name',
             'dimension_description',
-            'dimension_phase',
             'dimension_created_by',
             'dimension_last_modified_by',
             'dimension_last_modified_by_date'
@@ -277,7 +308,6 @@ class DimensionSerializer(serializers.ModelSerializer):
             surveys_id_surveys=validated_data.get('surveys_id_surveys'),
             dimension_name=validated_data.get('dimension_name'),
             dimension_description=validated_data.get('dimension_description', ''),
-            dimension_phase=validated_data.get('dimension_phase'),
             dimension_created_by=f"{user.user_first_name} {user.user_last_name}" if user else "Unknown",
             dimension_last_modified_by=f"{user.user_first_name} {user.user_last_name}" if user else "Unknown",
             dimension_last_modified_by_date=now()
@@ -291,7 +321,6 @@ class DimensionSerializer(serializers.ModelSerializer):
 
         instance.dimension_name = validated_data.get('dimension_name', instance.dimension_name)
         instance.dimension_description = validated_data.get('dimension_description', instance.dimension_description)
-        instance.dimension_phase = validated_data.get('dimension_phase', instance.dimension_phase)
 
         instance.dimension_last_modified_by = f"{user.user_first_name} {user.user_last_name}" if user else "Unknown"
         instance.dimension_last_modified_by_date = now()

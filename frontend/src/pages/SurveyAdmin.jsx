@@ -170,7 +170,6 @@ const SurveyAdmin = () => {
 
         let dimensionName;
         let dimensionDescription;
-        let dimensionPhase;
 
         if (updateDimensionDescription) {
             dimensionName = exisitingData;
@@ -196,12 +195,10 @@ const SurveyAdmin = () => {
 
                 dimensionName = formData.get('dimension_name');
                 dimensionDescription = formData.get('dimension_description');
-                dimensionPhase = 1;
 
                 await api.post(`/api/dimension/create/${id}/`, {
                    dimension_name: dimensionName,
                    dimension_description: dimensionDescription,
-                   dimension_phase: dimensionPhase
                 });
 
                 setSuccess("Dimension created successfully");

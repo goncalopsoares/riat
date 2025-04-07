@@ -149,7 +149,6 @@ class Dimensions(models.Model):
     surveys_id_surveys = models.ForeignKey('Surveys', models.DO_NOTHING, db_column='surveys_id_surveys')
     dimension_name = models.CharField(max_length=500)
     dimension_description = models.TextField(blank=True, null=True)
-    dimension_phase = models.IntegerField()
     dimension_created_by = models.CharField(max_length=45)
     dimension_last_modified_by = models.CharField(max_length=45)
     dimension_last_modified_by_date = models.DateTimeField()
