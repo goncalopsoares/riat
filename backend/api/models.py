@@ -55,6 +55,7 @@ class Submissions(models.Model):
     id_submissions = models.AutoField(primary_key=True)
     surveys_id_surveys = models.ForeignKey('Surveys', models.DO_NOTHING, db_column='surveys_id_surveys')
     users_has_projects_id_users_has_projects = models.ForeignKey('UsersHasProjects', models.DO_NOTHING, db_column='users_has_projects_id_users_has_projects')
+    submission_state=models.IntegerField()
     submission_starting_time = models.DateTimeField()
     submission_ending_time = models.DateTimeField()
 

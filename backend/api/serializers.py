@@ -213,6 +213,7 @@ class SubmissionsSerializer(serializers.ModelSerializer):
             'id_submissions',
             'surveys_id_surveys',
             'users_has_projects_id_users_has_projects',
+            'submission_state',
             'submission_starting_time',
             'submission_ending_time'
         ]
@@ -223,11 +224,13 @@ class SubmissionsSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Define o tempo de início automaticamente no momento da criação
         validated_data['submission_starting_time'] = now()
+        validated_data['submission_state'] = 1
         return Submissions.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         # Apenas permite atualizar o ending_time (exemplo típico)
         instance.submission_ending_time = validated_data.get('submission_ending_time', instance.submission_ending_time)
+        instance.submission_state = validated_data.get('submission_state', instance.submission_state)
         instance.save()
         return instance
 
