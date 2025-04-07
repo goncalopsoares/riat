@@ -12,6 +12,7 @@ import { UserProvider } from './contexts/UserContext';
 import { ProjectProvider } from './contexts/ProjectContext';
 import Assessment from './pages/Assessment';
 import SurveyAdmin from './pages/SurveyAdmin';
+import Projects from './pages/Projects';
 
 
 const Logout = () => {
@@ -55,9 +56,16 @@ function App() {
                 <SurveyAdmin />
               </ProtectedRoute>}
             />
-             <Route path='/scaletools'
+            <Route path='/scaletools'
               element={<ProtectedRoute>
                 <ScaleTools />
+              </ProtectedRoute>}
+            />
+            <Route path='/projects'
+              element={<ProtectedRoute>
+                <ProjectProvider>
+                  <Projects />
+                </ProjectProvider>
               </ProtectedRoute>}
             />
             <Route path='/login' element={<Login />} />

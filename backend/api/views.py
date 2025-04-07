@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import generics
 from .serializers import UserRegistrationSerializer, LoginSerializer, SurveySerializer, ProjectSerializer, ScaleSerializer, DimensionSerializer, StatementSerializer
-from .models import Surveys, Projects, Scales, Dimensions, Statements
+from .models import Surveys, Projects, Scales, Dimensions, Statements, UsersHasProjects
 from rest_framework.permissions import  AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
@@ -34,6 +34,27 @@ class LoginView(APIView):
 
 # PROJECTS
 
+class GetProjectView(generics.ListAPIView):
+    
+    permission_classes = [IsAuthenticated]
+    
+    serializer_class = ProjectSerializer
+    
+    def get_queryset(self):
+        users_id_users = self.kwargs.get("users_id_users")
+        # Get project IDs associated with the user from user_has_projects
+        project_ids = UsersHasProjects.objects.filter(users_id_users=users_id_users).values_list('projects_id_projects', flat=True)
+        # Get project info from Projects using the retrieved project IDs
+        return Projects.objects.filter(id_projects__in=project_ids)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        projects = []
+        for project in queryset:
+            project_data = ProjectSerializer(project).data
+            projects.append(project_data)
+        return Response(projects, status=status.HTTP_200_OK)
+    
 class CreateProjectView(generics.CreateAPIView):
     
     permission_classes = [IsAuthenticated] 
@@ -132,8 +153,6 @@ class CreateDimensionView(generics.CreateAPIView):
         data = request.data.copy()  # Copy request data
         data['surveys_id_surveys'] = surveys_id_surveys  # Add surveys_id_surveys to data
         
-        print("Final data before serialization:", data)  # Log final data sent to serializer
-
         serializer = self.get_serializer(data=data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         dimension = serializer.save()  # No need to pass surveys_id_surveys manually
