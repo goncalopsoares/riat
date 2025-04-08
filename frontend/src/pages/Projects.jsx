@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
+import { useProject } from '../contexts/ProjectContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
 
@@ -14,6 +15,8 @@ const Projects = () => {
 
     const user = useUser();
     const id_user = user.user.id;
+
+    const { setProjectId } = useProject();  
 
     useEffect(() => {
         const getAllProjects = async () => {
@@ -37,6 +40,23 @@ const Projects = () => {
         getAllProjects();
 
     }, [success, error]);
+
+
+    const navigateToAssessement = (id_project) => {
+        console.log(id_project);
+
+        if (!id_project) {
+            navigate('/assessment');
+            return;
+        }
+
+        setProjectId(id_project);
+
+        setTimeout(() => {
+            navigate('/assessment');
+        }, 0);
+    };
+
 
 
 
@@ -73,13 +93,19 @@ const Projects = () => {
                                         <td>lorem</td>
                                         <td>lorem</td>
                                         <td>
-                                            <a href={`/${project.id_projects}`}>
+                                            <button
+                                                onClick={() => navigateToAssessement(
+                                                    lastSubmission && lastSubmission.submission_state === 1
+                                                        ? project.id_projects
+                                                        : null
+                                                )}
+                                            >
                                                 {lastSubmission && lastSubmission.submission_state === 1 ? (
                                                     <p>Resume Latest Assessment</p>
                                                 ) : (
                                                     <p>New Assessment</p>
                                                 )}
-                                            </a>
+                                            </button>
                                         </td>
                                     </tr>
                                 );

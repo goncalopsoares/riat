@@ -6,10 +6,9 @@ import { useState } from "react";
 
 const Assessment = () => {
 
-    const { projectName, projectOrganization, projectPhase, projectTrl, projectMrl, projectSrl, userRole, userFunction, setError, setSuccess, setLoading } = useProject();
+    const { projectId, setProjectId, projectName, projectOrganization, projectPhase, projectTrl, projectMrl, projectSrl, userRole, userFunction, setError, setSuccess, setLoading } = useProject();
 
     const [step, setStep] = useState(1);
-    const [projectId, setProjectId] = useState(null);
 
     /* STEP 1 - REGISTER PROJECT */
 
@@ -118,14 +117,24 @@ const Assessment = () => {
 
     return (
         <>
-            {step === 1 ? (
-                <AssessmentOne handleProjectSubmit={handleProjectSubmit} />
-            ) : null}
-            {step === 2 ? (
-                <AssessmentTwo handlePhaseUpdate={handlePhaseUpdate} />
-            ) : null}
+            {projectId === null ? (
+                <>
+                    {step === 1 && (
+                        <AssessmentOne handleProjectSubmit={handleProjectSubmit} />
+                    )}
+                    {step === 2 && (
+                        <AssessmentTwo handlePhaseUpdate={handlePhaseUpdate} />
+                    )}
+                </>
+            ) : (
+                <>
+                    {/* Aqui podes renderizar o que quiseres quando já houver um projeto selecionado */}
+                    <div>Projeto selecionado: {projectId}</div>
+                </>
+            )}
         </>
-    )
+    );
+
 
 }
 

@@ -10,9 +10,9 @@ import ScaleTools from './pages/ScaleTools';
 import Navbar from './components/Navbar';
 import { UserProvider } from './contexts/UserContext';
 import { ProjectProvider } from './contexts/ProjectContext';
-import Assessment from './pages/Assessment';
 import SurveyAdmin from './pages/SurveyAdmin';
 import Projects from './pages/Projects';
+import Assessment from './pages/Assessment';
 
 
 const Logout = () => {
@@ -29,54 +29,52 @@ const RegisterAndLogout = () => {
 function App() {
 
   return (
-    <>
-      <UserProvider>
+    <UserProvider>
+      <BrowserRouter>
         <Navbar />
-        <BrowserRouter>
-          <Routes>
-            <Route path='/'
-              element={<ProtectedRoute>
-                <Home />
-              </ProtectedRoute>}
-            />
-            <Route path='/assessment'
-              element={<ProtectedRoute>
-                <ProjectProvider>
-                  <Assessment />
-                </ProjectProvider>
-              </ProtectedRoute>}
-            />
-            <Route path='/surveytools'
-              element={<ProtectedRoute>
-                <SurveyTools />
-              </ProtectedRoute>}
-            />
-            <Route path='/surveyadmin/:id'
-              element={<ProtectedRoute>
-                <SurveyAdmin />
-              </ProtectedRoute>}
-            />
-            <Route path='/scaletools'
-              element={<ProtectedRoute>
-                <ScaleTools />
-              </ProtectedRoute>}
-            />
-            <Route path='/projects'
-              element={<ProtectedRoute>
-                <ProjectProvider>
-                  <Projects />
-                </ProjectProvider>
-              </ProtectedRoute>}
-            />
-            <Route path='/login' element={<Login />} />
-            <Route path='/logout' element={<Logout />} />
-            <Route path='/register' element={<RegisterAndLogout />} />
-            <Route path='*' element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </UserProvider>
-    </>
-  )
+        <Routes>
+          <Route path='/'
+            element={<ProtectedRoute>
+              <Home />
+            </ProtectedRoute>}
+          />
+          <Route path='/assessment/*' element={
+            <ProtectedRoute>
+              <ProjectProvider>
+                <Assessment />
+              </ProjectProvider>
+            </ProtectedRoute>
+          } />
+          <Route path='/surveytools'
+            element={<ProtectedRoute>
+              <SurveyTools />
+            </ProtectedRoute>}
+          />
+          <Route path='/surveyadmin/:id'
+            element={<ProtectedRoute>
+              <SurveyAdmin />
+            </ProtectedRoute>}
+          />
+          <Route path='/scaletools'
+            element={<ProtectedRoute>
+              <ScaleTools />
+            </ProtectedRoute>}
+          />
+          <Route path='/projects'
+            element={<ProtectedRoute>
+              <ProjectProvider>
+                <Projects />
+              </ProjectProvider>
+            </ProtectedRoute>}
+          />
+          <Route path='/login' element={<Login />} />
+          <Route path='/logout' element={<Logout />} />
+          <Route path='/register' element={<RegisterAndLogout />} />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </UserProvider>
+  );
 }
 
 export default App

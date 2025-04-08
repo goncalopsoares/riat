@@ -8,6 +8,7 @@ export const ProjectProvider = ({ children }) => {
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const [projectId, setProjectId] = useState(null);
     const [projectName, setProjectName] = useState('');
     const [projectOrganization, setProjectOrganization] = useState('');
     const [projectPhase, setProjectPhase] = useState('');
@@ -22,6 +23,7 @@ export const ProjectProvider = ({ children }) => {
             error, setError,
             success, setSuccess,
             loading, setLoading,
+            projectId, setProjectId,
             projectName, setProjectName,
             projectOrganization, setProjectOrganization,
             projectPhase, setProjectPhase,
