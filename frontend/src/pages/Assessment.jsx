@@ -1,4 +1,4 @@
-import AssessmentOne from "../components/AssessmentOne";
+import AssessmentOne from "../components/AssessmentOne"
 import AssessmentTwo from "../components/AssessmentTwo";
 import AssessmentThree from "../components/AssessmentThree";
 import AssessmentFour from "../components/AssessmentFour";
@@ -13,7 +13,32 @@ const Assessment = () => {
     const [agreement, setAgreement] = useState(false);
     const [instructionsRead, setInstructionsRead] = useState(false);
 
-    /* STEP 1 - REGISTER PROJECT */
+    /* STEP 1 - INSTRUCTIONS */
+
+    const handleInstructionsRead = (e) => {
+        e.preventDefault();
+
+        const isChecked = document.getElementById("instructions").checked;
+        setInstructionsRead(isChecked);
+        if (isChecked) {
+            setStep(2);
+        }
+    };
+
+
+    /* STEP 2 - RGPD */
+
+    const handleAgreement = (e) => {
+        e.preventDefault();
+
+        const isChecked = document.getElementById("agreement").checked;
+        setAgreement(isChecked);
+        if (isChecked) {
+            setStep(3);
+        }
+    };
+
+    /* STEP 3 - REGISTER PROJECT */
 
     const handleProjectSubmit = async (e) => {
         setLoading(true)
@@ -78,7 +103,7 @@ const Assessment = () => {
             console.log(response)
             const projectId = response.data.id_projects;
             setProjectId(projectId);
-            setStep(2);
+            setStep(4);
 
         } catch (error) {
             alert(error);
@@ -90,7 +115,7 @@ const Assessment = () => {
 
     }
 
-    /* STEP 2 - SELECT PROJECT'S PHASE */
+    /* STEP 4 - SELECT PROJECT'S PHASE */
 
     const handlePhaseUpdate = async (e) => {
 
@@ -105,7 +130,7 @@ const Assessment = () => {
             });
 
             setSuccess('Fase selecionada com sucesso');
-            setStep(3);
+            setStep(5);
 
         } catch (error) {
             alert(error);
@@ -116,45 +141,25 @@ const Assessment = () => {
         }
     };
 
-    /* STEP 3 - INSTRUCTIONS */
-
-    const handleInstructionsRead = (e) => {
-        e.preventDefault();
-
-        const isChecked = document.getElementById("agreement").checked;
-        setInstructionsRead(isChecked);
-        if (isChecked) {
-            setStep(4);
-        }
-    };
-
-
-    /* STEP 4 - RGPD */
-
-    const handleAgreement = (e) => {
-        setAgreement(e.target.checked);
-    }
 
     return (
         <>
             {projectId === null ? (
                 <>
                     {step === 1 && (
-                        <AssessmentOne handleProjectSubmit={handleProjectSubmit} />
+                        <AssessmentOne handleInstructionsRead={handleInstructionsRead} />
                     )}
                     {step === 2 && (
-                        <AssessmentTwo handlePhaseUpdate={handlePhaseUpdate} />
+                        <AssessmentTwo handleAgreement={handleAgreement} />
                     )}
-                </>
-            ) : (
-                <>
                     {step === 3 && (
-                        <AssessmentThree handleInstructionsRead={handleInstructionsRead} />
+                        <AssessmentThree handleProjectSubmit={handleProjectSubmit} />
                     )}
                     {step === 4 && (
-                        <AssessmentFour handleAgreement={handleAgreement} />
+                        <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
                     )}
                 </>
+            ) : (null
             )}
         </>
     );

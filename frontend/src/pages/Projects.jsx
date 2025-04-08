@@ -51,7 +51,7 @@ const Projects = () => {
         }
 
         setProjectId(id_project);
-        setStep(3);
+        setStep(5);
 
         setTimeout(() => {
             navigate('/assessment');
