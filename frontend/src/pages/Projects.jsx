@@ -16,7 +16,7 @@ const Projects = () => {
     const user = useUser();
     const id_user = user.user.id;
 
-    const { setProjectId } = useProject();  
+    const { setProjectId, setStep } = useProject();  
 
     useEffect(() => {
         const getAllProjects = async () => {
@@ -51,6 +51,7 @@ const Projects = () => {
         }
 
         setProjectId(id_project);
+        setStep(3);
 
         setTimeout(() => {
             navigate('/assessment');

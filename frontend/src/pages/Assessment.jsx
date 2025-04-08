@@ -1,14 +1,17 @@
 import AssessmentOne from "../components/AssessmentOne";
 import AssessmentTwo from "../components/AssessmentTwo";
+import AssessmentThree from "../components/AssessmentThree";
+import AssessmentFour from "../components/AssessmentFour";
 import { useProject } from "../contexts/ProjectContext";
-import api from '../api';
 import { useState } from "react";
+import api from '../api';
 
 const Assessment = () => {
 
-    const { projectId, setProjectId, projectName, projectOrganization, projectPhase, projectTrl, projectMrl, projectSrl, userRole, userFunction, setError, setSuccess, setLoading } = useProject();
+    const { projectId, setProjectId, step, setStep, projectName, projectOrganization, projectPhase, projectTrl, projectMrl, projectSrl, userRole, userFunction, setError, setSuccess, setLoading } = useProject();
 
-    const [step, setStep] = useState(1);
+    const [agreement, setAgreement] = useState(false);
+    const [instructionsRead, setInstructionsRead] = useState(false);
 
     /* STEP 1 - REGISTER PROJECT */
 
@@ -113,7 +116,24 @@ const Assessment = () => {
         }
     };
 
+    /* STEP 3 - INSTRUCTIONS */
 
+    const handleInstructionsRead = (e) => {
+        e.preventDefault();
+
+        const isChecked = document.getElementById("agreement").checked;
+        setInstructionsRead(isChecked);
+        if (isChecked) {
+            setStep(4);
+        }
+    };
+
+
+    /* STEP 4 - RGPD */
+
+    const handleAgreement = (e) => {
+        setAgreement(e.target.checked);
+    }
 
     return (
         <>
@@ -128,8 +148,12 @@ const Assessment = () => {
                 </>
             ) : (
                 <>
-                    {/* Aqui podes renderizar o que quiseres quando já houver um projeto selecionado */}
-                    <div>Projeto selecionado: {projectId}</div>
+                    {step === 3 && (
+                        <AssessmentThree handleInstructionsRead={handleInstructionsRead} />
+                    )}
+                    {step === 4 && (
+                        <AssessmentFour handleAgreement={handleAgreement} />
+                    )}
                 </>
             )}
         </>
