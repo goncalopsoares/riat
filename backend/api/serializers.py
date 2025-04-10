@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import CustomUser, Dimensions, Projects, Scales, Statements, Surveys, Users, UsersHasProjects
+from api.models import AnswersBase, AnswersBoolean, AnswersInteger, AnswersSelect, AnswersText, CustomUser, Dimensions, Projects, Scales, Statements, Surveys, Users, UsersHasProjects
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.utils.timezone import now
@@ -386,3 +386,59 @@ class StatementSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+# ANSWERS
+
+class AnswerBaseSerializer(serializers.ModelSerializer):
+    answer_type = serializers.ChoiceField(choices=['text', 'boolean', 'integer'])
+    value = serializers.CharField(required=False, allow_blank=True)
+    is_na = serializers.BooleanField(default=False, required=False)
+
+    class Meta:
+        model = AnswersBase
+        fields = ['id_answers_base', 'statements_id_statements', 'submissions_id_submissions', 'answer_creation_time', 'answer_type', 'value']
+        read_only_fields = ['id_answers_base, answer_creation_time']
+
+    def create(self, validated_data):
+        answer_type = validated_data.pop('answer_type')
+        value = validated_data.pop('value')
+        is_na = validated_data.pop('is_na', None)
+
+        base_answer, _ = AnswersBase.objects.update_or_create(
+            question=validated_data['statements_id_statements'],
+            submission=validated_data['submissions_id_submissions'],
+            defaults={'answer_creation_time': now()}
+        )
+
+        if answer_type == 'text':
+            AnswersText.objects.update_or_create(id=base_answer, defaults={'value': value})
+        elif answer_type == 'boolean' and is_na is None:
+            AnswersBoolean.objects.update_or_create(id=base_answer, defaults={'value': False})
+        elif answer_type == 'boolean' and is_na is not None:
+            AnswersBoolean.objects.update_or_create(id=base_answer, defaults={'value': True})
+            AnswersText.objects.update_or_create(id=base_answer, defaults={'value': value})
+        elif answer_type == 'integer':
+            AnswersInteger.objects.update_or_create(id=base_answer, defaults={'value': value})
+        else:
+            raise serializers.ValidationError("Unsupported answer type")
+
+        return base_answer
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        try:
+            if hasattr(instance, 'answerstext'):
+                data['value'] = instance.answerstext.value
+                data['answer_type'] = 'text'
+            elif hasattr(instance, 'answersboolean'):
+                data['value'] = instance.answersboolean.value
+                data['answer_type'] = 'boolean'
+            elif hasattr(instance, 'answersinteger'):
+                data['value'] = instance.answersinteger.value
+                data['answer_type'] = 'integer'
+        except Exception:
+            data['value'] = None
+            data['answer_type'] = 'unknown'
+
+        return data

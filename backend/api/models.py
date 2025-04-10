@@ -79,7 +79,7 @@ class AnswersBase(models.Model):
 
 class AnswersBoolean(models.Model):
     answers_base_id_answers_base = models.OneToOneField(AnswersBase, models.DO_NOTHING, db_column='answers_base_id_answers_base', primary_key=True)
-    answer_boolean_value = models.IntegerField()
+    value = models.IntegerField()
 
     class Meta:
         managed = False
@@ -88,7 +88,7 @@ class AnswersBoolean(models.Model):
 
 class AnswersInteger(models.Model):
     answers_base_id_answers_base = models.OneToOneField(AnswersBase, models.DO_NOTHING, db_column='answers_base_id_answers_base', primary_key=True)
-    answer_integer_value = models.IntegerField()
+    value = models.IntegerField()
 
     class Meta:
         managed = False
@@ -97,7 +97,7 @@ class AnswersInteger(models.Model):
 
 class AnswersSelect(models.Model):
     answers_base_id_answers_base = models.OneToOneField(AnswersBase, models.DO_NOTHING, db_column='answers_base_id_answers_base', primary_key=True)
-    answer_select_value = models.CharField(max_length=100)
+    value = models.CharField(max_length=100)
 
     class Meta:
         managed = False
@@ -106,7 +106,7 @@ class AnswersSelect(models.Model):
 
 class AnswersText(models.Model):
     answers_base_id_answers_base = models.OneToOneField(AnswersBase, models.DO_NOTHING, db_column='answers_base_id_answers_base', primary_key=True)
-    answer_text_value = models.TextField()
+    value = models.TextField()
 
     class Meta:
         managed = False
