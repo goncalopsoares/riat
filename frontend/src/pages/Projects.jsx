@@ -21,6 +21,8 @@ const Projects = () => {
 
     const { setProjectId, setStep } = useProject();
 
+    //GET USER'S PROJECTS
+
     useEffect(() => {
         const getAllProjects = async () => {
             setLoading(true);
@@ -44,6 +46,8 @@ const Projects = () => {
 
     }, [success, error]);
 
+    //GET AVAILABLE SURVEYS
+
     useEffect(() => {
 
         const getAllSurveys = async () => {
@@ -66,19 +70,20 @@ const Projects = () => {
 
     }, []);
 
+    //RESUME ASSESSMENT OR SHOW SELECTOR FOR NEW ASSESSMENT
 
-    const navigateToAssessement = (e, id_project, lastSubmission) => {
+    const navigateToAssessement = (e, idProjet, lastSubmission) => {
 
         if (!lastSubmission) {
 
             e.currentTarget.disabled = true;
 
-            setSurveySelector(id_project);
+            setSurveySelector(idProjet);
 
             return;
         }
 
-        setProjectId(id_project);
+        setProjectId(idProjet);
         setStep(5);
 
         setTimeout(() => {
@@ -86,28 +91,34 @@ const Projects = () => {
         }, 0);
     };
 
+    //SELECT SURVEY
+
     const handleSelectSurvey = (e) => {
         setSelectedSurvey(e.target.value);
     }
 
-    const handleChooseSurvey = async (e) => {
+    //START NEW ASSESSMENT
+
+    const handleStartNewAssessment = async (e, idUserProject) => {
+
         e.preventDefault();
 
         setLoading(true);
 
+        console.log(idUserProject);
+
         try {
-            await api.patch(`/api/submissions/`, {
+            await api.post(`/api/submissions/`, {
                 surveys_id_surveys: selectedSurvey,
-
-
-
+                users_has_projects_id_users_has_projects: idUserProject,
+                submission_state: 1,
             });
 
-            setSuccess('Survey updated successfully');
+            setSuccess('Started new assessment successfully');
             setSelecting(false);
 
         } catch (error) {
-            setError('Error updating survey');
+            setError('Error starting new assessment');
             console.error(error);
 
         } finally {
@@ -142,6 +153,7 @@ const Projects = () => {
                             {allProjects.map(project => {
 
                                 const lastSubmission = project.submissions[project.submissions.length - 1];
+                                const idUserProject = project.metadata[0].id_users_has_projects;
 
                                 return (
                                     <tr key={project.id_projects}>
@@ -168,7 +180,7 @@ const Projects = () => {
                                         </td>
                                         <td>
                                             {surveySelector === project.id_projects ? (
-                                                <form onSubmit={handleChooseSurvey}>
+                                                <form onSubmit={(e) => handleStartNewAssessment(e, idUserProject)}>
                                                     <select value={selectedSurvey} onChange={handleSelectSurvey}>
                                                         {allSurveys.map((survey) => (
                                                             <option key={survey.id_surveys} value={survey.id_surveys}>

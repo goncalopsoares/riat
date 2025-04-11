@@ -65,6 +65,7 @@ class UserHasProjectsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersHasProjects
         fields = [
+            'id_users_has_projects',
             'users_has_projects_role',
             'users_has_projects_function',
         ]
@@ -215,11 +216,16 @@ class SubmissionsSerializer(serializers.ModelSerializer):
             'users_has_projects_id_users_has_projects',
             'submission_state',
             'submission_starting_time',
-            'submission_ending_time'
+            'submission_ending_time',
         ]
         extra_kwargs = {
             'submission_starting_time': {'read_only': True},
+            'submission_ending_time': {'read_only': True},
         }
+        defaults = {
+            'submission_starting_time': now(),
+        }
+      
 
     def create(self, validated_data):
         # Define o tempo de início automaticamente no momento da criação
