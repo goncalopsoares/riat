@@ -5,7 +5,7 @@ import AssessmentFour from "../components/AssessmentFour";
 import AssessmentFive from "../components/AssessmentFive";
 import { useProject } from "../contexts/ProjectContext";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import api from '../api';
 
 const Assessment = () => {
@@ -17,9 +17,13 @@ const Assessment = () => {
     const [surveyId, setSurveyId] = useState('');
     const [allDimensions, setAllDimensions] = useState([]);
     const [dimensionsNumber, setDimensionsNumber] = useState(0);
+    const [currentDimension, setCurrentDimension] = useState(0);
+
+    const [isAssessmentReady, setIsAssessmentReady] = useState(false);
 
     const { id } = useParams();
 
+    const navigate = useNavigate();
 
     //GET SUBMISSION DATA
 
@@ -30,10 +34,10 @@ const Assessment = () => {
             const getSubmission = async () => {
                 try {
                     const response = await api.get(`/api/submission/${id}/`);
-                    console.log(response.data);
 
                     setSurveyId(response.data.surveys_id_surveys);
                     setStep(5);
+
                 } catch (error) {
                     alert(error);
                     console.error(error);
@@ -133,7 +137,7 @@ const Assessment = () => {
             });
 
             setSuccess('Projeto criado com sucesso');
-            console.log(response)
+
             const projectId = response.data.id_projects;
             setProjectId(projectId);
             setStep(4);
@@ -155,8 +159,6 @@ const Assessment = () => {
         setLoading(true)
         e.preventDefault();
 
-        console.log(projectPhase)
-
         try {
             await api.patch(`/api/project/update/${projectId}/`, {
                 project_phase: projectPhase,
@@ -164,6 +166,7 @@ const Assessment = () => {
 
             setSuccess('Fase selecionada com sucesso');
             setStep(5);
+            navigate('/projects/');
 
         } catch (error) {
             alert(error);
@@ -176,6 +179,7 @@ const Assessment = () => {
 
 
     // STEP 5 - ASSESSMENT | GET DIMENSIONS AND STATEMENTS
+
 
     useEffect(() => {
 
@@ -202,7 +206,7 @@ const Assessment = () => {
 
                     setAllDimensions(dimensionsWithStatements);
                     setDimensionsNumber(dimensionsWithStatements.length);
-                    console.log(dimensionsWithStatements);
+
                 } catch (error) {
                     alert(error);
                     console.error(error);
@@ -217,31 +221,34 @@ const Assessment = () => {
 
     }, [id, surveyId]);
 
+    useEffect(() => {
+        if (step === 5 && surveyId && allDimensions.length > 0) {
+            setIsAssessmentReady(true);
+        }
+
+    }, [step, surveyId, allDimensions]);
 
 
     return (
         <>
-            {projectId === null ? (
-                <>
-                    {step === 1 && (
-                        <AssessmentOne handleInstructionsRead={handleInstructionsRead} />
-                    )}
-                    {step === 2 && (
-                        <AssessmentTwo handleAgreement={handleAgreement} />
-                    )}
-                    {step === 3 && (
-                        <AssessmentThree handleProjectSubmit={handleProjectSubmit} />
-                    )}
-                    {step === 4 && (
-                        <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
-                    )}
-                    {step === 5 && id !== null && (
-                        <AssessmentFive />
-                    )}
-                </>
-            ) : (null
+            {step === 1 && (
+                <AssessmentOne handleInstructionsRead={handleInstructionsRead} />
+            )}
+            {step === 2 && (
+                <AssessmentTwo handleAgreement={handleAgreement} />
+            )}
+            {step === 3 && (
+                <AssessmentThree handleProjectSubmit={handleProjectSubmit} />
+            )}
+            {step === 4 && (
+                <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
+            )}
+
+            {isAssessmentReady && (
+                <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} setCurrentDimension={setCurrentDimension} />
             )}
         </>
+
     );
 
 
