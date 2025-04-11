@@ -11,7 +11,7 @@ const Projects = () => {
     const [error, setError] = useState('');
     const [allProjects, setAllProjects] = useState([]);
     const [allSurveys, setAllSurveys] = useState([]);
-    const [selectedSurvey, setSelectedSurvey] = useState('');
+    const [selectedSurvey, setSelectedSurvey] = useState(1);
     const [surveySelector, setSurveySelector] = useState(false);
 
     const navigate = useNavigate();
@@ -105,17 +105,20 @@ const Projects = () => {
 
         setLoading(true);
 
-        console.log(idUserProject);
-
         try {
-            await api.post(`/api/submissions/`, {
+            const response = await api.post(`/api/submissions/`, {
                 surveys_id_surveys: selectedSurvey,
                 users_has_projects_id_users_has_projects: idUserProject,
                 submission_state: 1,
             });
 
             setSuccess('Started new assessment successfully');
-            setSelecting(false);
+
+            const lastSubmission = response.data.id_submissions;
+
+            setTimeout(() => {
+                navigateToAssessement(e, idUserProject, lastSubmission);
+            }, 0);
 
         } catch (error) {
             setError('Error starting new assessment');
