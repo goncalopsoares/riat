@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import generics, viewsets
-from .serializers import AnswerBaseSerializer, UserRegistrationSerializer, LoginSerializer, SurveySerializer, ProjectSerializer, ScaleSerializer, DimensionSerializer, StatementSerializer
+from .serializers import AnswerBaseSerializer, UserRegistrationSerializer, LoginSerializer, SurveySerializer, ProjectSerializer, ScaleSerializer, DimensionSerializer, StatementSerializer, SubmissionsSerializer
 from .models import AnswersBase, Surveys, Projects, Scales, Dimensions, Statements, UsersHasProjects
 from rest_framework.permissions import  AllowAny, IsAuthenticated
 from rest_framework.views import APIView
@@ -8,6 +8,9 @@ from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from .permissions import IsAdminUser
+from .models import Submissions
+from .models import Submissions
+from .models import Submissions
 
 
 User = get_user_model()
@@ -95,7 +98,7 @@ class UpdateProjectPhaseView(UpdateAPIView):
 
 class GetSurveyView(generics.ListAPIView):
     
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
     
     serializer_class = SurveySerializer
     
@@ -107,7 +110,7 @@ class GetSurveyView(generics.ListAPIView):
 class GetSurveyDetailView(generics.ListAPIView):
     
     serializer_class = SurveySerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         id_surveys = self.kwargs.get("id_surveys")
@@ -190,7 +193,7 @@ class UpdateDimensionView(UpdateAPIView):
 class GetStatementView(generics.ListAPIView):
     
     serializer_class = StatementSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         dimensions_id_dimensions = self.kwargs.get("dimensions_id_dimensions")
@@ -264,6 +267,58 @@ class CreateScaleView(generics.CreateAPIView):
         survey = serializer.save()
 
         return Response(ScaleSerializer(survey).data, status=status.HTTP_201_CREATED)
+    
+# SUBMSSIONS
+
+class SubmissionViewSet(viewsets.ModelViewSet):
+        
+        serializer_class = SubmissionsSerializer
+        permission_classes = [IsAuthenticated]
+    
+        def get_queryset(self):
+            id_submissions = self.kwargs.get("id_submissions")
+            return Surveys.objects.filter(id_submissions=id_submissions)
+    
+        def list(self, request, *args, **kwargs):
+            queryset = self.get_queryset()
+            submissions = []
+            for submission in queryset:
+                submission_data = SurveySerializer(submission).data
+                submissions.append(submission_data)
+            return Response(submissions, status=status.HTTP_200_OK)  
+        
+        def create(self, request, *args, **kwargs):
+            serializer = self.get_serializer(data=request.data, context={'request': request})
+            serializer.is_valid(raise_exception=True)
+            submission = serializer.save()
+            return Response(self.get_serializer(submission).data, status=status.HTTP_201_CREATED)
+
+        def retrieve(self, request, id_submissions, *args, **kwargs):
+            try:
+                submission = Submissions.objects.get(id_submissions=id_submissions)
+                serializer = self.get_serializer(submission)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Submissions.DoesNotExist:
+                return Response({"error": "Submission not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        def update(self, request, id_submissions, *args, **kwargs):
+            try:
+                submission = Submissions.objects.get(id_submissions=id_submissions)
+                serializer = self.get_serializer(submission, data=request.data, partial=True)
+                serializer.is_valid(raise_exception=True)
+                updated_submission = serializer.save()
+                return Response(self.get_serializer(updated_submission).data, status=status.HTTP_200_OK)
+            except Submissions.DoesNotExist:
+                return Response({"error": "Submission not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        def destroy(self, request, id_submissions, *args, **kwargs):
+            try:
+                submission = Submissions.objects.get(id_submissions=id_submissions)
+                submission.delete()
+                return Response({"message": "Submission deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+            except Submissions.DoesNotExist:
+                return Response({"error": "Submission not found"}, status=status.HTTP_404_NOT_FOUND)
+        
     
 # ANSWERS
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { useProject } from '../contexts/ProjectContext';
 import { useNavigate } from 'react-router-dom';
@@ -10,13 +10,16 @@ const Projects = () => {
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
     const [allProjects, setAllProjects] = useState([]);
+    const [allSurveys, setAllSurveys] = useState([]);
+    const [selectedSurvey, setSelectedSurvey] = useState('');
+    const [surveySelector, setSurveySelector] = useState(false);
 
     const navigate = useNavigate();
 
     const user = useUser();
     const id_user = user.user.id;
 
-    const { setProjectId, setStep } = useProject();  
+    const { setProjectId, setStep } = useProject();
 
     useEffect(() => {
         const getAllProjects = async () => {
@@ -41,12 +44,37 @@ const Projects = () => {
 
     }, [success, error]);
 
+    useEffect(() => {
 
-    const navigateToAssessement = (id_project) => {
-        console.log(id_project);
+        const getAllSurveys = async () => {
+            setLoading(true);
+            try {
+                const response = await api.get(`/api/survey/get/`);
+                console.log(response.data);
+                setAllSurveys(response.data);
 
-        if (!id_project) {
-            navigate('/assessment');
+            } catch (error) {
+                alert(error);
+                console.error(error);
+
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getAllSurveys();
+
+    }, []);
+
+
+    const navigateToAssessement = (e, id_project, lastSubmission) => {
+
+        if (!lastSubmission) {
+
+            e.currentTarget.disabled = true;
+
+            setSurveySelector(id_project);
+
             return;
         }
 
@@ -54,11 +82,39 @@ const Projects = () => {
         setStep(5);
 
         setTimeout(() => {
-            navigate('/assessment');
+            navigate('/assessment/' + lastSubmission);
         }, 0);
     };
 
+    const handleSelectSurvey = (e) => {
+        setSelectedSurvey(e.target.value);
+    }
 
+    const handleChooseSurvey = async (e) => {
+        e.preventDefault();
+
+        setLoading(true);
+
+        try {
+            await api.patch(`/api/submissions/`, {
+                surveys_id_surveys: selectedSurvey,
+
+
+
+            });
+
+            setSuccess('Survey updated successfully');
+            setSelecting(false);
+
+        } catch (error) {
+            setError('Error updating survey');
+            console.error(error);
+
+        } finally {
+            setLoading(false);
+        }
+
+    };
 
 
     return (
@@ -95,9 +151,11 @@ const Projects = () => {
                                         <td>lorem</td>
                                         <td>
                                             <button
-                                                onClick={() => navigateToAssessement(
+                                                onClick={(e) => navigateToAssessement(
+                                                    e,
+                                                    project.id_projects,
                                                     lastSubmission && lastSubmission.submission_state === 1
-                                                        ? project.id_projects
+                                                        ? lastSubmission.id_submissions
                                                         : null
                                                 )}
                                             >
@@ -107,6 +165,20 @@ const Projects = () => {
                                                     <p>New Assessment</p>
                                                 )}
                                             </button>
+                                        </td>
+                                        <td>
+                                            {surveySelector === project.id_projects ? (
+                                                <form onSubmit={handleChooseSurvey}>
+                                                    <select value={selectedSurvey} onChange={handleSelectSurvey}>
+                                                        {allSurveys.map((survey) => (
+                                                            <option key={survey.id_surveys} value={survey.id_surveys}>
+                                                                {survey.survey_name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <button type="submit">Start assessment</button>
+                                                </form>
+                                            ) : null}
                                         </td>
                                     </tr>
                                 );

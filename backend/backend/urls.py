@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, GetProjectView
+from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, GetProjectView, SubmissionViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView  
 
 urlpatterns = [
@@ -31,5 +31,17 @@ urlpatterns = [
     path('api/project/get/<int:users_id_users>/', GetProjectView.as_view(), name='view_project'),
     path('api/project/create/', CreateProjectView.as_view(), name='create_project'),
     path('api/project/update/<int:id_projects>/', UpdateProjectPhaseView.as_view(), name="update-project-phase"),
+    #SUBMISSIONS
+    path('submissions/', SubmissionViewSet.as_view({'get': 'list', 'post': 'create'}), name='submission-list'),
+    # Retrieve, update, destroy a specific submission
+    path('submissions/<int:id_submissions>/', 
+         SubmissionViewSet.as_view({
+             'get': 'retrieve',
+             'put': 'update',
+             'patch': 'update',
+             'delete': 'destroy'
+         }), 
+         name='submission-detail'),
 ]
+
  

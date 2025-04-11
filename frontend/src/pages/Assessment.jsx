@@ -4,6 +4,7 @@ import AssessmentThree from "../components/AssessmentThree";
 import AssessmentFour from "../components/AssessmentFour";
 import { useProject } from "../contexts/ProjectContext";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import api from '../api';
 
 const Assessment = () => {
@@ -12,6 +13,8 @@ const Assessment = () => {
 
     const [agreement, setAgreement] = useState(false);
     const [instructionsRead, setInstructionsRead] = useState(false);
+
+    const { id } = useParams();
 
     /* STEP 1 - INSTRUCTIONS */
 
@@ -157,6 +160,9 @@ const Assessment = () => {
                     )}
                     {step === 4 && (
                         <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
+                    )}
+                    {step === 5 && id !== null(
+                        <AssessmentFive />
                     )}
                 </>
             ) : (null
