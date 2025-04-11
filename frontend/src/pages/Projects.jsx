@@ -106,7 +106,7 @@ const Projects = () => {
         setLoading(true);
 
         try {
-            const response = await api.post(`/api/submissions/`, {
+            const response = await api.post(`/api/submission/`, {
                 surveys_id_surveys: selectedSurvey,
                 users_has_projects_id_users_has_projects: idUserProject,
                 submission_state: 1,

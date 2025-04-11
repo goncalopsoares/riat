@@ -32,9 +32,9 @@ urlpatterns = [
     path('api/project/create/', CreateProjectView.as_view(), name='create_project'),
     path('api/project/update/<int:id_projects>/', UpdateProjectPhaseView.as_view(), name="update-project-phase"),
     #SUBMISSIONS
-    path('api/submissions/', SubmissionViewSet.as_view({'get': 'list', 'post': 'create'}), name='submission-list'),
+    path('api/submission/', SubmissionViewSet.as_view({'get': 'list', 'post': 'create'}), name='submission-list'),
     # Retrieve, update, destroy a specific submission
-    path('api/submissions/<int:id_submissions>/', 
+    path('api/submission/<int:id_submissions>/', 
          SubmissionViewSet.as_view({
              'get': 'retrieve',
              'put': 'update',

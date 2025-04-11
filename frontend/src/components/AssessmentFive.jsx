@@ -1,5 +1,4 @@
 import { useProject } from "../contexts/ProjectContext";
-import SelectPhase from "./SelectPhase";
 
 const AssessmentFive = ({  }) => {
 
@@ -7,10 +6,10 @@ const AssessmentFive = ({  }) => {
 
     return (
         <>
-            < SelectPhase />
+
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && <p style={{ color: 'green' }}> {success} </p>}
-            <button onClick={handlePhaseUpdate} disabled={loading}>
+            <button disabled={loading}>
                 {loading ? "Submitting..." : "Next"}
             </button>
         </>

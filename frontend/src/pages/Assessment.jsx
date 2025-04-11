@@ -2,8 +2,9 @@ import AssessmentOne from "../components/AssessmentOne"
 import AssessmentTwo from "../components/AssessmentTwo";
 import AssessmentThree from "../components/AssessmentThree";
 import AssessmentFour from "../components/AssessmentFour";
+import AssessmentFive from "../components/AssessmentFive";
 import { useProject } from "../contexts/ProjectContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from '../api';
 
@@ -13,8 +14,37 @@ const Assessment = () => {
 
     const [agreement, setAgreement] = useState(false);
     const [instructionsRead, setInstructionsRead] = useState(false);
+    const [surveyId, setSurveyId] = useState('');
+    const [allDimensions, setAllDimensions] = useState([]);
+    const [dimensionsNumber, setDimensionsNumber] = useState(0);
 
     const { id } = useParams();
+
+
+    //GET SUBMISSION DATA
+
+    useEffect(() => {
+
+        if (id !== undefined) {
+
+            const getSubmission = async () => {
+                try {
+                    const response = await api.get(`/api/submission/${id}/`);
+                    console.log(response.data);
+
+                    setSurveyId(response.data.surveys_id_surveys);
+                    setStep(5);
+                } catch (error) {
+                    alert(error);
+                    console.error(error);
+                }
+            }
+            getSubmission();
+        } else {
+            setProjectId(null);
+            setStep(1);
+        }
+    }, [id]);
 
     /* STEP 1 - INSTRUCTIONS */
 
@@ -145,6 +175,50 @@ const Assessment = () => {
     };
 
 
+    // STEP 5 - ASSESSMENT | GET DIMENSIONS AND STATEMENTS
+
+    useEffect(() => {
+
+        if (surveyId && surveyId !== undefined) {
+
+            const getDimensionsAndStatements = async () => {
+
+                setLoading(true);
+
+                try {
+                    const response = await api.get(`/api/dimension/get/${surveyId}/`);
+                    const dimensions = response.data;
+
+                    const dimensionsWithStatements = await Promise.all(
+                        dimensions.map(async (dimension) => {
+                            const statementsResponse = await api.get(`/api/statement/get/${dimension.id_dimensions}/`);
+
+                            return {
+                                ...dimension,
+                                statements: statementsResponse.data,
+                            };
+                        })
+                    );
+
+                    setAllDimensions(dimensionsWithStatements);
+                    setDimensionsNumber(dimensionsWithStatements.length);
+                    console.log(dimensionsWithStatements);
+                } catch (error) {
+                    alert(error);
+                    console.error(error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            getDimensionsAndStatements();
+
+        }
+
+    }, [id, surveyId]);
+
+
+
     return (
         <>
             {projectId === null ? (
@@ -161,7 +235,7 @@ const Assessment = () => {
                     {step === 4 && (
                         <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
                     )}
-                    {step === 5 && id !== null(
+                    {step === 5 && id !== null && (
                         <AssessmentFive />
                     )}
                 </>

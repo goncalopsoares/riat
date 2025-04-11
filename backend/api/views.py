@@ -149,7 +149,7 @@ class UpdateSurveyView(UpdateAPIView):
 class GetDimensionView(generics.ListAPIView):
     
     serializer_class = DimensionSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         surveys_id_surveys = self.kwargs.get("surveys_id_surveys")
