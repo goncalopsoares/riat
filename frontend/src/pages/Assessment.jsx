@@ -18,12 +18,14 @@ const Assessment = () => {
     const [allDimensions, setAllDimensions] = useState([]);
     const [dimensionsNumber, setDimensionsNumber] = useState(0);
     const [currentDimension, setCurrentDimension] = useState(0);
+    const [dimensionStage, setDimensionStage] = useState(1);
 
     const [isAssessmentReady, setIsAssessmentReady] = useState(false);
 
     const { id } = useParams();
 
     const navigate = useNavigate();
+
 
     //GET SUBMISSION DATA
 
@@ -180,7 +182,6 @@ const Assessment = () => {
 
     // STEP 5 - ASSESSMENT | GET DIMENSIONS AND STATEMENTS
 
-
     useEffect(() => {
 
         if (surveyId && surveyId !== undefined) {
@@ -228,6 +229,12 @@ const Assessment = () => {
 
     }, [step, surveyId, allDimensions]);
 
+    const handleDimensionChange = (index) => {
+        if (index >= 0 && index < allDimensions.length) {
+            setCurrentDimension(index);
+            setDimensionStage(1);
+        }
+    }
 
     return (
         <>
@@ -243,14 +250,11 @@ const Assessment = () => {
             {step === 4 && (
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
-
             {isAssessmentReady && (
-                <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} setCurrentDimension={setCurrentDimension} />
+                <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} />
             )}
         </>
-
     );
-
 
 }
 
