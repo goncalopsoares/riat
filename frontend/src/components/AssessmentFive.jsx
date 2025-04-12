@@ -70,6 +70,16 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                 );
                             })}
                         </div>)}
+                    {dimensionStage === 3 && (
+                        <div>
+                             <h1>{allDimensions[currentDimension].dimension_name}</h1>
+                             <p>{allDimensions[currentDimension].dimension_description}</p>
+                            <p>Provide examples</p>
+                            <p>Give examples of evidence in you project related to {allDimensions[currentDimension].dimension_name} staments</p>
+
+                            <textarea type="text" placeholder="Max 1000 char." ></textarea>
+
+                        </div>)}
                     <div>
                         <button onClick={() => {
                             dimensionStage < 3
