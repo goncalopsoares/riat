@@ -12,20 +12,27 @@ const Assessment = () => {
 
     const { projectId, setProjectId, step, setStep, projectName, projectOrganization, projectPhase, projectTrl, projectMrl, projectSrl, userRole, userFunction, setError, setSuccess, setLoading } = useProject();
 
+
+    const [surveyId, setSurveyId] = useState('');
+
+    // STEP 1 & 2
     const [agreement, setAgreement] = useState(false);
     const [instructionsRead, setInstructionsRead] = useState(false);
-    const [surveyId, setSurveyId] = useState('');
+
+    // STEP 5
     const [allDimensions, setAllDimensions] = useState([]);
     const [dimensionsNumber, setDimensionsNumber] = useState(0);
     const [currentDimension, setCurrentDimension] = useState(0);
     const [dimensionStage, setDimensionStage] = useState(1);
-
     const [isAssessmentReady, setIsAssessmentReady] = useState(false);
+    const [selectedValues, setSelectedValues] = useState([]);
+    const [exampleInput, setExampleInput] = useState('');
 
     const { id } = useParams();
 
     const navigate = useNavigate();
 
+    console.log(selectedValues);
 
     //GET SUBMISSION DATA
 
@@ -251,7 +258,7 @@ const Assessment = () => {
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
             {isAssessmentReady && (
-                <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} />
+                <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} exampleInput={exampleInput} setExampleInput={setExampleInput} />
             )}
         </>
     );

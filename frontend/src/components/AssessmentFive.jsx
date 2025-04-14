@@ -1,21 +1,4 @@
-const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage }) => {
-
-    const getAllScaleLabels = () => {
-        return allDimensions.map((dimension) => ({
-            dimensionId: dimension.id_dimensions,
-            dimensionName: dimension.dimension_name,
-            statements: (dimension.statements || []).map((statement) => ({
-                statementId: statement.id_statements,
-                statementName: statement.statement_name,
-                scaleLabels: statement.scale.scale_labels.split(',').map(label => label.trim()),
-
-            }))
-        }));
-    };
-
-    if (allDimensions.length > 0) {
-        console.log(getAllScaleLabels());
-    }
+const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, exampleInput, setExampleInput }) => {
 
     return (
         <>
@@ -50,25 +33,32 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                             {allDimensions[currentDimension].statements.map(statement => {
 
                                 const scaleLabels = statement.scale.scale_labels.split(',').map(label => label.trim());
-                                
+
                                 // Skip the "Provide Examples" statement
                                 if (statement.statement_name === 'Provide Examples') {
                                     return null;
                                 }
 
                                 return (
-                                   
                                     <div key={statement.id_statements}>
                                         <h4>{statement.statement_name}</h4>
                                         <p>{statement.statement_description}</p>
                                         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-
                                             {scaleLabels.map((label, index) => (
-
                                                 <div key={index} style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
                                                     <label>{label}</label>
-                                                    <input type="radio" name={statement.id_statements} value={label} />
-
+                                                    <input
+                                                        type="radio"
+                                                        name={statement.id_statements}
+                                                        value={index + 1}
+                                                        onChange={(e) => {
+                                                            const selectedValue = e.target.value;
+                                                            setSelectedValues(prev => ({
+                                                                ...prev,
+                                                                [statement.id_statements]: selectedValue
+                                                            }));
+                                                        }}
+                                                    />
                                                 </div>
                                             ))}
                                         </div>
@@ -78,25 +68,45 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                         </div>)}
                     {dimensionStage === 3 && (() => {
                         const examplesStatement = allDimensions[currentDimension].statements.find(statement => statement.statement_name === 'Provide Examples');
-                        console.log(examplesStatement);
+
+                        if (!examplesStatement) {
+                            return null; // No "Provide Examples" statement found
+                        }
 
                         return (
-                        <div>
-                             <h1>{allDimensions[currentDimension].dimension_name}</h1>
-                             <p>{allDimensions[currentDimension].dimension_description}</p>
-                            <p>{examplesStatement.statement_name}</p>
-                            <p>{examplesStatement.statement_description}</p>
+                            <div>
+                                <h1>{allDimensions[currentDimension].dimension_name}</h1>
+                                <p>{allDimensions[currentDimension].dimension_description}</p>
+                                <p>{examplesStatement.statement_name}</p>
+                                <p>{examplesStatement.statement_description}</p>
 
-                            <textarea type="text" placeholder="Max 1000 char." ></textarea>
-
-                        </div>
+                                <textarea
+                                    type="text"
+                                    placeholder="Max 1000 char."
+                                    value={exampleInput}
+                                    onChange={(e) => setExampleInput(e.target.value)}
+                                ></textarea>
+                            </div>
                         );
                     })()}
                     <div>
                         <button onClick={() => {
-                            dimensionStage < 3
-                                ? setDimensionStage(dimensionStage + 1)
-                                : handleDimensionChange(currentDimension + 1);
+                            if (dimensionStage === 1) {
+                                setDimensionStage(dimensionStage + 1);
+                            } else if (dimensionStage === 2) {
+                                const selectedValuesCount = Object.keys(selectedValues).length;
+                                if (selectedValuesCount === allDimensions[currentDimension].statements.length-1) {
+                                    setDimensionStage(dimensionStage + 1);
+                                } else {
+                                    alert("Please provide an answer to every statement before proceeding.");
+                                }
+                            } else if (dimensionStage === 3) {
+                                if (exampleInput !== "") {
+                                    handleDimensionChange(currentDimension + 1);
+                                } else {
+                                    alert("Please provide an answer before proceeding.");
+                                }
+                            }
                         }}>Next</button>
                     </div>
                 </>
