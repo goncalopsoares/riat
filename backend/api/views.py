@@ -268,7 +268,7 @@ class CreateScaleView(generics.CreateAPIView):
 
         return Response(ScaleSerializer(survey).data, status=status.HTTP_201_CREATED)
     
-# SUBMSSIONS
+# SUBMISSIONS
 
 class SubmissionViewSet(viewsets.ModelViewSet):
         

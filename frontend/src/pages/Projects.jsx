@@ -157,12 +157,13 @@ const Projects = () => {
 
                                 const lastSubmission = project.submissions[project.submissions.length - 1];
                                 const idUserProject = project.metadata[0].id_users_has_projects;
+                                const submissionsNumber = project.submissions.length;
 
                                 return (
                                     <tr key={project.id_projects}>
                                         <td>{project.project_name}</td>
                                         <td>{project.project_phase}</td>
-                                        <td>lorem</td>
+                                        <td>{submissionsNumber}</td>
                                         <td>lorem</td>
                                         <td>
                                             <button
