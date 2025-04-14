@@ -50,8 +50,14 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                             {allDimensions[currentDimension].statements.map(statement => {
 
                                 const scaleLabels = statement.scale.scale_labels.split(',').map(label => label.trim());
+                                
+                                // Skip the "Provide Examples" statement
+                                if (statement.statement_name === 'Provide Examples') {
+                                    return null;
+                                }
 
                                 return (
+                                   
                                     <div key={statement.id_statements}>
                                         <h4>{statement.statement_name}</h4>
                                         <p>{statement.statement_description}</p>
@@ -70,16 +76,22 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                 );
                             })}
                         </div>)}
-                    {dimensionStage === 3 && (
+                    {dimensionStage === 3 && (() => {
+                        const examplesStatement = allDimensions[currentDimension].statements.find(statement => statement.statement_name === 'Provide Examples');
+                        console.log(examplesStatement);
+
+                        return (
                         <div>
                              <h1>{allDimensions[currentDimension].dimension_name}</h1>
                              <p>{allDimensions[currentDimension].dimension_description}</p>
-                            <p>Provide examples</p>
-                            <p>Give examples of evidence in you project related to {allDimensions[currentDimension].dimension_name} staments</p>
+                            <p>{examplesStatement.statement_name}</p>
+                            <p>{examplesStatement.statement_description}</p>
 
                             <textarea type="text" placeholder="Max 1000 char." ></textarea>
 
-                        </div>)}
+                        </div>
+                        );
+                    })()}
                     <div>
                         <button onClick={() => {
                             dimensionStage < 3
