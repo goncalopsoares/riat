@@ -46,22 +46,58 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                                             {scaleLabels.map((label, index) => (
                                                 <div key={index} style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-                                                    <label>{label}</label>
-                                                    <input
-                                                        type="radio"
-                                                        name={statement.id_statements}
-                                                        value={index + 1}
-                                                        onChange={(e) => {
-                                                            const selectedValue = e.target.value;
-                                                            setSelectedValues(prev => ({
-                                                                ...prev,
-                                                                [statement.id_statements]: selectedValue
-                                                            }));
-                                                        }}
-                                                    />
+                                                    {selectedValues[`${statement.id_statements}`] !== "N/A" && (
+                                                        <>
+                                                            <label>{label}</label>
+                                                            <input
+                                                                type="radio"
+                                                                name={statement.id_statements}
+                                                                value={index + 1}
+                                                                onChange={(e) => {
+                                                                    const selectedValue = e.target.value;
+                                                                    setSelectedValues(prev => ({
+                                                                        ...prev,
+                                                                        [statement.id_statements]: selectedValue
+                                                                    }));
+                                                                }}
+                                                            />
+                                                        </>
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>
+                                        <input
+                                            type="checkbox"
+                                            name={`${statement.id_statements}_na`}
+                                            onChange={(e) => {
+                                                const isChecked = e.target.checked;
+                                                setSelectedValues(prev => {
+                                                    const updatedValues = { ...prev };
+                                                    if (isChecked) {
+                                                        updatedValues[`${statement.id_statements}`] = "N/A";
+                                                    } else {
+                                                        delete updatedValues[`${statement.id_statements}`];
+                                                    }
+                                                    return updatedValues;
+                                                });
+                                            }}
+                                        />
+                                        <label>N/A</label>
+                                        {selectedValues[`${statement.id_statements}`] === "N/A" ? (
+                                            <div>
+                                                <p>Please explain why you selected this option.</p>
+                                                <textarea
+                                                    placeholder="200 char. max"
+                                                    onChange={(e) => {
+                                                        const naValue = e.target.value;
+                                                        setSelectedValues(prev => ({
+                                                            ...prev,
+                                                            [`${statement.id_statements}_na`]: naValue
+                                                        }));
+                                                    }}
+                                                ></textarea>
+                                            </div>
+                                        ) : null}
                                     </div>
                                 );
                             })}
@@ -95,7 +131,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                 setDimensionStage(dimensionStage + 1);
                             } else if (dimensionStage === 2) {
                                 const selectedValuesCount = Object.keys(selectedValues).length;
-                                if (selectedValuesCount === allDimensions[currentDimension].statements.length-1) {
+                                if (selectedValuesCount === allDimensions[currentDimension].statements.length - 1) {
                                     handleStatementAnswerSubmit();
                                     setDimensionStage(dimensionStage + 1);
                                 } else {
