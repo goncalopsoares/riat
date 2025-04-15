@@ -258,14 +258,12 @@ const Assessment = () => {
                         submissions_id_submissions: id,
                         statements_id_statements: key,
                         value: value,
-                        answer_type: 'integer',
                     });
                 } else {
                     return api.post(`/api/answer/${id}/`, {
                         submissions_id_submissions: id,
                         statements_id_statements: key,
                         value: value,
-                        answer_type: 'integer',
                     });
                 }
             })

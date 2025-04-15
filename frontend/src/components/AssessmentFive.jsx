@@ -90,7 +90,10 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                             }}
                                         />
                                         <label>N/A</label>
-                                        {(selectedValues[`${statement.id_statements}`] === "N/A" || isNaN(selectedValues[`${statement.id_statements}`])) ? (
+                                        {(selectedValues[`${statement.id_statements}`] === "N/A" || isNaN(selectedValues[`${statement.id_statements}`])) &&
+                                            selectedValues[`${statement.id_statements}`] !== "" &&
+                                            selectedValues[`${statement.id_statements}`] !== null &&
+                                            selectedValues[`${statement.id_statements}`] !== undefined ? (
                                             <div>
                                                 <p>Please explain why you selected this option.</p>
                                                 <textarea

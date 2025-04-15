@@ -396,9 +396,7 @@ class StatementSerializer(serializers.ModelSerializer):
 # ANSWERS
 
 class AnswerBaseSerializer(serializers.ModelSerializer):
-    answer_type = serializers.ChoiceField(choices=['text', 'boolean', 'integer'], write_only=True)
     value = serializers.CharField(required=False, allow_blank=True, write_only=True)
-    is_na = serializers.BooleanField(default=False, required=False, write_only=True)
 
     class Meta:
         model = AnswersBase
@@ -407,60 +405,48 @@ class AnswerBaseSerializer(serializers.ModelSerializer):
             'statements_id_statements',
             'submissions_id_submissions',
             'answer_creation_time',
-            'answer_type',
             'value',
-            'is_na',
         ]
         read_only_fields = ['id_answers_base', 'answer_creation_time']
 
     def create(self, validated_data):
-        answer_type = validated_data.pop('answer_type')
         value = validated_data.pop('value', '')
-        is_na = validated_data.pop('is_na', None)
-
-        # Criação da resposta base
         base_answer = AnswersBase.objects.create(**validated_data)
-
-        # Criação da resposta específica
-        self._save_typed_answer(base_answer, answer_type, value, is_na)
-
+        self._save_typed_answer(base_answer, value)
         return base_answer
 
     def update(self, instance, validated_data):
-        answer_type = validated_data.pop('answer_type', None)
         value = validated_data.pop('value', '')
-        is_na = validated_data.pop('is_na', None)
-
-        # Atualiza a instância base se necessário
         for attr, val in validated_data.items():
             setattr(instance, attr, val)
         instance.save()
-
-        if answer_type:
-            self._save_typed_answer(instance, answer_type, value, is_na)
-
+        self._save_typed_answer(instance, value)
         return instance
 
-    def _save_typed_answer(self, base_answer, answer_type, value, is_na):
-        if answer_type == 'text':
-            AnswersText.objects.update_or_create(
-                answers_base_id_answers_base=base_answer,
-                defaults={'value': value}
-            )
-        elif answer_type == 'boolean':
-            AnswersBoolean.objects.update_or_create(
-                answers_base_id_answers_base=base_answer,
-                defaults={'value': bool(is_na)}  # True if is_na, else False
-            )
-            if is_na:
-                AnswersText.objects.update_or_create(
-                    answers_base_id_answers_base=base_answer,
-                    defaults={'value': value}
-                )
-        elif answer_type == 'integer':
+    def _save_typed_answer(self, base_answer, value):
+        # Tenta converter para inteiro
+        try:
+            int_value = int(value)
             AnswersInteger.objects.update_or_create(
                 answers_base_id_answers_base=base_answer,
-                defaults={'value': value}
+                defaults={'value': int_value}
             )
-        else:
-            raise serializers.ValidationError("Unsupported answer type")
+            return
+        except (ValueError, TypeError):
+            pass
+
+        # Tenta interpretar como booleano
+        if isinstance(value, bool) or str(value).lower() in ['true', 'false']:
+            bool_value = value if isinstance(value, bool) else str(value).lower() == 'true'
+            AnswersBoolean.objects.update_or_create(
+                answers_base_id_answers_base=base_answer,
+                defaults={'value': bool_value}
+            )
+            return
+
+        # Se for texto, guarda como texto
+        AnswersText.objects.update_or_create(
+            answers_base_id_answers_base=base_answer,
+            defaults={'value': value}
+        )
+
