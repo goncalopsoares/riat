@@ -229,6 +229,7 @@ const Assessment = () => {
 
     }, [id, surveyId]);
 
+    // STEP 5 - RENDER ASSESSMENT IF READY
     useEffect(() => {
         if (step === 5 && surveyId && allDimensions.length > 0) {
             setIsAssessmentReady(true);
@@ -236,12 +237,50 @@ const Assessment = () => {
 
     }, [step, surveyId, allDimensions]);
 
+
+    // STEP 5 - PROCEED TO NEXT DIMENSION
     const handleDimensionChange = (index) => {
         if (index >= 0 && index < allDimensions.length) {
             setCurrentDimension(index);
             setDimensionStage(1);
         }
-    }
+    };
+
+    // STEP 5 - REGISTER STATEMENTS ANSWERS
+    const handleStatementAnswerSubmit = async () => {
+        setLoading(true);
+
+        const requests = Object.entries(selectedValues).map(([key, value]) =>
+            api.get(`/api/answer/${id}/${key}/`).then((response) => {
+                if (response.data) {
+                    console.log(response.data);
+                    return api.patch(`/api/answer/${id}/${key}/`, {
+                        submissions_id_submissions: id,
+                        statements_id_statements: key,
+                        value: value,
+                        answer_type: 'integer',
+                    });
+                } else {
+                    return api.post(`/api/answer/${id}/`, {
+                        submissions_id_submissions: id,
+                        statements_id_statements: key,
+                        value: value,
+                        answer_type: 'integer',
+                    });
+                }
+            })
+        );
+
+        try {
+            await Promise.all(requests);
+            setSelectedValues([]);
+        } catch (error) {
+            alert('Erro ao submeter as respostas.');
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <>
@@ -258,7 +297,7 @@ const Assessment = () => {
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
             {isAssessmentReady && (
-                <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} exampleInput={exampleInput} setExampleInput={setExampleInput} />
+                <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} exampleInput={exampleInput} setExampleInput={setExampleInput} handleStatementAnswerSubmit={handleStatementAnswerSubmit} />
             )}
         </>
     );

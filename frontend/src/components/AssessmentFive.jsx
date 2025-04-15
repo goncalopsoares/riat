@@ -1,4 +1,4 @@
-const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, exampleInput, setExampleInput }) => {
+const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, exampleInput, setExampleInput, handleStatementAnswerSubmit }) => {
 
     return (
         <>
@@ -96,6 +96,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                             } else if (dimensionStage === 2) {
                                 const selectedValuesCount = Object.keys(selectedValues).length;
                                 if (selectedValuesCount === allDimensions[currentDimension].statements.length-1) {
+                                    handleStatementAnswerSubmit();
                                     setDimensionStage(dimensionStage + 1);
                                 } else {
                                     alert("Please provide an answer to every statement before proceeding.");

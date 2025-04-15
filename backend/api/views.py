@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import generics, viewsets
+from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
 from .serializers import AnswerBaseSerializer, UserRegistrationSerializer, LoginSerializer, SurveySerializer, ProjectSerializer, ScaleSerializer, DimensionSerializer, StatementSerializer, SubmissionsSerializer
 from .models import AnswersBase, Surveys, Projects, Scales, Dimensions, Statements, UsersHasProjects
 from rest_framework.permissions import  AllowAny, IsAuthenticated
@@ -20,7 +22,7 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
     permission_classes = [AllowAny] 
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.save(), status=status.HTTP_201_CREATED)
@@ -137,7 +139,7 @@ class UpdateSurveyView(UpdateAPIView):
     queryset = Surveys.objects.all()
     lookup_field = 'id_surveys'
 
-    def update(self, request, *args, **kwargs):
+    def update(self, request, pk=None):
         dimension = self.get_object()
         serializer = self.get_serializer(dimension, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -323,61 +325,67 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 # ANSWERS
 
 class AnswerViewSet(viewsets.ModelViewSet):
-    
     serializer_class = AnswerBaseSerializer
     permission_classes = [IsAuthenticated]
-    
+    queryset = AnswersBase.objects.all()
+
     def get_queryset(self):
         queryset = AnswersBase.objects.all()
-        submissions_id_submissions = self.request.query_params.get('submissions_id_submissions')
-        statements_id_statements = self.request.query_params.get('statements_id_statements')
+        submission_id = self.request.query_params.get('submissions_id_submissions')
+        statement_id = self.request.query_params.get('statements_id_statements')
 
-        if submissions_id_submissions:
-            queryset = queryset.filter(submissions_id_submissions=submissions_id_submissions)
-        if statements_id_statements:
-            queryset = queryset.filter(statements_id_statements=statements_id_statements)
+        if submission_id:
+            queryset = queryset.filter(submissions_id_submissions=submission_id)
+        if statement_id:
+            queryset = queryset.filter(statements_id_statements=statement_id)
 
         return queryset
 
     def create(self, request, *args, **kwargs):
-        submissions_id_submissions = request.data.get('submissions_id_submissions')
-        statements_id_statements = request.data.get('statements_id_statements')
-        
-        if AnswersBase.objects.filter(submissions_id_submissions=submissions_id_submissions, statements_id_statements=statements_id_statements).exists():
+        submission_id = request.data.get('submissions_id_submissions')
+        statement_id = request.data.get('statements_id_statements')
+
+        if not submission_id or not statement_id:
             return Response(
-                {"error": "Answer already exists for this submission and statement"},
+                {"error": "Both submissions_id_submissions and statements_id_statements are required"},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if not submissions_id_submissions or not statements_id_statements:
+        if AnswersBase.objects.filter(
+            submissions_id_submissions=submission_id,
+            statements_id_statements=statement_id
+        ).exists():
             return Response(
-                {"error": "Both submissions_id_submissions and statements_id_statements are required"},
+                {"error": "Answer already exists for this submission and statement"},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         serializer = self.get_serializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         answer = serializer.save()
-        return Response(AnswerBaseSerializer(answer).data, status=status.HTTP_201_CREATED)
 
-    def list(self, request, *args, **kwargs):
-        serializer = self.get_serializer(self.get_queryset(), many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(self.get_serializer(answer).data, status=status.HTTP_201_CREATED)
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
+    def get_object_by_composite_key(self, submission_id, statement_id):
+        return get_object_or_404(
+            AnswersBase,
+            submissions_id_submissions=submission_id,
+            statements_id_statements=statement_id
+        )
+
+    @action(detail=False, methods=['get'], url_path=r'(?P<submissions_id_submissions>\d+)/(?P<statements_id_statements>\d+)', url_name='retrieve_by_composite')
+    def retrieve_by_composite(self, request, submissions_id_submissions, statements_id_statements, *args, **kwargs):
+        instance = self.get_object_by_composite_key(submissions_id_submissions, statements_id_statements)
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
+    @action(detail=False, methods=['put', 'patch'], url_path=r'(?P<submissions_id_submissions>\d+)/(?P<statements_id_statements>\d+)', url_name='update_by_composite')
+    def update_by_composite(self, request, submissions_id_submissions, statements_id_statements, *args, **kwargs):
+        instance = self.get_object_by_composite_key(submissions_id_submissions, statements_id_statements)
+        partial = request.method == 'PATCH'
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        updated_answer = serializer.save()
+        return Response(self.get_serializer(updated_answer).data, status=status.HTTP_200_OK)
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response({"message": "Answer deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
