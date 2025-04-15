@@ -46,23 +46,30 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                                             {scaleLabels.map((label, index) => (
                                                 <div key={index} style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-                                                    {selectedValues[`${statement.id_statements}`] !== "N/A" && (
-                                                        <>
-                                                            <label>{label}</label>
-                                                            <input
-                                                                type="radio"
-                                                                name={statement.id_statements}
-                                                                value={index + 1}
-                                                                onChange={(e) => {
-                                                                    const selectedValue = e.target.value;
-                                                                    setSelectedValues(prev => ({
-                                                                        ...prev,
-                                                                        [statement.id_statements]: selectedValue
-                                                                    }));
-                                                                }}
-                                                            />
-                                                        </>
-                                                    )}
+                                                    {(selectedValues[`${statement.id_statements}`] === undefined ||
+                                                        selectedValues[`${statement.id_statements}`] === null ||
+                                                        selectedValues[`${statement.id_statements}`] === "" ||
+                                                        (
+                                                            selectedValues[`${statement.id_statements}`] !== "N/A" &&
+                                                            !isNaN(selectedValues[`${statement.id_statements}`])
+                                                        )
+                                                    ) && (
+                                                            <>
+                                                                <label>{label}</label>
+                                                                <input
+                                                                    type="radio"
+                                                                    name={statement.id_statements}
+                                                                    value={index + 1}
+                                                                    onChange={(e) => {
+                                                                        const selectedValue = parseInt(e.target.value, 10);
+                                                                        setSelectedValues(prev => ({
+                                                                            ...prev,
+                                                                            [statement.id_statements]: selectedValue
+                                                                        }));
+                                                                    }}
+                                                                />
+                                                            </>
+                                                        )}
                                                 </div>
                                             ))}
                                         </div>
@@ -83,7 +90,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                             }}
                                         />
                                         <label>N/A</label>
-                                        {selectedValues[`${statement.id_statements}`] === "N/A" ? (
+                                        {(selectedValues[`${statement.id_statements}`] === "N/A" || isNaN(selectedValues[`${statement.id_statements}`])) ? (
                                             <div>
                                                 <p>Please explain why you selected this option.</p>
                                                 <textarea
@@ -92,7 +99,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                                         const naValue = e.target.value;
                                                         setSelectedValues(prev => ({
                                                             ...prev,
-                                                            [`${statement.id_statements}_na`]: naValue
+                                                            [`${statement.id_statements}`]: naValue
                                                         }));
                                                     }}
                                                 ></textarea>
