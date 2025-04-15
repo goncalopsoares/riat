@@ -141,11 +141,14 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                 setDimensionStage(dimensionStage + 1);
                             } else if (dimensionStage === 2) {
                                 const selectedValuesCount = Object.keys(selectedValues).length;
-                                if (selectedValuesCount === allDimensions[currentDimension].statements.length - 1) {
+                                if (
+                                    selectedValuesCount === allDimensions[currentDimension].statements.length - 1 &&
+                                    !Object.values(selectedValues).includes("N/A")
+                                ) {
                                     handleStatementAnswerSubmit();
                                     setDimensionStage(dimensionStage + 1);
                                 } else {
-                                    alert("Please provide an answer to every statement before proceeding.");
+                                    alert("Please provide an answer to every statement and ensure none of the answers is 'N/A' before proceeding.");
                                 }
                             } else if (dimensionStage === 3) {
                                 if (exampleInput !== "") {
