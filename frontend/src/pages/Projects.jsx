@@ -186,11 +186,21 @@ const Projects = () => {
                                             {surveySelector === project.id_projects ? (
                                                 <form onSubmit={(e) => handleStartNewAssessment(e, idUserProject)}>
                                                     <select value={selectedSurvey} onChange={handleSelectSurvey}>
-                                                        {allSurveys.map((survey) => (
-                                                            <option key={survey.id_surveys} value={survey.id_surveys}>
-                                                                {survey.survey_name}
-                                                            </option>
-                                                        ))}
+                                                        {allSurveys.map((survey) => {
+                                                            // Extract phase number from survey_name
+                                                            const surveyPhase = parseInt(survey.survey_name.match(/\d+/)?.[0], 10); 
+                                                            console.log(surveyPhase);
+                                                            return (
+                                                                <option
+                                                                    key={survey.id_surveys}
+                                                                    value={survey.id_surveys}
+                                                                    // Disable if project phase is less than survey phase
+                                                                    disabled={project.project_phase < surveyPhase} 
+                                                                >
+                                                                    {survey.survey_name}
+                                                                </option>
+                                                            );
+                                                        })}
                                                     </select>
                                                     <button type="submit">Start assessment</button>
                                                 </form>
