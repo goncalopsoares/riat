@@ -70,7 +70,7 @@ class AnswersBase(models.Model):
     id_answers_base = models.AutoField(primary_key=True)
     statements_id_statements = models.ForeignKey('Statements', models.DO_NOTHING, db_column='statements_id_statements')
     submissions_id_submissions = models.ForeignKey('Submissions', models.DO_NOTHING, db_column='submissions_id_submissions')
-    answer_creation_time = models.DateTimeField()
+    answer_creation_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False

@@ -127,10 +127,14 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                 <p>{examplesStatement.statement_description}</p>
 
                                 <textarea
-                                    type="text"
-                                    placeholder="Max 1000 char."
-                                    value={exampleInput}
-                                    onChange={(e) => setExampleInput(e.target.value)}
+                                    placeholder="1000 char. max"
+                                    onChange={(e) => {
+                                        const exampleInput = e.target.value;
+                                        setSelectedValues(prev => ({
+                                            ...prev,
+                                            [`${examplesStatement.id_statements}`]: exampleInput
+                                        }));
+                                    }}
                                 ></textarea>
                             </div>
                         );
@@ -151,7 +155,8 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                     alert("Please provide an answer to every statement and ensure none of the answers is 'N/A' before proceeding.");
                                 }
                             } else if (dimensionStage === 3) {
-                                if (exampleInput !== "") {
+                                if (Object.keys(selectedValues).length > 0) {
+                                    handleStatementAnswerSubmit();
                                     handleDimensionChange(currentDimension + 1);
                                 } else {
                                     alert("Please provide an answer before proceeding.");

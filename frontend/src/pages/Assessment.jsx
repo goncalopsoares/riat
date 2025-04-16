@@ -251,34 +251,40 @@ const Assessment = () => {
         setLoading(true);
 
         const requests = Object.entries(selectedValues).map(([key, value]) =>
-            api.get(`/api/answer/${id}/${key}/`).then((response) => {
-                if (response.data) {
-                    console.log(response.data);
+            api.get(`/api/answer/${id}/${key}/`)
+                .then(() => {
+                    // Se encontrou a resposta, faz PATCH
                     return api.patch(`/api/answer/${id}/${key}/`, {
                         submissions_id_submissions: id,
                         statements_id_statements: key,
                         value: value,
                     });
-                } else {
-                    return api.post(`/api/answer/${id}/`, {
-                        submissions_id_submissions: id,
-                        statements_id_statements: key,
-                        value: value,
-                    });
-                }
-            })
+                })
+                .catch((error) => {
+                    // Se não encontrou (provavelmente 404), faz POST
+                    if (error.response && error.response.status === 404) {
+                        return api.post(`/api/answer/${id}/`, {
+                            submissions_id_submissions: id,
+                            statements_id_statements: key,
+                            value: value,
+                        });
+                    } else {
+                        console.error(`Erro ao obter a resposta para a statement ${key}:`, error);
+                        throw error;
+                    }
+                })
         );
 
         try {
-            await Promise.all(requests);
-            setSelectedValues([]);
+            await Promise.all(requests); // Espera todas as requisições terminarem
+            setSelectedValues({});       // Limpa os valores
         } catch (error) {
-            alert('Erro ao submeter as respostas.');
-            console.error(error);
+            alert('Erro ao submeter as respostas. Por favor, tenta novamente.');
         } finally {
             setLoading(false);
         }
     };
+
 
     return (
         <>
