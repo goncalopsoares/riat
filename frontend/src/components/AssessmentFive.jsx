@@ -152,7 +152,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                     handleStatementAnswerSubmit();
                                     setDimensionStage(dimensionStage + 1);
                                 } else {
-                                    alert("Please provide an answer to every statement and ensure none of the answers is 'N/A' before proceeding.");
+                                    alert("Please provide an answer to every statement and to write an explanation for N/A options.");
                                 }
                             } else if (dimensionStage === 3) {
                                 if (Object.keys(selectedValues).length > 0) {

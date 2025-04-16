@@ -32,7 +32,6 @@ const Assessment = () => {
 
     const navigate = useNavigate();
 
-    console.log(selectedValues);
 
     //GET SUBMISSION DATA
 
@@ -198,22 +197,56 @@ const Assessment = () => {
                 setLoading(true);
 
                 try {
-                    const response = await api.get(`/api/dimension/get/${surveyId}/`);
-                    const dimensions = response.data;
+                    const responseAllSurveys = await api.get(`/api/survey/get/`);
+                    const allSurveys = responseAllSurveys.data;
 
-                    const dimensionsWithStatements = await Promise.all(
-                        dimensions.map(async (dimension) => {
-                            const statementsResponse = await api.get(`/api/statement/get/${dimension.id_dimensions}/`);
+                    const responseCurrentSurvey = await api.get(`/api/survey/get/${surveyId}/`);
+                    const survey = responseCurrentSurvey.data;
 
-                            return {
-                                ...dimension,
-                                statements: statementsResponse.data,
-                            };
+                    const surveyPhase = parseInt(survey[0].survey_name.match(/\d+/)?.[0], 10);
+
+                    // 1. Filter surveys by phase and sort them
+                    const surveysToLoad = allSurveys
+                        .filter(s => {
+                            const match = s.survey_name.match(/\d+/);
+                            if (!match) return false;
+                            const phase = parseInt(match[0], 10);
+                            return phase <= surveyPhase;
                         })
+                        .sort((a, b) => {
+                            const phaseA = parseInt(a.survey_name.match(/\d+/)?.[0], 10);
+                            const phaseB = parseInt(b.survey_name.match(/\d+/)?.[0], 10);
+                            return phaseA - phaseB;
+                        });
+
+                    // 2. Get dimensions for each survey, first phase first, then second and so on
+                    const dimensionResponses = await Promise.all(
+                        surveysToLoad.map(s =>
+                            api.get(`/api/dimension/get/${s.id_surveys}/`)
+                        )
                     );
+
+                    // 3. Get statements for each dimension and sort the dimensions by dimension_order
+                    const dimensionsWithStatements = (
+                        await Promise.all(
+                            dimensionResponses.map(async res => {
+                                const dims = res.data.sort((a, b) => a.dimension_order - b.dimension_order);
+                                return await Promise.all(
+                                    dims.map(async dimension => {
+                                        const statementsRes = await api.get(`/api/statement/get/${dimension.id_dimensions}/`);
+                                        return {
+                                            ...dimension,
+                                            statements: statementsRes.data
+                                        };
+                                    })
+                                );
+                            })
+                        )
+                    ).flat(); // 4. Flatten the array of arrays
 
                     setAllDimensions(dimensionsWithStatements);
                     setDimensionsNumber(dimensionsWithStatements.length);
+
 
                 } catch (error) {
                     alert(error);
