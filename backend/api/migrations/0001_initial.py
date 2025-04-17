@@ -225,7 +225,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id_submissions', models.AutoField(primary_key=True, serialize=False)),
                 ('submission_starting_time', models.DateTimeField()),
-                ('submission_ending_time', models.DateTimeField()),
+                ('submission_ending_time', models.DateTimeField(null=True)),
             ],
             options={
                 'db_table': 'submissions',

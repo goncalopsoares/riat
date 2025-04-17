@@ -57,7 +57,7 @@ class Submissions(models.Model):
     users_has_projects_id_users_has_projects = models.ForeignKey('UsersHasProjects', models.DO_NOTHING, db_column='users_has_projects_id_users_has_projects')
     submission_state=models.IntegerField()
     submission_starting_time = models.DateTimeField()
-    submission_ending_time = models.DateTimeField()
+    submission_ending_time = models.DateTimeField(null=True)
 
     class Meta:
         managed = False
@@ -69,17 +69,19 @@ class Submissions(models.Model):
 class AnswersBase(models.Model):
     id_answers_base = models.AutoField(primary_key=True)
     statements_id_statements = models.ForeignKey('Statements', models.DO_NOTHING, db_column='statements_id_statements')
-    submissions_id_submissions = models.ForeignKey('Submissions', models.DO_NOTHING, db_column='responses_id_responses')
-    answer_creation_time = models.DateTimeField()
+    submissions_id_submissions = models.ForeignKey('Submissions', models.DO_NOTHING, db_column='submissions_id_submissions')
+    answer_creation_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
         db_table = 'answers_base'
+        unique_together = ('submissions_id_submissions', 'statements_id_statements')
+
 
 
 class AnswersBoolean(models.Model):
     answers_base_id_answers_base = models.OneToOneField(AnswersBase, models.DO_NOTHING, db_column='answers_base_id_answers_base', primary_key=True)
-    answer_boolean_value = models.IntegerField()
+    value = models.IntegerField()
 
     class Meta:
         managed = False
@@ -88,7 +90,7 @@ class AnswersBoolean(models.Model):
 
 class AnswersInteger(models.Model):
     answers_base_id_answers_base = models.OneToOneField(AnswersBase, models.DO_NOTHING, db_column='answers_base_id_answers_base', primary_key=True)
-    answer_integer_value = models.IntegerField()
+    value = models.IntegerField()
 
     class Meta:
         managed = False
@@ -97,7 +99,7 @@ class AnswersInteger(models.Model):
 
 class AnswersSelect(models.Model):
     answers_base_id_answers_base = models.OneToOneField(AnswersBase, models.DO_NOTHING, db_column='answers_base_id_answers_base', primary_key=True)
-    answer_select_value = models.CharField(max_length=100)
+    value = models.CharField(max_length=100)
 
     class Meta:
         managed = False
@@ -106,7 +108,7 @@ class AnswersSelect(models.Model):
 
 class AnswersText(models.Model):
     answers_base_id_answers_base = models.OneToOneField(AnswersBase, models.DO_NOTHING, db_column='answers_base_id_answers_base', primary_key=True)
-    answer_text_value = models.TextField()
+    value = models.TextField()
 
     class Meta:
         managed = False

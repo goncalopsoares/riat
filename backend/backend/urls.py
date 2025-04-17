@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, GetProjectView
+from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, GetProjectView, SubmissionViewSet, AnswerViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView  
 
 urlpatterns = [
@@ -31,5 +31,27 @@ urlpatterns = [
     path('api/project/get/<int:users_id_users>/', GetProjectView.as_view(), name='view_project'),
     path('api/project/create/', CreateProjectView.as_view(), name='create_project'),
     path('api/project/update/<int:id_projects>/', UpdateProjectPhaseView.as_view(), name="update-project-phase"),
+    #SUBMISSIONS
+    path('api/submission/', SubmissionViewSet.as_view({'get': 'list', 'post': 'create'}), name='submission-list'),
+    path('api/submission/<int:id_submissions>/', 
+         SubmissionViewSet.as_view({
+             'get': 'retrieve',
+             'put': 'update',
+             'patch': 'update',
+             'delete': 'destroy'
+         }), 
+         name='submission-detail'),
+    #ANSWERS
+    path('api/answer/<int:submissions_id_submissions>/', AnswerViewSet.as_view({ 'post': 'create'}), name='answer-list'),
+    path(
+    'api/answer/<int:submissions_id_submissions>/<int:statements_id_statements>/',
+    AnswerViewSet.as_view({
+        'get': 'retrieve_by_composite',
+        'put': 'update_by_composite',
+        'patch': 'update_by_composite',
+    }),
+    name='answer-composite'
+),
 ]
+
  

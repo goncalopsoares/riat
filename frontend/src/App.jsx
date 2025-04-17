@@ -38,13 +38,20 @@ function App() {
               <Home />
             </ProtectedRoute>}
           />
-          <Route path='/assessment/*' element={
+          <Route path='/assessment/' element={
             <ProtectedRoute>
               <ProjectProvider>
                 <Assessment />
               </ProjectProvider>
             </ProtectedRoute>
           } />
+          <Route path='/assessment/:id'
+            element={<ProtectedRoute>
+              <ProjectProvider>
+                <Assessment />
+              </ProjectProvider>
+            </ProtectedRoute>}
+          />
           <Route path='/surveytools'
             element={<ProtectedRoute>
               <SurveyTools />

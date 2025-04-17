@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import CustomUser, Dimensions, Projects, Scales, Statements, Surveys, Users, UsersHasProjects
+from api.models import AnswersBase, AnswersBoolean, AnswersInteger, AnswersSelect, AnswersText, CustomUser, Dimensions, Projects, Scales, Statements, Surveys, Users, UsersHasProjects
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.utils.timezone import now
@@ -65,6 +65,7 @@ class UserHasProjectsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersHasProjects
         fields = [
+            'id_users_has_projects',
             'users_has_projects_role',
             'users_has_projects_function',
         ]
@@ -215,20 +216,25 @@ class SubmissionsSerializer(serializers.ModelSerializer):
             'users_has_projects_id_users_has_projects',
             'submission_state',
             'submission_starting_time',
-            'submission_ending_time'
+            'submission_ending_time',
         ]
         extra_kwargs = {
             'submission_starting_time': {'read_only': True},
+            'submission_ending_time': {'read_only': True},
         }
+        defaults = {
+            'submission_starting_time': now(),
+        }
+      
 
     def create(self, validated_data):
-        # Define o tempo de início automaticamente no momento da criação
+
         validated_data['submission_starting_time'] = now()
         validated_data['submission_state'] = 1
         return Submissions.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        # Apenas permite atualizar o ending_time (exemplo típico)
+  
         instance.submission_ending_time = validated_data.get('submission_ending_time', instance.submission_ending_time)
         instance.submission_state = validated_data.get('submission_state', instance.submission_state)
         instance.save()
@@ -386,3 +392,61 @@ class StatementSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+# ANSWERS
+
+class AnswerBaseSerializer(serializers.ModelSerializer):
+    value = serializers.CharField(required=False, allow_blank=True, write_only=True)
+
+    class Meta:
+        model = AnswersBase
+        fields = [
+            'id_answers_base',
+            'statements_id_statements',
+            'submissions_id_submissions',
+            'answer_creation_time',
+            'value',
+        ]
+        read_only_fields = ['id_answers_base', 'answer_creation_time']
+
+    def create(self, validated_data):
+        value = validated_data.pop('value', '')
+        base_answer = AnswersBase.objects.create(**validated_data)
+        self._save_typed_answer(base_answer, value)
+        return base_answer
+
+    def update(self, instance, validated_data):
+        value = validated_data.pop('value', '')
+        for attr, val in validated_data.items():
+            setattr(instance, attr, val)
+        instance.save()
+        self._save_typed_answer(instance, value)
+        return instance
+
+    def _save_typed_answer(self, base_answer, value):
+        # Tenta converter para inteiro
+        try:
+            int_value = int(value)
+            AnswersInteger.objects.update_or_create(
+                answers_base_id_answers_base=base_answer,
+                defaults={'value': int_value}
+            )
+            return
+        except (ValueError, TypeError):
+            pass
+
+        # Tenta interpretar como booleano
+        if isinstance(value, bool) or str(value).lower() in ['true', 'false']:
+            bool_value = value if isinstance(value, bool) else str(value).lower() == 'true'
+            AnswersBoolean.objects.update_or_create(
+                answers_base_id_answers_base=base_answer,
+                defaults={'value': bool_value}
+            )
+            return
+
+        # Se for texto, guarda como texto
+        AnswersText.objects.update_or_create(
+            answers_base_id_answers_base=base_answer,
+            defaults={'value': value}
+        )
+

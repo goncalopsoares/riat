@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { useProject } from '../contexts/ProjectContext';
 import { useNavigate } from 'react-router-dom';
@@ -10,13 +10,18 @@ const Projects = () => {
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
     const [allProjects, setAllProjects] = useState([]);
+    const [allSurveys, setAllSurveys] = useState([]);
+    const [selectedSurvey, setSelectedSurvey] = useState(1);
+    const [surveySelector, setSurveySelector] = useState(false);
 
     const navigate = useNavigate();
 
     const user = useUser();
     const id_user = user.user.id;
 
-    const { setProjectId, setStep } = useProject();  
+    const { setProjectId, setStep } = useProject();
+
+    //GET USER'S PROJECTS
 
     useEffect(() => {
         const getAllProjects = async () => {
@@ -41,24 +46,89 @@ const Projects = () => {
 
     }, [success, error]);
 
+    //GET AVAILABLE SURVEYS
 
-    const navigateToAssessement = (id_project) => {
-        console.log(id_project);
+    useEffect(() => {
 
-        if (!id_project) {
-            navigate('/assessment');
+        const getAllSurveys = async () => {
+            setLoading(true);
+            try {
+                const response = await api.get(`/api/survey/get/`);
+                console.log(response.data);
+                setAllSurveys(response.data);
+
+            } catch (error) {
+                alert(error);
+                console.error(error);
+
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getAllSurveys();
+
+    }, []);
+
+    //RESUME ASSESSMENT OR SHOW SELECTOR FOR NEW ASSESSMENT
+
+    const navigateToAssessement = (e, idProjet, lastSubmission) => {
+
+        if (!lastSubmission) {
+
+            e.currentTarget.disabled = true;
+
+            setSurveySelector(idProjet);
+
             return;
         }
 
-        setProjectId(id_project);
+        setProjectId(idProjet);
         setStep(5);
 
         setTimeout(() => {
-            navigate('/assessment');
+            navigate('/assessment/' + lastSubmission);
         }, 0);
     };
 
+    //SELECT SURVEY
 
+    const handleSelectSurvey = (e) => {
+        setSelectedSurvey(e.target.value);
+    }
+
+    //START NEW ASSESSMENT
+
+    const handleStartNewAssessment = async (e, idUserProject) => {
+
+        e.preventDefault();
+
+        setLoading(true);
+
+        try {
+            const response = await api.post(`/api/submission/`, {
+                surveys_id_surveys: selectedSurvey,
+                users_has_projects_id_users_has_projects: idUserProject,
+                submission_state: 1,
+            });
+
+            setSuccess('Started new assessment successfully');
+
+            const lastSubmission = response.data.id_submissions;
+
+            setTimeout(() => {
+                navigateToAssessement(e, idUserProject, lastSubmission);
+            }, 0);
+
+        } catch (error) {
+            setError('Error starting new assessment');
+            console.error(error);
+
+        } finally {
+            setLoading(false);
+        }
+
+    };
 
 
     return (
@@ -86,18 +156,22 @@ const Projects = () => {
                             {allProjects.map(project => {
 
                                 const lastSubmission = project.submissions[project.submissions.length - 1];
+                                const idUserProject = project.metadata[0].id_users_has_projects;
+                                const submissionsNumber = project.submissions.length;
 
                                 return (
                                     <tr key={project.id_projects}>
                                         <td>{project.project_name}</td>
                                         <td>{project.project_phase}</td>
-                                        <td>lorem</td>
+                                        <td>{submissionsNumber}</td>
                                         <td>lorem</td>
                                         <td>
                                             <button
-                                                onClick={() => navigateToAssessement(
+                                                onClick={(e) => navigateToAssessement(
+                                                    e,
+                                                    project.id_projects,
                                                     lastSubmission && lastSubmission.submission_state === 1
-                                                        ? project.id_projects
+                                                        ? lastSubmission.id_submissions
                                                         : null
                                                 )}
                                             >
@@ -107,6 +181,30 @@ const Projects = () => {
                                                     <p>New Assessment</p>
                                                 )}
                                             </button>
+                                        </td>
+                                        <td>
+                                            {surveySelector === project.id_projects ? (
+                                                <form onSubmit={(e) => handleStartNewAssessment(e, idUserProject)}>
+                                                    <select value={selectedSurvey} onChange={handleSelectSurvey}>
+                                                        {allSurveys.map((survey) => {
+                                                            // Extract phase number from survey_name
+                                                            const surveyPhase = parseInt(survey.survey_name.match(/\d+/)?.[0], 10); 
+                                                            console.log(surveyPhase);
+                                                            return (
+                                                                <option
+                                                                    key={survey.id_surveys}
+                                                                    value={survey.id_surveys}
+                                                                    // Disable if project phase is less than survey phase
+                                                                    disabled={project.project_phase < surveyPhase} 
+                                                                >
+                                                                    {survey.survey_name}
+                                                                </option>
+                                                            );
+                                                        })}
+                                                    </select>
+                                                    <button type="submit">Start assessment</button>
+                                                </form>
+                                            ) : null}
                                         </td>
                                     </tr>
                                 );
