@@ -167,21 +167,32 @@ const Assessment = () => {
         setLoading(true)
         e.preventDefault();
 
-        try {
-            await api.patch(`/api/project/update/${projectId}/`, {
-                project_phase: projectPhase,
-            });
+        console.log('Project Phase:', projectPhase);
 
-            setSuccess('Fase selecionada com sucesso');
+        if (projectPhase === 1) {
+            setLoading(false);
+            setSuccess('Phase selected successfully');
             setStep(5);
             navigate('/projects/');
+            return;
+        } else {
 
-        } catch (error) {
-            alert(error);
-            console.error(error);
+            try {
+                await api.patch(`/api/project/update/${projectId}/`, {
+                    project_phase: projectPhase,
+                });
 
-        } finally {
-            setLoading(false);
+                setSuccess('Phase selected successfully');
+                setStep(5);
+                navigate('/projects/');
+
+            } catch (error) {
+                alert(error);
+                console.error(error);
+
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
@@ -286,7 +297,7 @@ const Assessment = () => {
         const requests = Object.entries(selectedValues).map(([key, value]) =>
             api.get(`/api/answer/${id}/${key}/`)
                 .then(() => {
-                    // Se encontrou a resposta, faz PATCH
+
                     return api.patch(`/api/answer/${id}/${key}/`, {
                         submissions_id_submissions: id,
                         statements_id_statements: key,
@@ -294,7 +305,7 @@ const Assessment = () => {
                     });
                 })
                 .catch((error) => {
-                    // Se não encontrou (provavelmente 404), faz POST
+
                     if (error.response && error.response.status === 404) {
                         return api.post(`/api/answer/${id}/`, {
                             submissions_id_submissions: id,
@@ -309,10 +320,10 @@ const Assessment = () => {
         );
 
         try {
-            await Promise.all(requests); // Espera todas as requisições terminarem
-            setSelectedValues({});       // Limpa os valores
+            await Promise.all(requests);
+            setSelectedValues({});
         } catch (error) {
-            alert('Erro ao submeter as respostas. Por favor, tenta novamente.');
+            alert('Error submitting answers. Please try again.');
         } finally {
             setLoading(false);
         }

@@ -5,6 +5,8 @@ const SelectPhase = () => {
 
     const { setProjectPhase } = useProject();
 
+    setProjectPhase(1); // Default value
+
     const [selectedValue, setSelectedValue] = useState(1);
 
     const handleChange = (e) => {
