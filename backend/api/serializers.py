@@ -234,8 +234,7 @@ class SubmissionsSerializer(serializers.ModelSerializer):
         return Submissions.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-  
-        instance.submission_ending_time = validated_data.get('submission_ending_time', instance.submission_ending_time)
+        instance.submission_ending_time = now()
         instance.submission_state = validated_data.get('submission_state', instance.submission_state)
         instance.save()
         return instance

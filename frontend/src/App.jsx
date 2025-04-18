@@ -13,7 +13,7 @@ import { ProjectProvider } from './contexts/ProjectContext';
 import SurveyAdmin from './pages/SurveyAdmin';
 import Projects from './pages/Projects';
 import Assessment from './pages/Assessment';
-
+import Report from './pages/Report';
 
 const Logout = () => {
   localStorage.clear();
@@ -49,6 +49,13 @@ function App() {
             element={<ProtectedRoute>
               <ProjectProvider>
                 <Assessment />
+              </ProjectProvider>
+            </ProtectedRoute>}
+          />
+          <Route path='/report/:id'
+            element={<ProtectedRoute>
+              <ProjectProvider>
+                <Report />
               </ProjectProvider>
             </ProtectedRoute>}
           />

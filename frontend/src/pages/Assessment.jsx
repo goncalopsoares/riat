@@ -354,7 +354,10 @@ const Assessment = () => {
                 try {
                     const response = await api.get(`/api/answer/${id}/`);
                     const existingAnswers = response.data.reduce((acc, answer) => {
-                        acc[answer.statements_id_statements] = answer.value;
+                        acc[answer.statements_id_statements] = {
+                            value: answer.value,
+                            answer_creation_time: answer.answer_creation_time
+                        };
                         return acc;
                     }, {});
                     setExistingAnswers(existingAnswers);
@@ -373,7 +376,13 @@ const Assessment = () => {
     useEffect(() => {
         if (existingAnswers.length === 0 || allDimensions.length === 0 || firstRender.current === false) return;
 
-        const lastAnsweredStatementId = Math.max(...Object.keys(existingAnswers).map(Number));
+        const lastAnsweredStatementId = Object.keys(existingAnswers)
+            .map(key => ({
+                id: Number(key),
+                creationTime: existingAnswers[key].answer_creation_time
+            }))
+            .sort((a, b) => new Date(b.creationTime) - new Date(a.creationTime))[0]?.id;
+
         const dimensionWithLastAnswer = allDimensions.find(dimension =>
             dimension.statements.some(statement => statement.id_statements === lastAnsweredStatementId)
         );
@@ -401,7 +410,7 @@ const Assessment = () => {
                     statement.id_statements.toString() === key && statement.statement_name !== 'Provide Examples'
                 ))
                 .reduce((obj, key) => {
-                    obj[key] = existingAnswers[key];
+                    obj[key] = existingAnswers[key].value; // Extract only the value
                     return obj;
                 }, {});
             if (Object.keys(filteredAnswers).length !== 0 && loading === false) {
@@ -412,15 +421,49 @@ const Assessment = () => {
 
             const examplesStatement = currentDimensionStatements.find(statement => statement.statement_name === 'Provide Examples');
             if (examplesStatement) {
-                const examplesAnswer = { [examplesStatement.id_statements]: existingAnswers[examplesStatement.id_statements] || "" };
-                if (examplesAnswer[examplesStatement.id_statements] !== "" && loading === false) {
-                    setSelectedValues(examplesAnswer);
+
+                const examplesAnswer = { [examplesStatement.id_statements]: existingAnswers[examplesStatement.id_statements].value || "" };
+          
+                if (examplesAnswer !== "" && loading === false) {
+
+                    const value = Object.values(examplesAnswer)[0];
+
+                    setSelectedValues(value);
+
                 }
             }
         }
 
     }, [currentDimension, dimensionStage, loading]);
 
+    useEffect(() => {
+        console.log("selectedValues:", selectedValues);
+    }
+        , [selectedValues]);
+
+
+    // STEP 5 - SUBMIT ASSESSMENT
+
+    const handleAssessmentSubmit = async (e) => {
+
+        e.preventDefault();
+
+        setLoading(true);
+
+        try {
+            const response = await api.patch(`/api/submission/${id}/`, {
+                submission_state: 2,
+            });
+
+            navigate(`/report/${id}/`);
+
+        } catch (error) {
+            alert(error);
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <>
@@ -437,7 +480,7 @@ const Assessment = () => {
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
             {isAssessmentReady && (
-                <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} />
+                <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} />
             )}
         </>
     );

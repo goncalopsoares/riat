@@ -1,4 +1,4 @@
-const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, existingAnswers }) => {
+const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, existingAnswers, handleAssessmentSubmit }) => {
 
     return (
         <>
@@ -101,7 +101,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                                 <textarea
                                                     placeholder="200 char. max"
                                                     maxLength={200}
-                                                    defaultValue={isNaN(existingAnswers[`${statement.id_statements}`]) ? existingAnswers[`${statement.id_statements}`] : ""}
+                                                    defaultValue={selectedValues[`${statement.id_statements}`] === 'N/A' ? "" : selectedValues[`${statement.id_statements}`]}
                                                     onChange={(e) => {
                                                         const naValue = e.target.value;
                                                         setSelectedValues(prev => ({
@@ -133,7 +133,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                 <textarea
                                     placeholder="1000 char. max"
                                     maxLength={1000}
-                                    defaultValue={existingAnswers[`${examplesStatement.id_statements}`]}
+                                    defaultValue={selectedValues}
                                     onChange={(e) => {
                                         const exampleInput = e.target.value;
                                         setSelectedValues(prev => ({
@@ -161,29 +161,47 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                 }
                             }}>Back</button>)
                         }
-                        <button onClick={() => {
-                            if (dimensionStage === 1) {
-                                setDimensionStage(dimensionStage + 1);
-                            } else if (dimensionStage === 2) {
-                                const selectedValuesCount = Object.keys(selectedValues).length;
-                                if (
-                                    selectedValuesCount === allDimensions[currentDimension].statements.length - 1 &&
-                                    !Object.values(selectedValues).includes("N/A")
-                                ) {
-                                    handleStatementAnswerSubmit();
-                                    setDimensionStage(dimensionStage + 1);
-                                } else {
-                                    alert("Please provide an answer to every statement and to write an explanation for N/A options.");
-                                }
-                            } else if (dimensionStage === 3) {
+                        {currentDimension === dimensionsNumber - 1 && dimensionStage === 3 ? (
+
+                            <button onClick={(e) => {
+
                                 if (Object.keys(selectedValues).length > 0) {
+
                                     handleStatementAnswerSubmit();
-                                    handleDimensionChange(currentDimension + 1);
+
+                                    handleAssessmentSubmit(e);
+                                    
                                 } else {
                                     alert("Please provide an answer before proceeding.");
                                 }
-                            }
-                        }}>Next</button>
+
+                            }}>Submit Assessment</button>
+
+                        ) : (
+                            <button onClick={() => {
+                                if (dimensionStage === 1) {
+                                    setDimensionStage(dimensionStage + 1);
+                                } else if (dimensionStage === 2) {
+                                    const selectedValuesCount = Object.keys(selectedValues).length;
+                                    if (
+                                        selectedValuesCount === allDimensions[currentDimension].statements.length - 1 &&
+                                        !Object.values(selectedValues).includes("N/A")
+                                    ) {
+                                        handleStatementAnswerSubmit();
+                                        setDimensionStage(dimensionStage + 1);
+                                    } else {
+                                        alert("Please provide an answer to every statement and to write an explanation for N/A options.");
+                                    }
+                                } else if (dimensionStage === 3) {
+                                    if (Object.keys(selectedValues).length > 0) {
+                                        handleStatementAnswerSubmit();
+                                        handleDimensionChange(currentDimension + 1);
+                                    } else {
+                                        alert("Please provide an answer before proceeding.");
+                                    }
+                                }
+                            }}>Next</button>)}
+
                     </div>
                 </>
             )
