@@ -348,12 +348,12 @@ const Assessment = () => {
             };
             getExistingAnswers();
         }
-    }, [id]);
+    }, [id, currentDimension]);
 
 
     // STEP 5 - SET CURRENT DIMENSION BASED ON LAST ANSWERED STATEMENT
     useEffect(() => {
-        if (existingAnswers.length === 0 || allDimensions.length === 0) return;
+        if (existingAnswers.length === 0 || allDimensions.length === 0 || firstRender.current === false) return;
 
         const lastAnsweredStatementId = Math.max(...Object.keys(existingAnswers).map(Number));
         const dimensionWithLastAnswer = allDimensions.find(dimension =>
@@ -364,6 +364,9 @@ const Assessment = () => {
             const dimensionIndex = allDimensions.indexOf(dimensionWithLastAnswer);
             setCurrentDimension(dimensionIndex);
         }
+
+        firstRender.current = false; // Ensure this effect runs only once after existingAnswers is set
+        
     }, [existingAnswers, allDimensions]);
 
 
