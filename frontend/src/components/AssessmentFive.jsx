@@ -147,6 +147,16 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                     <div>
                         <button onClick={() => {
                             if (dimensionStage === 1) {
+                                handleDimensionChange(currentDimension - 1);
+                                setDimensionStage(3);
+                            } else if (dimensionStage === 2) {
+                                setDimensionStage(dimensionStage - 1);
+                            } else if (dimensionStage === 3) {
+                                setDimensionStage(dimensionStage - 1);
+                            }
+                        }}>Back</button>
+                        <button onClick={() => {
+                            if (dimensionStage === 1) {
                                 setDimensionStage(dimensionStage + 1);
                             } else if (dimensionStage === 2) {
                                 const selectedValuesCount = Object.keys(selectedValues).length;

@@ -169,8 +169,6 @@ const Assessment = () => {
         setLoading(true)
         e.preventDefault();
 
-        console.log('Project Phase:', projectPhase);
-
         if (projectPhase === 1) {
             setLoading(false);
             setSuccess('Phase selected successfully');
@@ -353,6 +351,22 @@ const Assessment = () => {
     }, [id]);
 
 
+    // STEP 5 - SET CURRENT DIMENSION BASED ON LAST ANSWERED STATEMENT
+    useEffect(() => {
+        if (existingAnswers.length === 0 || allDimensions.length === 0) return;
+
+        const lastAnsweredStatementId = Math.max(...Object.keys(existingAnswers).map(Number));
+        const dimensionWithLastAnswer = allDimensions.find(dimension =>
+            dimension.statements.some(statement => statement.id_statements === lastAnsweredStatementId)
+        );
+
+        if (dimensionWithLastAnswer) {
+            const dimensionIndex = allDimensions.indexOf(dimensionWithLastAnswer);
+            setCurrentDimension(dimensionIndex);
+        }
+    }, [existingAnswers, allDimensions]);
+
+
     // STEP 5 - SET SELECTED VALUES BASED ON EXISTING ANSWERS
     useEffect(() => {
 
@@ -386,7 +400,8 @@ const Assessment = () => {
 
     }, [currentDimension, dimensionStage, loading]);
 
-    console.log('Selected Values:', selectedValues);
+
+    console.log("Current Dimension:", currentDimension, "dimensionStage:", dimensionStage, "selectedValues:", selectedValues, "existingAnswers:", existingAnswers);
 
     return (
         <>
