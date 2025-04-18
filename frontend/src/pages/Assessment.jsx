@@ -4,7 +4,7 @@ import AssessmentThree from "../components/AssessmentThree";
 import AssessmentFour from "../components/AssessmentFour";
 import AssessmentFive from "../components/AssessmentFive";
 import { useProject } from "../contexts/ProjectContext";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, use } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from '../api';
 
@@ -301,6 +301,8 @@ const Assessment = () => {
 
                     if (isNaN(value)) {
 
+                        console.log(`Answer exists for statement ${key}. Creating...`);
+
                         await api.delete(`/api/answer/${id}/${key}/`);
 
                         return api.post(`/api/answer/${id}/`, {
@@ -436,12 +438,6 @@ const Assessment = () => {
 
     }, [currentDimension, dimensionStage, loading]);
 
-    useEffect(() => {
-        console.log("selectedValues:", selectedValues);
-    }
-        , [selectedValues]);
-
-
     // STEP 5 - SUBMIT ASSESSMENT
 
     const handleAssessmentSubmit = async (e) => {
@@ -464,6 +460,10 @@ const Assessment = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        console.log("selectedValues", selectedValues);
+    }, [selectedValues]);
 
     return (
         <>

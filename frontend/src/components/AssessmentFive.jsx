@@ -77,7 +77,12 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                         <input
                                             type="checkbox"
                                             name={`${statement.id_statements}_na`}
-                                            checked={selectedValues[`${statement.id_statements}`] === "N/A" || isNaN(selectedValues[`${statement.id_statements}`])}
+                                            checked={
+                                                (selectedValues[`${statement.id_statements}`] === "N/A" || isNaN(selectedValues[`${statement.id_statements}`])) &&
+                                                selectedValues[`${statement.id_statements}`] !== "" &&
+                                                selectedValues[`${statement.id_statements}`] !== null &&
+                                                selectedValues[`${statement.id_statements}`] !== undefined
+                                            }
                                             onChange={(e) => {
                                                 const isChecked = e.target.checked;
                                                 setSelectedValues(prev => {
