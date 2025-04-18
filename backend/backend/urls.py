@@ -43,6 +43,7 @@ urlpatterns = [
          name='submission-detail'),
     #ANSWERS
     path('api/answer/<int:submissions_id_submissions>/', AnswerViewSet.as_view({ 'post': 'create'}), name='answer-list'),
+    path('api/answer/<int:submissions_id_submissions>/', AnswerViewSet.as_view({ 'get': 'list'}), name='answer-list'),
     path(
     'api/answer/<int:submissions_id_submissions>/<int:statements_id_statements>/',
     AnswerViewSet.as_view({

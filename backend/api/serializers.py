@@ -408,6 +408,30 @@ class AnswerBaseSerializer(serializers.ModelSerializer):
             'value',
         ]
         read_only_fields = ['id_answers_base', 'answer_creation_time']
+        
+    def get(self, submissions_id_submissions):
+        answers_base = AnswersBase.objects.filter(submissions_id_submissions=submissions_id_submissions)
+        result = []
+        for answer in answers_base:
+            answer_data = {
+                'id_answers_base': answer.id_answers_base,
+                'statements_id_statements': answer.statements_id_statements.id_statements,
+                'submissions_id_submissions': answer.submissions_id_submissions.id_submissions,
+                'answer_creation_time': answer.answer_creation_time,
+                'value': None
+            }
+            try:
+                answer_data['value'] = AnswersInteger.objects.get(answers_base_id_answers_base=answer).value
+            except AnswersInteger.DoesNotExist:
+                try:
+                    answer_data['value'] = AnswersBoolean.objects.get(answers_base_id_answers_base=answer).value
+                except AnswersBoolean.DoesNotExist:
+                    try:
+                        answer_data['value'] = AnswersText.objects.get(answers_base_id_answers_base=answer).value
+                    except AnswersText.DoesNotExist:
+                        pass
+            result.append(answer_data)
+        return result
 
     def create(self, validated_data):
         value = validated_data.pop('value', '')

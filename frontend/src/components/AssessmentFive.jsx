@@ -1,4 +1,29 @@
-const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, exampleInput, setExampleInput, handleStatementAnswerSubmit }) => {
+import { useEffect } from "react";
+
+const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, existingAnswers, firstRender }) => {
+
+
+    useEffect(() => {
+        console.log("current", currentDimension, "stage", dimensionStage);
+        const currentDimensionStatements = allDimensions[currentDimension]?.statements || [];
+        if (dimensionStage === 2) {
+            const filteredAnswers = Object.keys(existingAnswers)
+                .filter(key => currentDimensionStatements.some(statement =>
+                    statement.id_statements.toString() === key && statement.statement_name !== 'Provide Examples'
+                ))
+                .reduce((obj, key) => {
+                    obj[key] = existingAnswers[key];
+                    return obj;
+                }, {});
+            setSelectedValues(filteredAnswers);
+        } else if (dimensionStage === 3) {
+            const examplesStatement = currentDimensionStatements.find(statement => statement.statement_name === 'Provide Examples');
+            if (examplesStatement) {
+                const examplesAnswer = { [examplesStatement.id_statements]: existingAnswers[examplesStatement.id_statements] || "" };
+                setSelectedValues(examplesAnswer);
+            }
+        }
+    }, [existingAnswers, currentDimension, dimensionStage]);
 
     return (
         <>
@@ -60,6 +85,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                                                     type="radio"
                                                                     name={statement.id_statements}
                                                                     value={index + 1}
+                                                                    checked={selectedValues[`${statement.id_statements}`] === index + 1}
                                                                     onChange={(e) => {
                                                                         const selectedValue = parseInt(e.target.value, 10);
                                                                         setSelectedValues(prev => ({
@@ -76,6 +102,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                         <input
                                             type="checkbox"
                                             name={`${statement.id_statements}_na`}
+                                            checked={existingAnswers[`${statement.id_statements}`] === "N/A"}
                                             onChange={(e) => {
                                                 const isChecked = e.target.checked;
                                                 setSelectedValues(prev => {
@@ -98,6 +125,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                                 <p>Please explain why you selected this option.</p>
                                                 <textarea
                                                     placeholder="200 char. max"
+                                                    defaultValue={existingAnswers[`${statement.id_statements}`]}
                                                     onChange={(e) => {
                                                         const naValue = e.target.value;
                                                         setSelectedValues(prev => ({
@@ -128,6 +156,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
 
                                 <textarea
                                     placeholder="1000 char. max"
+                                    defaultValue={existingAnswers[`${examplesStatement.id_statements}`]}
                                     onChange={(e) => {
                                         const exampleInput = e.target.value;
                                         setSelectedValues(prev => ({
@@ -135,7 +164,8 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                             [`${examplesStatement.id_statements}`]: exampleInput
                                         }));
                                     }}
-                                ></textarea>
+                                >
+                                </textarea>
                             </div>
                         );
                     })()}

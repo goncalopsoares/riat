@@ -4,7 +4,7 @@ import AssessmentThree from "../components/AssessmentThree";
 import AssessmentFour from "../components/AssessmentFour";
 import AssessmentFive from "../components/AssessmentFive";
 import { useProject } from "../contexts/ProjectContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from '../api';
 
@@ -26,7 +26,9 @@ const Assessment = () => {
     const [dimensionStage, setDimensionStage] = useState(1);
     const [isAssessmentReady, setIsAssessmentReady] = useState(false);
     const [selectedValues, setSelectedValues] = useState([]);
-    const [exampleInput, setExampleInput] = useState('');
+    const [existingAnswers, setExistingAnswers] = useState([]);
+
+    const firstRender = useRef(true);
 
     const { id } = useParams();
 
@@ -329,6 +331,28 @@ const Assessment = () => {
         }
     };
 
+    // STEP 5 - GET EXISTING ANSWERS
+
+    useEffect(() => {
+        if (id !== undefined) {
+            const getExistingAnswers = async () => {
+                try {
+                    const response = await api.get(`/api/answer/${id}/`);
+                    const existingAnswers = response.data.reduce((acc, answer) => {
+                        acc[answer.statements_id_statements] = answer.value;
+                        return acc;
+                    }, {});
+                    setExistingAnswers(existingAnswers);
+                } catch (error) {
+                    console.error('Error fetching existing answers:', error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            getExistingAnswers();
+        }
+    }, [id]);
+
 
     return (
         <>
@@ -345,7 +369,7 @@ const Assessment = () => {
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
             {isAssessmentReady && (
-                <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} exampleInput={exampleInput} setExampleInput={setExampleInput} handleStatementAnswerSubmit={handleStatementAnswerSubmit} />
+                <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} />
             )}
         </>
     );
