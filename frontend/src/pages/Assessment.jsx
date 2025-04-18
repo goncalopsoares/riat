@@ -12,8 +12,12 @@ const Assessment = () => {
 
     const { projectId, setProjectId, step, setStep, projectName, projectOrganization, projectPhase, projectTrl, projectMrl, projectSrl, userRole, userFunction, setError, setSuccess, setLoading, loading } = useProject();
 
-
     const [surveyId, setSurveyId] = useState('');
+
+    const navigate = useNavigate();
+
+    //GET SUBMISSION ID FROM URL
+    const { id } = useParams();
 
     // STEP 1 & 2
     const [agreement, setAgreement] = useState(false);
@@ -29,10 +33,6 @@ const Assessment = () => {
     const [existingAnswers, setExistingAnswers] = useState([]);
 
     const firstRender = useRef(true);
-
-    const { id } = useParams();
-
-    const navigate = useNavigate();
 
 
     //GET SUBMISSION DATA
@@ -366,7 +366,7 @@ const Assessment = () => {
         }
 
         firstRender.current = false; // Ensure this effect runs only once after existingAnswers is set
-        
+
     }, [existingAnswers, allDimensions]);
 
 
@@ -403,8 +403,6 @@ const Assessment = () => {
 
     }, [currentDimension, dimensionStage, loading]);
 
-
-    console.log("Current Dimension:", currentDimension, "dimensionStage:", dimensionStage, "selectedValues:", selectedValues, "existingAnswers:", existingAnswers);
 
     return (
         <>

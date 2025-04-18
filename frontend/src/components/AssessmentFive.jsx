@@ -77,7 +77,6 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                         <input
                                             type="checkbox"
                                             name={`${statement.id_statements}_na`}
-                                            checked={existingAnswers[`${statement.id_statements}`] === "N/A"}
                                             onChange={(e) => {
                                                 const isChecked = e.target.checked;
                                                 setSelectedValues(prev => {
@@ -145,16 +144,20 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                         );
                     })()}
                     <div>
-                        <button onClick={() => {
-                            if (dimensionStage === 1) {
-                                handleDimensionChange(currentDimension - 1);
-                                setDimensionStage(3);
-                            } else if (dimensionStage === 2) {
-                                setDimensionStage(dimensionStage - 1);
-                            } else if (dimensionStage === 3) {
-                                setDimensionStage(dimensionStage - 1);
-                            }
-                        }}>Back</button>
+                        {currentDimension === 0 && dimensionStage === 1 ? (
+                            null // No back button on the first dimension
+                        ) : (
+                            <button onClick={() => {
+                                if (dimensionStage === 1) {
+                                    handleDimensionChange(currentDimension - 1);
+                                    setDimensionStage(3);
+                                } else if (dimensionStage === 2) {
+                                    setDimensionStage(dimensionStage - 1);
+                                } else if (dimensionStage === 3) {
+                                    setDimensionStage(dimensionStage - 1);
+                                }
+                            }}>Back</button>)
+                        }
                         <button onClick={() => {
                             if (dimensionStage === 1) {
                                 setDimensionStage(dimensionStage + 1);
