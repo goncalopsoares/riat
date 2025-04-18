@@ -1,29 +1,4 @@
-import { useEffect } from "react";
-
-const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, existingAnswers, firstRender }) => {
-
-
-    useEffect(() => {
-        console.log("current", currentDimension, "stage", dimensionStage);
-        const currentDimensionStatements = allDimensions[currentDimension]?.statements || [];
-        if (dimensionStage === 2) {
-            const filteredAnswers = Object.keys(existingAnswers)
-                .filter(key => currentDimensionStatements.some(statement =>
-                    statement.id_statements.toString() === key && statement.statement_name !== 'Provide Examples'
-                ))
-                .reduce((obj, key) => {
-                    obj[key] = existingAnswers[key];
-                    return obj;
-                }, {});
-            setSelectedValues(filteredAnswers);
-        } else if (dimensionStage === 3) {
-            const examplesStatement = currentDimensionStatements.find(statement => statement.statement_name === 'Provide Examples');
-            if (examplesStatement) {
-                const examplesAnswer = { [examplesStatement.id_statements]: existingAnswers[examplesStatement.id_statements] || "" };
-                setSelectedValues(examplesAnswer);
-            }
-        }
-    }, [existingAnswers, currentDimension, dimensionStage]);
+const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, existingAnswers }) => {
 
     return (
         <>

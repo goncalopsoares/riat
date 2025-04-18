@@ -10,7 +10,7 @@ import api from '../api';
 
 const Assessment = () => {
 
-    const { projectId, setProjectId, step, setStep, projectName, projectOrganization, projectPhase, projectTrl, projectMrl, projectSrl, userRole, userFunction, setError, setSuccess, setLoading } = useProject();
+    const { projectId, setProjectId, step, setStep, projectName, projectOrganization, projectPhase, projectTrl, projectMrl, projectSrl, userRole, userFunction, setError, setSuccess, setLoading, loading } = useProject();
 
 
     const [surveyId, setSurveyId] = useState('');
@@ -332,7 +332,6 @@ const Assessment = () => {
     };
 
     // STEP 5 - GET EXISTING ANSWERS
-
     useEffect(() => {
         if (id !== undefined) {
             const getExistingAnswers = async () => {
@@ -353,6 +352,41 @@ const Assessment = () => {
         }
     }, [id]);
 
+
+    // STEP 5 - SET SELECTED VALUES BASED ON EXISTING ANSWERS
+    useEffect(() => {
+
+        if (existingAnswers.length === 0) return;
+
+        const currentDimensionStatements = allDimensions[currentDimension]?.statements || [];
+
+        if (dimensionStage === 2) {
+            const filteredAnswers = Object.keys(existingAnswers)
+                .filter(key => currentDimensionStatements.some(statement =>
+                    statement.id_statements.toString() === key && statement.statement_name !== 'Provide Examples'
+                ))
+                .reduce((obj, key) => {
+                    obj[key] = existingAnswers[key];
+                    return obj;
+                }, {});
+            if (Object.keys(filteredAnswers).length !== 0 && loading === false) {
+                setSelectedValues(filteredAnswers);
+            }
+
+        } else if (dimensionStage === 3) {
+
+            const examplesStatement = currentDimensionStatements.find(statement => statement.statement_name === 'Provide Examples');
+            if (examplesStatement) {
+                const examplesAnswer = { [examplesStatement.id_statements]: existingAnswers[examplesStatement.id_statements] || "" };
+                if (examplesAnswer[examplesStatement.id_statements] !== "" && loading === false) {
+                    setSelectedValues(examplesAnswer);
+                }
+            }
+        }
+
+    }, [currentDimension, dimensionStage, loading]);
+
+    console.log('Selected Values:', selectedValues);
 
     return (
         <>
