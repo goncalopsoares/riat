@@ -77,6 +77,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                         <input
                                             type="checkbox"
                                             name={`${statement.id_statements}_na`}
+                                            checked={selectedValues[`${statement.id_statements}`] === "N/A" || isNaN(selectedValues[`${statement.id_statements}`])}
                                             onChange={(e) => {
                                                 const isChecked = e.target.checked;
                                                 setSelectedValues(prev => {
@@ -99,7 +100,8 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                                 <p>Please explain why you selected this option.</p>
                                                 <textarea
                                                     placeholder="200 char. max"
-                                                    defaultValue={existingAnswers[`${statement.id_statements}`]}
+                                                    maxLength={200}
+                                                    defaultValue={isNaN(existingAnswers[`${statement.id_statements}`]) ? existingAnswers[`${statement.id_statements}`] : ""}
                                                     onChange={(e) => {
                                                         const naValue = e.target.value;
                                                         setSelectedValues(prev => ({
@@ -130,6 +132,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
 
                                 <textarea
                                     placeholder="1000 char. max"
+                                    maxLength={1000}
                                     defaultValue={existingAnswers[`${examplesStatement.id_statements}`]}
                                     onChange={(e) => {
                                         const exampleInput = e.target.value;
@@ -183,7 +186,8 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                         }}>Next</button>
                     </div>
                 </>
-            )}
+            )
+            }
         </>
     );
 };

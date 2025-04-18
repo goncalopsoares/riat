@@ -365,6 +365,24 @@ class AnswerViewSet(viewsets.ModelViewSet):
         answer = serializer.save()
 
         return Response(self.get_serializer(answer).data, status=status.HTTP_201_CREATED)
+    
+    @action(detail=False, methods=['delete'], url_path=r'(?P<submissions_id_submissions>\d+)/(?P<statements_id_statements>\d+)', url_name='delete_by_composite')
+    
+    def delete_by_composite(self, request, submissions_id_submissions, statements_id_statements):
+        answer = get_object_or_404(
+            AnswersBase,
+            submissions_id_submissions=submissions_id_submissions,
+            statements_id_statements=statements_id_statements
+        )
+        
+        # Delete related entries in AnswersInteger, AnswersBoolean, and AnswersText
+        AnswersInteger.objects.filter(answers_base_id_answers_base=answer).delete()
+        AnswersBoolean.objects.filter(answers_base_id_answers_base=answer).delete()
+        AnswersText.objects.filter(answers_base_id_answers_base=answer).delete()
+        
+        # Delete the main answer entry
+        answer.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_object_by_composite_key(self, submission_id, statement_id):
         return get_object_or_404(
@@ -374,12 +392,14 @@ class AnswerViewSet(viewsets.ModelViewSet):
         )
 
     @action(detail=False, methods=['get'], url_path=r'(?P<submissions_id_submissions>\d+)/(?P<statements_id_statements>\d+)', url_name='retrieve_by_composite')
+    
     def retrieve_by_composite(self, request, submissions_id_submissions, statements_id_statements, *args, **kwargs):
         instance = self.get_object_by_composite_key(submissions_id_submissions, statements_id_statements)
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['put', 'patch'], url_path=r'(?P<submissions_id_submissions>\d+)/(?P<statements_id_statements>\d+)', url_name='update_by_composite')
+    
     def update_by_composite(self, request, submissions_id_submissions, statements_id_statements, *args, **kwargs):
         instance = self.get_object_by_composite_key(submissions_id_submissions, statements_id_statements)
         partial = request.method == 'PATCH'

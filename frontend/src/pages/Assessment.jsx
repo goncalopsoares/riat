@@ -292,19 +292,37 @@ const Assessment = () => {
 
     // STEP 5 - REGISTER STATEMENTS ANSWERS
     const handleStatementAnswerSubmit = async () => {
+
         setLoading(true);
 
         const requests = Object.entries(selectedValues).map(([key, value]) =>
             api.get(`/api/answer/${id}/${key}/`)
-                .then(() => {
+                .then(async () => {
 
-                    return api.patch(`/api/answer/${id}/${key}/`, {
-                        submissions_id_submissions: id,
-                        statements_id_statements: key,
-                        value: value,
-                    });
+                    if (isNaN(value)) {
+
+                        await api.delete(`/api/answer/${id}/${key}/`);
+
+                        return api.post(`/api/answer/${id}/`, {
+                            submissions_id_submissions: id,
+                            statements_id_statements: key,
+                            value: value,
+                        });
+
+                    } else {
+
+
+                        return api.patch(`/api/answer/${id}/${key}/`, {
+                            submissions_id_submissions: id,
+                            statements_id_statements: key,
+                            value: value,
+                        });
+                    }
                 })
+
                 .catch((error) => {
+
+                    console.log(`Answer does not exist for statement ${key}. Creating...`);
 
                     if (error.response && error.response.status === 404) {
                         return api.post(`/api/answer/${id}/`, {

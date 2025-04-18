@@ -50,6 +50,7 @@ urlpatterns = [
         'get': 'retrieve_by_composite',
         'put': 'update_by_composite',
         'patch': 'update_by_composite',
+        'delete': 'delete_by_composite'
     }),
     name='answer-composite'
 ),
