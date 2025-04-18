@@ -424,19 +424,32 @@ const Assessment = () => {
             const examplesStatement = currentDimensionStatements.find(statement => statement.statement_name === 'Provide Examples');
             if (examplesStatement) {
 
-                const examplesAnswer = { [examplesStatement.id_statements]: existingAnswers[examplesStatement.id_statements].value || "" };
-          
+                const examplesAnswer = {
+                    [examplesStatement.id_statements]:
+                        existingAnswers[examplesStatement.id_statements]?.value || ""
+                };
+
                 if (examplesAnswer !== "" && loading === false) {
 
-                    const value = Object.values(examplesAnswer)[0];
-
-                    setSelectedValues(value);
+                    setSelectedValues(examplesAnswer);
 
                 }
             }
         }
 
     }, [currentDimension, dimensionStage, loading]);
+
+    const finalScore = Object.values(existingAnswers).reduce((sum, object) => {
+        const value = object.value;
+        return typeof value === 'number' ? sum + value : sum;
+    }, 0);
+
+    console.log("Final Score", finalScore);
+
+    useEffect(() => {
+        console.log("existingAnswers", existingAnswers);
+    }
+        , [existingAnswers]);
 
     // STEP 5 - SUBMIT ASSESSMENT
 

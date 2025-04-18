@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import AnswersBase, AnswersBoolean, AnswersInteger, AnswersSelect, AnswersText, CustomUser, Dimensions, Projects, Scales, Statements, Surveys, Users, UsersHasProjects
+from api.models import AnswersBase, AnswersBoolean, AnswersInteger, AnswersSelect, AnswersText, CustomUser, Dimensions, Projects, Scales, Statements, Surveys, Users, UsersHasProjects, Reports, ReportsOverallScore, OverallRecommendations, OverallScoreLevels, Submissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.utils.timezone import now
@@ -447,7 +447,7 @@ class AnswerBaseSerializer(serializers.ModelSerializer):
         return instance
 
     def _save_typed_answer(self, base_answer, value):
-        # Tenta converter para inteiro
+        # try to convert to integer first
         try:
             int_value = int(value)
             AnswersInteger.objects.update_or_create(
@@ -458,7 +458,7 @@ class AnswerBaseSerializer(serializers.ModelSerializer):
         except (ValueError, TypeError):
             pass
 
-        # Tenta interpretar como booleano
+        # verify if boolean
         if isinstance(value, bool) or str(value).lower() in ['true', 'false']:
             bool_value = value if isinstance(value, bool) else str(value).lower() == 'true'
             AnswersBoolean.objects.update_or_create(
@@ -467,9 +467,63 @@ class AnswerBaseSerializer(serializers.ModelSerializer):
             )
             return
 
-        # Se for texto, guarda como texto
+        # if text, saves as text
         AnswersText.objects.update_or_create(
             answers_base_id_answers_base=base_answer,
             defaults={'value': value}
         )
+        
+# REPORTS  
+class ReportSerializer(serializers.ModelSerializer):
+        
+    class Meta:
+        model = Reports
+        fields = [
+            'id_reports',
+            'submissions_id_submissions',
+            'reports_overall_score_id_reports_overall_score',
+            'report_creation_date',
+        ]
+        extra_kwargs = {
+            'report_creation_date': {'read_only': True},
+        }
+
+    def create(self, validated_data):
+        # 🎯 Suponhamos que já tens a pontuação final (podes calculá-la aqui se necessário)
+        final_score = self.context.get('final_score')  # ou outra forma de passar o score
+        survey = validated_data['submissions_id_submissions'].survey  # ajusta se necessário
+
+        # 🔍 1. Encontra o nível de score adequado
+        score_level = OverallScoreLevels.objects.filter(
+            overall_score_min_value__lte=final_score,
+            overall_score_max_value__gte=final_score
+        ).first()
+
+        if not score_level:
+            raise serializers.ValidationError("Não foi possível encontrar um nível de score para este valor.")
+
+        # 🔍 2. Encontra a recomendação correta com base no score e survey
+        recommendation = OverallRecommendations.objects.filter(
+            surveys_id_surveys=survey,
+            overall_score_levels_id_overall_score_levels=score_level
+        ).first()
+
+        if not recommendation:
+            raise serializers.ValidationError("Não foi possível encontrar uma recomendação para este score e survey.")
+
+        # ✅ 3. Cria o ReportsOverallScore
+        overall_score_obj = ReportsOverallScore.objects.create(
+            overall_recommendations_id_overall_recommendations=recommendation,
+            reports_overall_score_value=final_score
+        )
+
+        # 📝 4. Cria o Report com ligação ao score
+        validated_data['reports_overall_score_id_reports_overall_score'] = overall_score_obj
+        report = Reports.objects.create(**validated_data)
+
+        return report
+
+
+        
+        
 

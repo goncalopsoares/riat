@@ -138,7 +138,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                 <textarea
                                     placeholder="1000 char. max"
                                     maxLength={1000}
-                                    defaultValue={selectedValues}
+                                    defaultValue={Object.values(selectedValues)[0]}
                                     onChange={(e) => {
                                         const exampleInput = e.target.value;
                                         setSelectedValues(prev => ({
