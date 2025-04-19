@@ -54,9 +54,16 @@ urlpatterns = [
     }),
     name='answer-composite'),
     #REPORTS
-    path('api/report/<int:submissions_id_submissions>/', ReportViewSet.as_view({'post': 'create'}), name='create-report'),
-
+    path('api/report/<int:submissions_id_submissions>/', ReportViewSet.as_view({
+        'post': 'create',
+        'get': 'list'
+        }), 
+         name='create-report'),
+    path('api/get/report/<int:id_reports>/', ReportViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'patch': 'update',
+        'delete': 'destroy'
+    }), 
+         name='report-detail'),
 ]
-
-
- 

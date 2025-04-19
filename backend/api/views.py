@@ -465,3 +465,12 @@ class ReportViewSet(viewsets.ModelViewSet):
             self.perform_create(serializer)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def retrieve(self, request, id_reports, *args, **kwargs):
+        try:
+            report = Reports.objects.get(id_reports=id_reports)
+            serializer = self.get_serializer(report)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Reports.DoesNotExist:
+            return Response({"error": "Report not found"}, status=status.HTTP_404_NOT_FOUND)
+

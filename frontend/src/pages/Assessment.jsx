@@ -491,9 +491,10 @@ const Assessment = () => {
             });
 
             const reportResponse = await api.get(`/api/report/${id}/`);
+
             const reportId = reportResponse.data.id_reports;
 
-            navigate(`/report/${reportId}`);
+            navigate(`/report/get/${reportId}`);
 
         } catch (error) {
             alert(error);
