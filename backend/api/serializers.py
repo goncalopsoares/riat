@@ -475,7 +475,13 @@ class AnswerBaseSerializer(serializers.ModelSerializer):
         
 # REPORTS  
 class ReportSerializer(serializers.ModelSerializer):
-        
+    
+    final_score = serializers.FloatField(write_only=True)
+    ponderated_score = serializers.FloatField(write_only=True)
+    surveys_id_surveys = serializers.PrimaryKeyRelatedField(
+        queryset=Surveys.objects.all(), write_only=True
+    )
+
     class Meta:
         model = Reports
         fields = [
@@ -483,26 +489,36 @@ class ReportSerializer(serializers.ModelSerializer):
             'submissions_id_submissions',
             'reports_overall_score_id_reports_overall_score',
             'report_creation_date',
+            'final_score',
+            'ponderated_score',
+            'surveys_id_surveys',
         ]
         extra_kwargs = {
             'report_creation_date': {'read_only': True},
+            'reports_overall_score_id_reports_overall_score': {'read_only': True},
         }
 
     def create(self, validated_data):
-        # 🎯 Suponhamos que já tens a pontuação final (podes calculá-la aqui se necessário)
-        final_score = self.context.get('final_score')  # ou outra forma de passar o score
-        survey = validated_data['submissions_id_submissions'].survey  # ajusta se necessário
+        final_score = validated_data.pop('final_score', None)
+        ponderated_score = validated_data.pop('ponderated_score', None)
+        survey = validated_data.pop('surveys_id_surveys', None)
+        validated_data['report_creation_date'] = now()
 
-        # 🔍 1. Encontra o nível de score adequado
+        if final_score is None:
+            raise serializers.ValidationError("Final score must be provided.")
+        if ponderated_score is None:
+            raise serializers.ValidationError("Ponderated score must be provided.")
+        if survey is None:
+            raise serializers.ValidationError("Survey ID must be provided.")
+
         score_level = OverallScoreLevels.objects.filter(
-            overall_score_min_value__lte=final_score,
-            overall_score_max_value__gte=final_score
+            overall_score_level_min_value__lte=ponderated_score,
+            overall_score_level_max_value__gte=ponderated_score
         ).first()
 
         if not score_level:
             raise serializers.ValidationError("Não foi possível encontrar um nível de score para este valor.")
 
-        # 🔍 2. Encontra a recomendação correta com base no score e survey
         recommendation = OverallRecommendations.objects.filter(
             surveys_id_surveys=survey,
             overall_score_levels_id_overall_score_levels=score_level
@@ -511,13 +527,11 @@ class ReportSerializer(serializers.ModelSerializer):
         if not recommendation:
             raise serializers.ValidationError("Não foi possível encontrar uma recomendação para este score e survey.")
 
-        # ✅ 3. Cria o ReportsOverallScore
         overall_score_obj = ReportsOverallScore.objects.create(
             overall_recommendations_id_overall_recommendations=recommendation,
             reports_overall_score_value=final_score
         )
 
-        # 📝 4. Cria o Report com ligação ao score
         validated_data['reports_overall_score_id_reports_overall_score'] = overall_score_obj
         report = Reports.objects.create(**validated_data)
 

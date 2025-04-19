@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, GetProjectView, SubmissionViewSet, AnswerViewSet
+from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, GetProjectView, SubmissionViewSet, AnswerViewSet, ReportViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView  
 
 urlpatterns = [
@@ -52,8 +52,11 @@ urlpatterns = [
         'patch': 'update_by_composite',
         'delete': 'delete_by_composite'
     }),
-    name='answer-composite'
-),
+    name='answer-composite'),
+    #REPORTS
+    path('api/report/<int:submissions_id_submissions>/', ReportViewSet.as_view({'post': 'create'}), name='create-report'),
+
 ]
+
 
  

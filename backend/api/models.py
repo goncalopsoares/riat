@@ -222,8 +222,8 @@ class ReportsScore(models.Model):
 class Reports(models.Model):
     id_reports = models.AutoField(primary_key=True)
     submissions_id_submissions = models.ForeignKey('Submissions', models.DO_NOTHING, db_column='submissions_id_submissions')
-    reports_overall_score_id_reports_overall_score = models.ForeignKey('OverallScoreLevels', models.DO_NOTHING, db_column='reports_overall_score_id_reports_overall_score')
-    report_creation_time = models.DateTimeField()
+    reports_overall_score_id_reports_overall_score = models.ForeignKey('ReportsOverallScore', models.DO_NOTHING, db_column='reports_overall_score_id_reports_overall_score')
+    report_creation_date = models.DateTimeField()
     
     class Meta:
         managed = False
@@ -261,8 +261,8 @@ class OverallRecommendations(models.Model):
 class OverallScoreLevels(models.Model):
     id_overall_score_levels = models.AutoField(primary_key=True)
     overall_score_level_name = models.CharField(max_length=100)
-    overall_score_min_value = models.IntegerField()
-    overall_score_max_value = models.IntegerField()
+    overall_score_level_min_value = models.IntegerField()
+    overall_score_level_max_value = models.IntegerField()
     
     class Meta:
         managed = False

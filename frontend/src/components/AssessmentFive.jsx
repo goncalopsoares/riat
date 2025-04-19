@@ -172,8 +172,6 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
 
                                 if (Object.keys(selectedValues).length > 0) {
 
-                                    handleStatementAnswerSubmit();
-
                                     handleAssessmentSubmit(e);
                                     
                                 } else {

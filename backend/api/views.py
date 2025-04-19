@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics, viewsets
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
-from .serializers import AnswerBaseSerializer, UserRegistrationSerializer, LoginSerializer, SurveySerializer, ProjectSerializer, ScaleSerializer, DimensionSerializer, StatementSerializer, SubmissionsSerializer
-from .models import AnswersBase, Surveys, Projects, Scales, Dimensions, Statements, UsersHasProjects, AnswersInteger, AnswersBoolean, AnswersText
+from .serializers import AnswerBaseSerializer, UserRegistrationSerializer, LoginSerializer, SurveySerializer, ProjectSerializer, ScaleSerializer, DimensionSerializer, StatementSerializer, SubmissionsSerializer, ReportSerializer
+from .models import AnswersBase, Surveys, Projects, Scales, Dimensions, Statements, UsersHasProjects, AnswersInteger, AnswersBoolean, AnswersText, Reports, OverallScoreLevels, OverallRecommendations, ReportsOverallScore
 from rest_framework.permissions import  AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
@@ -437,3 +437,31 @@ class AnswerViewSet(viewsets.ModelViewSet):
         return Response(result, status=status.HTTP_200_OK)
 
 
+class ReportViewSet(viewsets.ModelViewSet):
+    queryset = Reports.objects.all()
+    serializer_class = ReportSerializer
+
+    def create(self, request, *args, **kwargs):
+        submission_id = request.data.get('submissions_id_submissions')
+        final_score = request.data.get('final_score')
+        survey_id = request.data.get('surveys_id_surveys') 
+        ponderated_score = request.data.get('ponderated_score')
+
+        if submission_id is None:
+            return Response({"error": "submission_id é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+        if final_score is None:
+            return Response({"error": "final_score é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+        if survey_id is None:
+            return Response({"error": "survey_id é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+        if ponderated_score is None:
+            return Response({"error": "ponderated_score é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+
+        request.data['final_score'] = final_score
+        request.data['surveys_id_surveys'] = survey_id
+        request.data['ponderated_score'] = ponderated_score
+
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

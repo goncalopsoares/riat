@@ -439,13 +439,6 @@ const Assessment = () => {
 
     }, [currentDimension, dimensionStage, loading]);
 
-    const finalScore = Object.values(existingAnswers).reduce((sum, object) => {
-        const value = object.value;
-        return typeof value === 'number' ? sum + value : sum;
-    }, 0);
-
-    console.log("Final Score", finalScore);
-
     useEffect(() => {
         console.log("existingAnswers", existingAnswers);
     }
@@ -460,11 +453,35 @@ const Assessment = () => {
         setLoading(true);
 
         try {
-            const response = await api.patch(`/api/submission/${id}/`, {
+            await handleStatementAnswerSubmit();
+
+            await api.patch(`/api/submission/${id}/`, {
                 submission_state: 2,
             });
 
-            navigate(`/report/${id}/`);
+            const finalScore = Object.values(existingAnswers).reduce((sum, object) => {
+                const value = object.value;
+                return typeof value === 'number' ? sum + value : sum;
+            }, 0);
+
+            const totalStatements = allDimensions.flatMap(dimension => dimension.statements).filter(
+                (statement) => statement.statement_name !== 'Provide Examples'
+            ).length;
+
+
+            const ponderatedScore = ((finalScore) / (totalStatements)).toFixed(2);
+
+            await api.post(`api/report/${id}/`, {
+                submissions_id_submissions: id,
+                final_score: finalScore,
+                ponderated_score: ponderatedScore,
+                surveys_id_surveys: surveyId,
+            });
+
+            const reportResponse = await api.get(`/api/report/${id}/`);
+            const reportId = reportResponse.data.id_reports;
+
+            navigate(`/report/${reportId}`);
 
         } catch (error) {
             alert(error);
@@ -473,10 +490,6 @@ const Assessment = () => {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        console.log("selectedValues", selectedValues);
-    }, [selectedValues]);
 
     return (
         <>
