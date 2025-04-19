@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import AnswersBase, AnswersBoolean, AnswersInteger, AnswersSelect, AnswersText, CustomUser, Dimensions, Projects, Scales, Statements, Surveys, Users, UsersHasProjects, Reports, ReportsOverallScore, OverallRecommendations, OverallScoreLevels, Submissions
+from api.models import AnswersBase, AnswersBoolean, AnswersInteger, AnswersText, CustomUser, Dimensions, Projects, Scales, Statements, Surveys, Users, UsersHasProjects, Reports, ReportsOverallScore, OverallRecommendations, OverallScoreLevels, Submissions, ReportsScore
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.utils.timezone import now
@@ -473,7 +473,12 @@ class AnswerBaseSerializer(serializers.ModelSerializer):
             defaults={'value': value}
         )
         
-# REPORTS  
+# REPORTS
+
+class DimensionScoreSerializer(serializers.Serializer):
+    dimensionId = serializers.IntegerField()
+    totalPointsByDimension = serializers.IntegerField()
+    
 class ReportSerializer(serializers.ModelSerializer):
     
     final_score = serializers.FloatField(write_only=True)
@@ -481,6 +486,7 @@ class ReportSerializer(serializers.ModelSerializer):
     surveys_id_surveys = serializers.PrimaryKeyRelatedField(
         queryset=Surveys.objects.all(), write_only=True
     )
+    dimension_scores = DimensionScoreSerializer(many=True, write_only=True)
 
     class Meta:
         model = Reports
@@ -492,6 +498,7 @@ class ReportSerializer(serializers.ModelSerializer):
             'final_score',
             'ponderated_score',
             'surveys_id_surveys',
+            'dimension_scores',
         ]
         extra_kwargs = {
             'report_creation_date': {'read_only': True},
@@ -503,7 +510,7 @@ class ReportSerializer(serializers.ModelSerializer):
         ponderated_score = validated_data.pop('ponderated_score', None)
         survey = validated_data.pop('surveys_id_surveys', None)
         validated_data['report_creation_date'] = now()
-
+     
         if final_score is None:
             raise serializers.ValidationError("Final score must be provided.")
         if ponderated_score is None:
@@ -533,11 +540,16 @@ class ReportSerializer(serializers.ModelSerializer):
         )
 
         validated_data['reports_overall_score_id_reports_overall_score'] = overall_score_obj
+        
+        dimension_scores = validated_data.pop('dimension_scores', None)
+        
         report = Reports.objects.create(**validated_data)
+        
+        for dimension_data in dimension_scores:
+            ReportsScore.objects.create(
+                reports_id_reports=report,
+                dimensions_id_dimensions_id=dimension_data['dimensionId'],
+                reports_score_dimension_score=dimension_data['totalPointsByDimension']
+            )
 
         return report
-
-
-        
-        
-
