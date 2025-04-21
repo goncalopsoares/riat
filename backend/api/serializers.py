@@ -505,14 +505,14 @@ class OverallRecommendationSerializer(serializers.ModelSerializer):
         fields = ['recommendation_name', 'recommendation_description']
 
 class ReportsOverallScoreSerializer(serializers.ModelSerializer):
-    overall_recommendations_id_overall_recommendations = OverallRecommendationSerializer()
+    overall_recommendation = OverallRecommendationSerializer(source='overall_recommendations_id_overall_recommendations')
 
     class Meta:
         model = ReportsOverallScore
         fields = [
             'reports_overall_score_value',
             'reports_overall_score_max_value',
-            'overall_recommendations_id_overall_recommendations',
+            'overall_recommendation',
         ]
 
 class ReportsScoreSerializer(serializers.ModelSerializer):
@@ -534,15 +534,14 @@ class ReportSerializer(serializers.ModelSerializer):
     ponderated_score = serializers.FloatField(write_only=True)
     surveys_id_surveys = serializers.PrimaryKeyRelatedField(queryset=Surveys.objects.all(), write_only=True)
     dimension_scores = DimensionScoreSerializer(many=True, write_only=True)
-
-    reports_overall_score_id_reports_overall_score = ReportsOverallScoreSerializer(read_only=True)
+    overall_score = ReportsOverallScoreSerializer(source='reports_overall_score_id_reports_overall_score', read_only=True)
 
     class Meta:
         model = Reports
         fields = [
             'id_reports',
             'submissions_id_submissions',
-            'reports_overall_score_id_reports_overall_score',
+            'overall_score',
             'report_creation_date',
             'final_score',
             'ponderated_score',
@@ -551,7 +550,7 @@ class ReportSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'report_creation_date': {'read_only': True},
-            'reports_overall_score_id_reports_overall_score': {'read_only': True},
+            'overall_score': {'read_only': True},
         }
 
     def create(self, validated_data):
@@ -560,7 +559,6 @@ class ReportSerializer(serializers.ModelSerializer):
         ponderated_score = validated_data.pop('ponderated_score', None)
         survey = validated_data.pop('surveys_id_surveys', None)
         validated_data['report_creation_date'] = now()
-
 
         if final_score is None:
             raise serializers.ValidationError("Final score must be provided.")
@@ -577,7 +575,6 @@ class ReportSerializer(serializers.ModelSerializer):
         if not score_level:
             raise serializers.ValidationError("Não foi possível encontrar um nível de score para este valor.")
 
-       
         recommendation = OverallRecommendations.objects.filter(
             surveys_id_surveys=survey,
             overall_score_levels_id_overall_score_levels=score_level
@@ -586,18 +583,17 @@ class ReportSerializer(serializers.ModelSerializer):
         if not recommendation:
             raise serializers.ValidationError("Não foi possível encontrar uma recomendação para este score e survey.")
 
-      
         overall_score_obj = ReportsOverallScore.objects.create(
             overall_recommendations_id_overall_recommendations=recommendation,
             reports_overall_score_value=final_score
         )
 
         validated_data['reports_overall_score_id_reports_overall_score'] = overall_score_obj
-        
+
         dimension_scores = validated_data.pop('dimension_scores', None)
-        
+
         report = Reports.objects.create(**validated_data)
-        
+
         if dimension_scores:
             for dimension_data in dimension_scores:
                 ReportsScore.objects.create(
@@ -607,7 +603,7 @@ class ReportSerializer(serializers.ModelSerializer):
                 )
 
         return report
-    
+
     def get_report_details(self, obj):
         report_details = {}
 
