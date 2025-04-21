@@ -535,8 +535,6 @@ class ReportSerializer(serializers.ModelSerializer):
     surveys_id_surveys = serializers.PrimaryKeyRelatedField(queryset=Surveys.objects.all(), write_only=True)
     dimension_scores = DimensionScoreSerializer(many=True, write_only=True)
 
-    dimension_scores_output = serializers.SerializerMethodField()
-
     reports_overall_score_id_reports_overall_score = ReportsOverallScoreSerializer(read_only=True)
 
     class Meta:
@@ -550,7 +548,6 @@ class ReportSerializer(serializers.ModelSerializer):
             'ponderated_score',
             'surveys_id_surveys',
             'dimension_scores',
-            'dimension_scores_output',
         ]
         extra_kwargs = {
             'report_creation_date': {'read_only': True},
@@ -611,6 +608,65 @@ class ReportSerializer(serializers.ModelSerializer):
 
         return report
     
-    def get_dimension_scores_output(self, obj):
+    def get_report_details(self, obj):
+        report_details = {}
+
+        # Get dimension scores
         scores = ReportsScore.objects.filter(reports_id_reports=obj)
-        return ReportsScoreSerializer(scores, many=True).data
+        report_details['dimension_scores'] = ReportsScoreSerializer(scores, many=True).data
+
+        # Get associated project
+        submission = obj.submissions_id_submissions
+        if submission:
+            user_project = submission.users_has_projects_id_users_has_projects
+            if user_project:
+                project = user_project.projects_id_projects
+                if project:
+                    report_details['project'] = {
+                        'id': project.id_projects,
+                        'name': project.project_name,
+                        'organization': project.project_organization,
+                    }
+
+        # Get dimensions, statements, and answers
+        survey = obj.submissions_id_submissions.surveys_id_surveys
+        dimensions = Dimensions.objects.filter(surveys_id_surveys=survey)
+        dimension_details = []
+        for dimension in dimensions:
+            statements = Statements.objects.filter(dimensions_id_dimensions=dimension)
+            statement_details = []
+            for statement in statements:
+                answers = AnswersBase.objects.filter(statements_id_statements=statement, submissions_id_submissions=submission)
+                answer_details = []
+                for answer in answers:
+                    value = None
+                    try:
+                        value = AnswersInteger.objects.get(answers_base_id_answers_base=answer).value
+                    except AnswersInteger.DoesNotExist:
+                        try:
+                            value = AnswersBoolean.objects.get(answers_base_id_answers_base=answer).value
+                        except AnswersBoolean.DoesNotExist:
+                            try:
+                                value = AnswersText.objects.get(answers_base_id_answers_base=answer).value
+                            except AnswersText.DoesNotExist:
+                                pass
+                    answer_details.append({
+                        'id': answer.id_answers_base,
+                        'value': value,
+                        'creation_time': answer.answer_creation_time,
+                    })
+                statement_details.append({
+                    'id': statement.id_statements,
+                    'name': statement.statement_name,
+                    'description': statement.statement_description,
+                    'answers': answer_details,
+                })
+            dimension_details.append({
+                'id': dimension.id_dimensions,
+                'name': dimension.dimension_name,
+                'description': dimension.dimension_description,
+                'statements': statement_details,
+            })
+
+        report_details['dimensions'] = dimension_details
+        return report_details

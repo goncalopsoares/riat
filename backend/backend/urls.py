@@ -54,16 +54,17 @@ urlpatterns = [
     }),
     name='answer-composite'),
     #REPORTS
+    # get all reports by submission id
     path('api/report/<int:submissions_id_submissions>/', ReportViewSet.as_view({
         'post': 'create',
         'get': 'list'
-        }), 
-         name='create-report'),
-    path('api/get/report/<int:id_reports>/', ReportViewSet.as_view({
+    }), name='report-create-or-list'),
+
+    # get specific report by id
+    path('api/report/detail/<int:id_reports>/', ReportViewSet.as_view({
         'get': 'retrieve',
         'put': 'update',
-        'patch': 'update',
+        'patch': 'partial_update',
         'delete': 'destroy'
-    }), 
-         name='report-detail'),
+    }), name='report-detail'),
 ]

@@ -12,23 +12,23 @@ const Report = () => {
     const [maxScore, setMaxScore] = useState(0);
     const [recommendationLevel, setRecommendationLevel] = useState(0);
     const [recommendation, setRecommendation] = useState("");
+    const [creationTime, setCreationTime] = useState("");
 
     const { id } = useParams();
 
     useEffect(() => {
         const getReport = async () => {
-            const response = await api.get(`api/report/${id}/`);
+            const response = await api.get(`api/report/detail/${id}/`);
             setReportData(response.data);
         }
         getReport();
-
     }, [id]);
 
     //CHART DATA
 
     const getChartCategories = () => {
         if (reportData) {
-            const categories = reportData[0]?.dimension_scores_output.map(item => item.dimension_name);
+            const categories = reportData.dimension_scores_output.map(item => item.dimension_name);
             setChartCategories(categories);
             return categories;
         }
@@ -36,7 +36,7 @@ const Report = () => {
 
     const getChartData = () => {
         if (reportData) {
-            const data = reportData[0]?.dimension_scores_output.map(item => item.reports_score_dimension_score);
+            const data = reportData.dimension_scores_output.map(item => item.reports_score_dimension_score);
             setChartData(data);
             return data;
         }
@@ -88,19 +88,32 @@ const Report = () => {
 
     useEffect(() => {
         if (reportData) {
-            const score = reportData[0].reports_overall_score_id_reports_overall_score.reports_overall_score_value;
-            const maxScore = reportData[0].reports_overall_score_id_reports_overall_score.reports_overall_score_max_value;
+            const score = reportData.reports_overall_score_id_reports_overall_score.reports_overall_score_value;
+            const maxScore = reportData.reports_overall_score_id_reports_overall_score.reports_overall_score_max_value;
             setScore(score);
             setMaxScore(maxScore);
 
-            const recommendationLevel = reportData[0].reports_overall_score_id_reports_overall_score.overall_recommendations_id_overall_recommendations.recommendation_name;
-            const recommendation = reportData[0].reports_overall_score_id_reports_overall_score.overall_recommendations_id_overall_recommendations.recommendation_description;
+            const recommendationLevel = reportData.reports_overall_score_id_reports_overall_score.overall_recommendations_id_overall_recommendations.recommendation_name;
+            const recommendation = reportData.reports_overall_score_id_reports_overall_score.overall_recommendations_id_overall_recommendations.recommendation_description;
             setRecommendationLevel(recommendationLevel);
             setRecommendation(recommendation);
         }
     }, [reportData]);
 
+    // GENERAL REPORT DATA
 
+    useEffect(() => {
+        if (reportData) {
+            const creationTime = reportData.report_creation_date;
+            const formattedCreationTime = new Date(creationTime).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+            });
+            setCreationTime(formattedCreationTime);
+
+        }
+    }, [reportData]);
 
         return (
             <>
@@ -123,6 +136,7 @@ const Report = () => {
                 </div>
                 <div>
                     <h1>Report</h1>
+                    <p>{creationTime}</p>
                 </div>
                 <div className="mixed-chart">
                     <Chart
@@ -134,7 +148,9 @@ const Report = () => {
                 </div>
                 <div>
                     <p>Score: {score} / {maxScore} </p>
+                    <p>Overall Responsibility Level</p>
                     <p>{recommendationLevel}</p>
+                    <p>The overall responsibility level is calculated based on the average score from the dimensions of the framework. The levels are based on the average score.</p>
                     <p>{recommendation}</p>
                 </div>
                 <div>
