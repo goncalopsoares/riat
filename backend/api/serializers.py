@@ -511,6 +511,7 @@ class ReportsOverallScoreSerializer(serializers.ModelSerializer):
         model = ReportsOverallScore
         fields = [
             'reports_overall_score_value',
+            'reports_overall_score_max_value',
             'overall_recommendations_id_overall_recommendations',
         ]
 

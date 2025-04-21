@@ -236,6 +236,7 @@ class ReportsOverallScore(models.Model):
     id_reports_overall_score = models.AutoField(primary_key=True)
     overall_recommendations_id_overall_recommendations = models.ForeignKey('OverallRecommendations', models.DO_NOTHING, db_column='overall_recommendations_id_overall_recommendations')
     reports_overall_score_value = models.IntegerField()
+    reports_overall_score_max_value = models.IntegerField()
 
     class Meta:
         managed = False
