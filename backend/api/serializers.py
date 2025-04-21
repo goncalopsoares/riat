@@ -624,7 +624,7 @@ class ReportSerializer(serializers.ModelSerializer):
                         'organization': project.project_organization,
                     }
 
-        # Get dimensions, statements, and answers
+        # Get dimensions, statements, answers, and scales
         survey = obj.submissions_id_submissions.surveys_id_surveys
         dimensions = Dimensions.objects.filter(surveys_id_surveys=survey)
         dimension_details = []
@@ -636,6 +636,7 @@ class ReportSerializer(serializers.ModelSerializer):
                 answer_details = []
                 for answer in answers:
                     value = None
+                    scale_label = None
                     try:
                         value = AnswersInteger.objects.get(answers_base_id_answers_base=answer).value
                     except AnswersInteger.DoesNotExist:
@@ -646,9 +647,19 @@ class ReportSerializer(serializers.ModelSerializer):
                                 value = AnswersText.objects.get(answers_base_id_answers_base=answer).value
                             except AnswersText.DoesNotExist:
                                 pass
+
+                    # Get scale label if applicable
+                    if statement.scales_id_scales and value is not None:
+                        scale_labels = statement.scales_id_scales.scale_labels.split(',')
+                        try:
+                            scale_label = scale_labels[int(value) - 1] if isinstance(value, int) and 0 < value <= len(scale_labels) else None
+                        except (IndexError, ValueError):
+                            scale_label = None
+
                     answer_details.append({
                         'id': answer.id_answers_base,
                         'value': value,
+                        'scale_label': scale_label,
                         'creation_time': answer.answer_creation_time,
                     })
                 statement_details.append({

@@ -14,6 +14,7 @@ const Report = () => {
     const [chartCategories, setChartCategories] = useState([]);
     const [chartData, setChartData] = useState([]);
     // dimensions and answers data
+    const [showAnswers, setShowAnswers] = useState(false);
     const [dimensionsData, setDimensionsData] = useState([]);
     // score and recommendations
     const [score, setScore] = useState(0);
@@ -138,8 +139,7 @@ const Report = () => {
                     description: statement.description,
                     answers: statement.answers.map(answer => ({
                         id: answer.id,
-                        value: answer.value,
-                        creation_time: answer.creation_time
+                        value: answer.scale_label !== null ? answer.scale_label : answer.value,
                     }))
                 }))
             }));
@@ -147,6 +147,8 @@ const Report = () => {
             setDimensionsData(formatted);
         }
     }, [reportData]);
+
+    console.log(dimensionsData);
 
 
     return (
@@ -182,7 +184,12 @@ const Report = () => {
                     width="700"
                 />
             </div>
-            <div>
+            {showAnswers ? (
+                <button onClick={() => setShowAnswers(false)}>Hide Answers</button>
+            ) : (
+                <button onClick={() => setShowAnswers(true)}>Show Answers</button>
+            )}
+            {showAnswers && (<div>
                 {dimensionsData.map(dimension => (
                     <div key={dimension.id} className="mb-4">
                         <h2>{dimension.name}</h2>
@@ -195,15 +202,14 @@ const Report = () => {
 
                                 {statement.answers.map(answer => (
                                     <div key={answer.id} className="ml-4 text-sm text-gray-600">
-                                        <span>Valor: {answer.value}</span><br />
-                                        <span>Criado em: {new Date(answer.creation_time).toLocaleString()}</span>
+                                        <span>Answer: {answer.value}</span><br />
                                     </div>
                                 ))}
                             </div>
                         ))}
                     </div>
                 ))}
-            </div>
+            </div>)}
             <div>
                 <p>Score: {score} / {maxScore} </p>
                 <p>Overall Responsibility Level</p>
