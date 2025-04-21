@@ -1,7 +1,8 @@
-import { use, useEffect, useState } from "react";
-import { useFetcher, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import api from '../api';
 import Chart from "react-apexcharts";
+import DownloadPDFButton from "../components/PdfReport";
 
 const Report = () => {
 
@@ -10,17 +11,21 @@ const Report = () => {
     const [creationTime, setCreationTime] = useState("");
     const [projectName, setProjectName] = useState("");
     const [projectOrganization, setProjectOrganization] = useState("");
+    const [loadedGeneralData, setLoadedGeneralData] = useState(false);
     // chart data
     const [chartCategories, setChartCategories] = useState([]);
     const [chartData, setChartData] = useState([]);
+    const [loadedChartData, setLoadedChartData] = useState(false);
     // dimensions and answers data
     const [showAnswers, setShowAnswers] = useState(false);
     const [dimensionsData, setDimensionsData] = useState([]);
+    const [loadedDimensionsData, setLoadedDimensionsData] = useState(false);
     // score and recommendations
     const [score, setScore] = useState(0);
     const [maxScore, setMaxScore] = useState(0);
     const [recommendationLevel, setRecommendationLevel] = useState(0);
     const [recommendation, setRecommendation] = useState("");
+    const [loadedScoreData, setLoadedScoreData] = useState(false);
 
 
 
@@ -49,6 +54,8 @@ const Report = () => {
             const prokectOrganization = reportData.details.project.organization;
             setProjectName(projectName);
             setProjectOrganization(prokectOrganization);
+
+            setLoadedGeneralData(true);
         }
     }, [reportData]);
 
@@ -72,6 +79,7 @@ const Report = () => {
     useEffect(() => {
         getChartCategories();
         getChartData();
+        setLoadedChartData(true);
     }, [reportData]);
 
     const [options, setOptions] = useState({
@@ -118,11 +126,13 @@ const Report = () => {
             const maxScore = reportData.overall_score.reports_overall_score_max_value;
             setScore(score);
             setMaxScore(maxScore);
+            setLoadedScoreData(true);
 
             const recommendationLevel = reportData.overall_score.overall_recommendation.recommendation_name;
             const recommendation = reportData.overall_score.overall_recommendation.recommendation_description;
             setRecommendationLevel(recommendationLevel);
             setRecommendation(recommendation);
+            setLoadedScoreData(true);
         }
     }, [reportData]);
 
@@ -145,6 +155,7 @@ const Report = () => {
             }));
 
             setDimensionsData(formatted);
+            setLoadedDimensionsData(true);
         }
     }, [reportData]);
 
@@ -162,7 +173,7 @@ const Report = () => {
                 overflow: "hidden"
             }}>
                 <div style={{
-                    width: '100%',
+                    width: "100%",
                     backgroundColor: "#4285F4",
                     height: "100%",
                     borderRadius: "8px",
@@ -217,9 +228,20 @@ const Report = () => {
                 <p>The overall responsibility level is calculated based on the average score from the dimensions of the framework. The levels are based on the average score.</p>
                 <p>{recommendation}</p>
             </div>
-            <div>
-                <button>Save Report</button>
-            </div>
+            {loadedGeneralData && loadedChartData && loadedDimensionsData && loadedScoreData && (
+                <DownloadPDFButton
+                    creationTime={creationTime}
+                    projectName={projectName}
+                    projectOrganization={projectOrganization}
+                    series={series}
+                    options={options}
+                    dimensionsData={dimensionsData}
+                    score={score}
+                    maxScore={maxScore}
+                    recommendationLevel={recommendationLevel}
+                    recommendation={recommendation}
+                />
+            )}
         </>
     );
 };
