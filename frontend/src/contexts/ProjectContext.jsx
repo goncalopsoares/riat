@@ -13,7 +13,7 @@ export const ProjectProvider = ({ children }) => {
     const [projectId, setProjectId] = useState(null);
     const [projectName, setProjectName] = useState('');
     const [projectOrganization, setProjectOrganization] = useState('');
-    const [projectPhase, setProjectPhase] = useState('');
+    const [projectPhase, setProjectPhase] = useState(1);
     const [projectValueChain, setProjectValueChain] = useState('');
     const [projectTrl, setProjectTrl] = useState('');
     const [projectMrl, setProjectMrl] = useState('');

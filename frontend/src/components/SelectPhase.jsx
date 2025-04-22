@@ -1,19 +1,8 @@
-import { useState } from "react";
 import { useProject } from "../contexts/ProjectContext";
 
 const SelectPhase = () => {
 
-    const { setProjectPhase } = useProject();
-
-    setProjectPhase(1); // Default value
-
-    const [selectedValue, setSelectedValue] = useState(1);
-
-    const handleChange = (e) => {
-        const phase = Number(e.target.value);
-        setSelectedValue(phase);
-        setProjectPhase(phase);
-    };
+    const { projectPhase, setProjectPhase } = useProject();
 
     return (
         <div>
@@ -23,10 +12,10 @@ const SelectPhase = () => {
             <div>
                 <input
                     type="radio"
-                    id="option1"
+                    name="phase"
                     value="1"
-                    checked={selectedValue === 1}
-                    onChange={handleChange}
+                    checked={projectPhase === "1"}
+                    onChange={(e) => setProjectPhase(e.target.value)}
                 />
                 <label htmlFor="option1">
                     Phase 1 - At the beginning of the project planning while defining the scope and engaging the project team
@@ -36,10 +25,11 @@ const SelectPhase = () => {
             <div>
                 <input
                     type="radio"
+                    name="phase"
                     id="option2"
                     value="2"
-                    checked={selectedValue === 2}
-                    onChange={handleChange}
+                    checked={projectPhase === "2"}
+                    onChange={(e) => setProjectPhase(e.target.value)}
                 />
                 <label htmlFor="option2">
                     Phase 2 - During project development (with at least 25% of project activities executed, after prototyping, ...)
@@ -49,10 +39,10 @@ const SelectPhase = () => {
             <div>
                 <input
                     type="radio"
-                    id="option3"
+                    name="phase"
                     value="3"
-                    checked={selectedValue === 3}
-                    onChange={handleChange}
+                    checked={projectPhase === "3"}
+                    onChange={(e) => setProjectPhase(e.target.value)}
                 />
                 <label htmlFor="option3">
                     Phase 3 - At the end of the project, before launching the project results
