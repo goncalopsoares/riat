@@ -6,8 +6,9 @@ const CreateProject = () => {
 
     return (
         <div>
-            <h1>Create a new project</h1>
-            <p>Innovation project name</p>
+            <h1>Responsible Innovation Assessment</h1>
+            <h4>Identification of your venture</h4>
+            <p>Project name</p>
             <input
                 className='login-form-input'
                 type='text'
@@ -16,10 +17,11 @@ const CreateProject = () => {
                 onChange={(e) => setProjectName(e.target.value)}
             >
             </input>
+            <p>Venture</p>
             <input
                 className='login-form-input'
                 type='text'
-                placeholder='Insert the organization responsible for the project'
+                placeholder='Insert the name of the organization'
                 value={projectOrrganization}
                 onChange={(e) => setProjectOrganization(e.target.value)}
             >

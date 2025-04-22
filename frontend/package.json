@@ -10,9 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^7.0.2",
     "@react-pdf/renderer": "^4.3.0",
     "apexcharts": "^4.5.0",
     "axios": "^1.8.4",
+    "bootstrap": "^5.3.5",
     "esbuild": "^0.25.2",
     "html2canvas": "^1.4.1",
     "jwt-decode": "^4.0.0",
