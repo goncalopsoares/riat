@@ -8,6 +8,7 @@ class Projects(models.Model):
     project_name = models.CharField(unique=True, max_length=100)
     project_organization = models.CharField(max_length=100)
     project_phase = models.IntegerField()
+    project_value_chain = models.CharField(max_length=25)
     project_trl = models.IntegerField()
     project_mrl = models.IntegerField()
     project_srl = models.IntegerField()

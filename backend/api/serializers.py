@@ -86,6 +86,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             'project_name',
             'project_organization',
             'project_phase',
+            'project_value_chain',
             'project_trl',
             'project_mrl',
             'project_srl',
@@ -118,6 +119,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         defaults = {
             'project_organization': validated_data.get('project_organization'),
             'project_phase': validated_data.get('project_phase'),
+            'project_value_chain': validated_data.get('project_value_chain'),
             'project_trl': validated_data.get('project_trl'),
             'project_mrl': validated_data.get('project_mrl'),
             'project_srl': validated_data.get('project_srl'),

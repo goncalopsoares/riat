@@ -1,8 +1,9 @@
 import { useProject } from "../contexts/ProjectContext";
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 const CreateProject = () => {
 
-    const { projectName, setProjectName, projectOrrganization, setProjectOrganization, projectTrl, setProjectTrl, projectMrl, setProjectMrl, projectSrl, setProjectSrl, userRole, setUserRole, userFunction, setUserFunction } = useProject();
+    const { projectName, setProjectName, projectOrrganization, setProjectOrganization, projectValueChain, setProjectValueChain, projectTrl, setProjectTrl, projectMrl, setProjectMrl, projectSrl, setProjectSrl, userRole, setUserRole, userFunction, setUserFunction } = useProject();
 
     return (
         <div>
@@ -26,15 +27,28 @@ const CreateProject = () => {
                 onChange={(e) => setProjectOrganization(e.target.value)}
             >
             </input>
-            <p>Responsible person for the assessment</p>
-            <input
-                className='login-form-input'
-                type='text'
-                placeholder='Insert the role of the user'
-                value={userRole}
-                onChange={(e) => setUserRole(e.target.value)}
-            >
-            </input>
+            <p>Project role</p>
+            <label>
+                <input
+                    type="radio"
+                    name="role"
+                    value="Project Manager"
+                    checked={userRole === "Project Manager"}
+                    onChange={(e) => setUserRole(e.target.value)}
+                />
+                Project Manager
+            </label>
+            <label>
+                <input
+                    type="radio"
+                    name="role"
+                    value="Other"
+                    checked={userRole === "Other"}
+                    onChange={(e) => setUserRole(e.target.value)}
+                />
+                Other
+            </label>
+            <p>Function</p>
             <input
                 className='login-form-input'
                 type='text'
@@ -43,6 +57,38 @@ const CreateProject = () => {
                 onChange={(e) => setUserFunction(e.target.value)}
             >
             </input>
+            <p>Value Chain</p>
+            <p><HelpOutlineIcon />Choose one of the following answers</p>
+            <label>
+                <input
+                    type="radio"
+                    name="value-chain"
+                    value="Food, Water and Nutrients"
+                    checked={projectValueChain === "Food, Water and Nutrients"}
+                    onChange={(e) => setProjectValueChain(e.target.value)}
+                />
+                Food, Water and Nutrients
+            </label>
+            <label>
+                <input
+                    type="radio"
+                    name="value-chain"
+                    value="Plastics and Packaging"
+                    checked={projectValueChain === "Plastics and Packaging"}
+                    onChange={(e) => setProjectValueChain(e.target.value)}
+                />
+                Plastics and Packaging
+            </label>
+            <label>
+                <input
+                    type="radio"
+                    name="value-chain"
+                    value="Textiles"
+                    checked={projectValueChain === "Textiles"}
+                    onChange={(e) => setProjectValueChain(e.target.value)}
+                />
+                Textiles
+            </label>
             <p>Technology Readiness Level (TRL), Manufacturing Readiness Level (MRL), and Service Readiness Level (SRL) are indices used to determine the maturity of a technology or product.</p>
             <input
                 className='login-form-input'
@@ -68,7 +114,7 @@ const CreateProject = () => {
                 onChange={(e) => setProjectSrl(e.target.value)}
             >
             </input>
-        </div>
+        </div >
     )
 }
 
