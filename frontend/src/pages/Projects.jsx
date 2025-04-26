@@ -19,7 +19,7 @@ const Projects = () => {
     const user = useUser();
     const id_user = user.user.id;
 
-    const { setProjectId, setStep } = useProject();
+    const { setProjectId, setStep, setProjectPhase } = useProject();
 
     //GET USER'S PROJECTS
 
@@ -72,19 +72,18 @@ const Projects = () => {
 
     //RESUME ASSESSMENT OR SHOW SELECTOR FOR NEW ASSESSMENT
 
-    const navigateToAssessement = (e, idProjet, lastSubmission) => {
+    const navigateToAssessement = (e, idProject, lastSubmission) => {
 
         if (!lastSubmission) {
 
             e.currentTarget.disabled = true;
 
-            setSurveySelector(idProjet);
+            setSurveySelector(idProject);
 
             return;
         }
 
-        setProjectId(idProjet);
-        setStep(5);
+        setProjectId(idProject);
 
         setTimeout(() => {
             navigate('/assessment/' + lastSubmission);
@@ -130,6 +129,25 @@ const Projects = () => {
 
     };
 
+    // HANDLE PHASE UPDATE
+
+    const handlePhaseUpdate = async (e, idProject, projectPhase) => {
+
+        e.preventDefault();
+
+        setLoading(true);
+
+        setStep(4);
+        setProjectId(idProject);
+        setProjectPhase(projectPhase);;
+
+        setTimeout(() => {
+            navigate('/assessment/');
+        }, 0);
+
+
+    }
+
 
     return (
         <>
@@ -157,12 +175,12 @@ const Projects = () => {
 
                                 const lastSubmission = project.submissions[project.submissions.length - 1];
                                 const idUserProject = project.metadata[0].id_users_has_projects;
-                                const submissionsNumber = project.submissions.length;
+                                const submissionsNumber = project.submissions.filter(submission => submission.submission_state === 2).length;
 
                                 return (
                                     <tr key={project.id_projects}>
                                         <td>{project.project_name}</td>
-                                        <td>{project.project_phase}</td>
+                                        <td>{project.project_phase} {!lastSubmission && <a className='text-underline' onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
                                         <td>{submissionsNumber}</td>
                                         <td>lorem</td>
                                         <td>
@@ -188,14 +206,14 @@ const Projects = () => {
                                                     <select value={selectedSurvey} onChange={handleSelectSurvey}>
                                                         {allSurveys.map((survey) => {
                                                             // Extract phase number from survey_name
-                                                            const surveyPhase = parseInt(survey.survey_name.match(/\d+/)?.[0], 10); 
-                                                            console.log(surveyPhase);
+                                                            const surveyPhase = parseInt(survey.survey_name.match(/\d+/)?.[0], 10);
+
                                                             return (
                                                                 <option
                                                                     key={survey.id_surveys}
                                                                     value={survey.id_surveys}
                                                                     // Disable if project phase is less than survey phase
-                                                                    disabled={project.project_phase < surveyPhase} 
+                                                                    disabled={project.project_phase < surveyPhase}
                                                                 >
                                                                     {survey.survey_name}
                                                                 </option>

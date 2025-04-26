@@ -4,6 +4,8 @@ const SelectPhase = () => {
 
     const { projectPhase, setProjectPhase } = useProject();
 
+    console.log("Project phase:", projectPhase);
+
     return (
         <div>
             <h1>What phase is your project in?</h1>
@@ -11,8 +13,10 @@ const SelectPhase = () => {
 
             <div>
                 <input
+                    disabled={parseInt(projectPhase) >= 1}
                     type="radio"
                     name="phase"
+                    id="option1"
                     value="1"
                     checked={projectPhase === "1"}
                     onChange={(e) => setProjectPhase(e.target.value)}
@@ -24,6 +28,7 @@ const SelectPhase = () => {
 
             <div>
                 <input
+                    disabled={parseInt(projectPhase) >= 2}
                     type="radio"
                     name="phase"
                     id="option2"
@@ -38,8 +43,10 @@ const SelectPhase = () => {
 
             <div>
                 <input
+                    disabled={parseInt(projectPhase) >= 3}
                     type="radio"
                     name="phase"
+                    id="option3"
                     value="3"
                     checked={projectPhase === "3"}
                     onChange={(e) => setProjectPhase(e.target.value)}

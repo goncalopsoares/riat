@@ -53,10 +53,15 @@ const Assessment = () => {
                     console.error(error);
                 }
             }
+
             getSubmission();
+
+
         } else {
-            setProjectId(null);
-            setStep(1);
+            if (step !== 4) {
+                setProjectId(null);
+                setStep(1);
+            }
         }
     }, [id]);
 
