@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { useProject } from '../contexts/ProjectContext';
 import { useNavigate } from 'react-router-dom';
@@ -166,7 +166,7 @@ const Projects = () => {
                                 <th>Project Name</th>
                                 <th>Phase</th>
                                 <th>Submissions</th>
-                                <th>Last </th>
+                                <th>Last Score Obtained </th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -175,7 +175,6 @@ const Projects = () => {
 
                                 const lastSubmission = project.submissions[project.submissions.length - 1];
                                 const lastCompletedSubmission = project.submissions.filter(submission => submission.submission_state === 2).slice(-1)[0];
-                                console.log(lastCompletedSubmission);
                                 const idUserProject = project.metadata[0].id_users_has_projects;
                                 const submissionsNumber = project.submissions.filter(submission => submission.submission_state === 2).length;
 

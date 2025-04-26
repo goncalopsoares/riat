@@ -1,9 +1,13 @@
 import { useUser } from "../contexts/UserContext";
+import { useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 
 const Navbar = () => {
+
     const { user } = useUser();
+
+    const navigate = useNavigate();
 
     return (
         <nav className="navbar bg-body-white sticky-top border-bottom border-secondary-subtle">
@@ -35,6 +39,7 @@ const Navbar = () => {
                         <li className="nav-item mx-2"><a className="nav-link" href="/assessment">Assessments</a></li>
                         <li className="nav-item mx-2"><a className="nav-link" href="/">Reports</a></li>
                         <li className="nav-item mx-2 dropdown">
+                            {user ? (
                             <button
                                 className="btn btn-link nav-link d-flex align-items-center dropdown-toggle position-relative"
                                 data-bs-toggle="dropdown"
@@ -42,6 +47,16 @@ const Navbar = () => {
                             >
                                 <AccountCircleIcon />
                             </button>
+                            ) : (
+                            <div className="d-flex align-items-center">
+                                <button onClick={() => navigate('/login')} className="btn btn-secondary d-flex align-items-center">
+                                    Sign In
+                                </button>
+                                <button onClick={() => navigate('/register')} className="btn btn-dark d-flex align-items-center ms-2">
+                                    Register
+                                </button>
+                            </div>
+                            )}
                             <ul className="dropdown-menu position-absolute">
                                 <li><a className="dropdown-item" href="/">Profile</a></li>
                                 <li><a className="dropdown-item" href="/logout">Logout</a></li>

@@ -31,65 +31,65 @@ const RegisterAndLogout = () => {
 function App() {
 
   return (
-      <UserProvider>
-        <BrowserRouter>
-          <Navbar />
-          <Routes>
-            <Route path='/'
-              element={<ProtectedRoute>
-                <Home />
-              </ProtectedRoute>}
-            />
-            <Route path='/assessment/' element={
-              <ProtectedRoute>
-                <ProjectProvider>
-                  <Assessment />
-                </ProjectProvider>
-              </ProtectedRoute>
-            } />
-            <Route path='/assessment/:id'
-              element={<ProtectedRoute>
-                <ProjectProvider>
-                  <Assessment />
-                </ProjectProvider>
-              </ProtectedRoute>}
-            />
-            <Route path='/report/:id'
-              element={<ProtectedRoute>
-                <ProjectProvider>
-                  <Report />
-                </ProjectProvider>
-              </ProtectedRoute>}
-            />
-            <Route path='/surveytools'
-              element={<ProtectedRoute>
-                <SurveyTools />
-              </ProtectedRoute>}
-            />
-            <Route path='/surveyadmin/:id'
-              element={<ProtectedRoute>
-                <SurveyAdmin />
-              </ProtectedRoute>}
-            />
-            <Route path='/scaletools'
-              element={<ProtectedRoute>
-                <ScaleTools />
-              </ProtectedRoute>}
-            />
-            <Route path='/projects'
-              element={<ProtectedRoute>
-                <ProjectProvider>
-                  <Projects />
-                </ProjectProvider>
-              </ProtectedRoute>}
-            />
-            <Route path='/login' element={<Login />} />
-            <Route path='/logout' element={<Logout />} />
-            <Route path='/register' element={<RegisterAndLogout />} />
-            <Route path='*' element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </UserProvider>
+    <UserProvider>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path='/'
+            element={
+              <Home />
+            }
+          />
+          <Route path='/assessment/' element={
+            <ProtectedRoute>
+              <ProjectProvider>
+                <Assessment />
+              </ProjectProvider>
+            </ProtectedRoute>
+          } />
+          <Route path='/assessment/:id'
+            element={<ProtectedRoute>
+              <ProjectProvider>
+                <Assessment />
+              </ProjectProvider>
+            </ProtectedRoute>}
+          />
+          <Route path='/report/:id'
+            element={<ProtectedRoute>
+              <ProjectProvider>
+                <Report />
+              </ProjectProvider>
+            </ProtectedRoute>}
+          />
+          <Route path='/surveytools'
+            element={<ProtectedRoute>
+              <SurveyTools />
+            </ProtectedRoute>}
+          />
+          <Route path='/surveyadmin/:id'
+            element={<ProtectedRoute>
+              <SurveyAdmin />
+            </ProtectedRoute>}
+          />
+          <Route path='/scaletools'
+            element={<ProtectedRoute>
+              <ScaleTools />
+            </ProtectedRoute>}
+          />
+          <Route path='/projects'
+            element={<ProtectedRoute>
+              <ProjectProvider>
+                <Projects />
+              </ProjectProvider>
+            </ProtectedRoute>}
+          />
+          <Route path='/login' element={<Login />} />
+          <Route path='/logout' element={<Logout />} />
+          <Route path='/register' element={<RegisterAndLogout />} />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </UserProvider>
   );
 }
 
