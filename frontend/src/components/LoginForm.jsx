@@ -83,12 +83,17 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
         <div className="right-section">
           {/* Section #1 */}
           <div className="welcome-section">
-            <div className="welcome-title">Welcome Back!</div>
-            <div className="welcome-subtitle">
+            {method === "login" && (
+              <div className="welcome-title">Welcome Back!</div>
+            )}
+            {method === "login" ? (<div className="welcome-subtitle">
               Login to start a new assessment.
-            </div>
+            </div>) : (
+              <div className="welcome-subtitle">
+                Create an account to start a new assessment.
+              </div>
+            )}
           </div>
-
           {/* Section #3 */}
           <form onSubmit={handleSubmit} className="login-form-container">
             <div className="form-group">
@@ -154,10 +159,16 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
             >
               {name}
             </button>
-            <div className="register-link">
-              <span>Don't have an account? </span>
-              <span className="create-new">Create new</span>
-            </div>
+            {method === "login" ? (
+              <div className="register-link">
+                <span>Don't have an account? </span>
+                <a href="/register/" className="create-new">Create new</a>
+              </div>) : (
+              <div className="register-link">
+                <span>Already have an account? </span>
+                <a href="/login/" className="create-new">Login</a>
+              </div>
+            )}
           </form>
         </div>
       </div>
