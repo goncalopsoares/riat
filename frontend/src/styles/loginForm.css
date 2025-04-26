@@ -1,0 +1,153 @@
+/* General container for the login page */
+.login-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  padding: 20px;
+  background-color: var(--Background-Default-Default, #ffffff);
+}
+
+/* Wrapper for the two sections */
+.login-content-wrapper {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  height: 100%; /* Ensure both sections take up the full height */
+}
+
+/* Left Section */
+.left-section {
+  flex: 1; /* Takes up half the screen */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  background-color: #f9f9f9; /* Optional: Add a background color */
+  padding: 20px;
+  height: 100%; /* Ensure it stretches to match the height of the parent */
+}
+
+/* Right Section */
+.right-section {
+  flex: 1; /* Takes up the other half of the screen */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
+  padding: 20px;
+  height: 100%; /* Ensure it stretches to match the height of the parent */
+}
+
+/* Centered content in the left section */
+.centered-content {
+  text-align: center;
+}
+
+.tool-title {
+  color: #0d141c;
+  font-size: 18px;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  line-height: 23px;
+  word-wrap: break-word;
+}
+
+.tool-subtitle {
+  color: #0d141c;
+  font-size: 13px;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 400;
+  line-height: 23px;
+  word-wrap: break-word;
+}
+
+/* Welcome section in the right section */
+.welcome-section {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.welcome-title {
+  color: var(--Text-Brand-On-Brand-Tertiary, #2c2c2c);
+  font-size: 48px;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  line-height: 57.6px;
+  word-wrap: break-word;
+}
+
+.welcome-subtitle {
+  color: var(--Text-Brand-On-Brand-Tertiary, #2c2c2c);
+  font-size: 32px;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  line-height: 38.4px;
+  word-wrap: break-word;
+}
+
+/* Form styles */
+.login-form-container {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  color: var(--Text-Default-Default, #1e1e1e);
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  line-height: 22.4px;
+}
+
+.form-input {
+  padding: 12px 16px;
+  background: var(--Background-Default-Default, #ffffff);
+  border: 1px solid var(--Border-Default-Default, #d9d9d9);
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  color: var(--Text-Default-Tertiary, #b3b3b3);
+}
+
+.forgot-password {
+  color: var(--Text-Default-Default, #1e1e1e);
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.login-form-button {
+  padding: 12px;
+  background: var(--Background-Brand-Default, #64c8eb);
+  border: 1px solid var(--Border-Brand-Default, #0091be);
+  border-radius: 8px;
+  color: var(--Text-Brand-On-Brand, #f5f5f5);
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.register-link {
+  text-align: center;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+}
+
+.create-new {
+  text-decoration: underline;
+  cursor: pointer;
+}

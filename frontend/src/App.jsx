@@ -16,6 +16,7 @@ import SurveyAdmin from './pages/SurveyAdmin';
 import Projects from './pages/Projects';
 import Assessment from './pages/Assessment';
 import Report from './pages/Report';
+import './styles/global.css';
 
 const Logout = () => {
   localStorage.clear();
