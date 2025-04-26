@@ -62,9 +62,21 @@ class GetProjectView(generics.ListAPIView):
             user_project = user_projects.filter(projects_id_projects=project.id_projects).first()
             if user_project:
                 submissions = user_project.submissions_set.all()
-                project_data['submissions'] = [
-                    {"id_submissions": submission.id_submissions, "submission_state": submission.submission_state} for submission in submissions
-                ]
+                project_data['submissions'] = []
+                for submission in submissions:
+                    submission_data = {
+                        "id_submissions": submission.id_submissions,
+                        "submission_state": submission.submission_state,
+                        "reports_overall_score_value": None,
+                        "reports_overall_score_max_value": None
+                    }
+                    report = Reports.objects.filter(submissions_id_submissions=submission.id_submissions).first()
+                    if report:
+                        overall_score = report.reports_overall_score_id_reports_overall_score
+                        if overall_score:
+                            submission_data["reports_overall_score_value"] = overall_score.reports_overall_score_value
+                            submission_data["reports_overall_score_max_value"] = overall_score.reports_overall_score_max_value
+                    project_data['submissions'].append(submission_data)
             else:
                 project_data['submissions'] = []
             projects.append(project_data)

@@ -166,7 +166,7 @@ const Projects = () => {
                                 <th>Project Name</th>
                                 <th>Phase</th>
                                 <th>Submissions</th>
-                                <th>Score</th>
+                                <th>Last </th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -174,6 +174,8 @@ const Projects = () => {
                             {allProjects.map(project => {
 
                                 const lastSubmission = project.submissions[project.submissions.length - 1];
+                                const lastCompletedSubmission = project.submissions.filter(submission => submission.submission_state === 2).slice(-1)[0];
+                                console.log(lastCompletedSubmission);
                                 const idUserProject = project.metadata[0].id_users_has_projects;
                                 const submissionsNumber = project.submissions.filter(submission => submission.submission_state === 2).length;
 
@@ -182,7 +184,7 @@ const Projects = () => {
                                         <td>{project.project_name}</td>
                                         <td>{project.project_phase} {!lastSubmission && <a className='text-underline' onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
                                         <td>{submissionsNumber}</td>
-                                        <td>lorem</td>
+                                        <td>{lastCompletedSubmission ? `${lastCompletedSubmission.reports_overall_score_value} / ${lastCompletedSubmission.reports_overall_score_max_value}` : 'No completed assessments'}</td>
                                         <td>
                                             <button
                                                 onClick={(e) => navigateToAssessement(
