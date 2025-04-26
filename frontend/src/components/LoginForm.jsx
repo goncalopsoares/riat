@@ -58,7 +58,7 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
         navigate("/login");
       }
     } catch (error) {
-      alert(error);
+      setError("An error occurred. Please try again.");
       console.error(error);
     } finally {
       setLoading(false);
@@ -111,13 +111,48 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            {method === "register" && (
+              <>
+                <div className="form-group">
+                  <label className="form-label">Confirm Password</label>
+                  <input
+                    className="form-input"
+                    type="password"
+                    placeholder="Confirm your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">First Name</label>
+                  <input
+                    className="form-input"
+                    type="text"
+                    placeholder="Enter your first name"
+                    value={first_name}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Last Name</label>
+                  <input
+                    className="form-input"
+                    type="text"
+                    placeholder="Enter your last name"
+                    value={last_name}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </div>
+              </>
+            )}
+            {error && <p style={{ color: "red" }}>{error}</p>}
             <div className="forgot-password">Forgot password?</div>
             <button
               className="login-form-button"
               type="submit"
               disabled={loading}
             >
-              Sign In
+              {name}
             </button>
             <div className="register-link">
               <span>Don't have an account? </span>
