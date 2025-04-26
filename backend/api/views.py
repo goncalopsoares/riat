@@ -2,18 +2,17 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics, viewsets
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
-from .serializers import AnswerBaseSerializer, UserRegistrationSerializer, LoginSerializer, SurveySerializer, ProjectSerializer, ScaleSerializer, DimensionSerializer, StatementSerializer, SubmissionsSerializer, ReportSerializer
-from .models import AnswersBase, Surveys, Projects, Scales, Dimensions, Statements, UsersHasProjects, AnswersInteger, AnswersBoolean, AnswersText, Reports, OverallScoreLevels, OverallRecommendations, ReportsOverallScore
+from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
+from django.utils.timezone import now
+from .serializers import AnswerBaseSerializer, UserRegistrationSerializer, LoginSerializer, SurveySerializer, ProjectSerializer, ScaleSerializer, DimensionSerializer, StatementSerializer, SubmissionsSerializer, ReportSerializer, PasswordResetRequestSerializer, PasswordResetSerializer
+from .models import AnswersBase, Surveys, Projects, Scales, Dimensions, Statements, UsersHasProjects, AnswersInteger, AnswersBoolean, AnswersText, Reports, Submissions
 from rest_framework.permissions import  AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from .permissions import IsAdminUser
-from .models import Submissions
-from .models import Submissions
-from .models import Submissions
-
 
 User = get_user_model()
 
@@ -35,6 +34,51 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+    
+class PasswordResetRequestView(APIView):
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data['email']
+        user = User.objects.filter(user_email=email).first()
+
+        if user:
+            token = get_random_string(length=64)
+            user.password_reset_token = token
+            user.password_reset_requested_at = now()
+            user.save()
+
+            reset_link = f"https://localhost:5173/reset-password?token={token}"
+
+            send_mail(
+                'Password Reset',
+                f'Click the following link to reset your password: {reset_link}',
+                'no-reply@localhost.com',
+                [user.user_email],
+            )
+
+        return Response({"message": ""}, status=status.HTTP_200_OK)
+    
+class PasswordResetView(APIView):
+    
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        serializer = PasswordResetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = serializer.validated_data['user']
+        new_password = serializer.validated_data['new_password']
+
+        user.set_password(new_password)
+        user.password_reset_token = None
+        user.password_reset_requested_at = None
+        user.save()
+
+        return Response({"message": "Password reset successfully"}, status=status.HTTP_200_OK)
 
 
 # PROJECTS

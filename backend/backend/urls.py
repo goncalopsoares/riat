@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, GetProjectView, SubmissionViewSet, AnswerViewSet, ReportViewSet
+from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, GetProjectView, SubmissionViewSet, AnswerViewSet, ReportViewSet, PasswordResetRequestView, PasswordResetView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView  
 
 urlpatterns = [
@@ -10,6 +10,8 @@ urlpatterns = [
     path('api/user/login/', LoginView.as_view(), name='login'),
     path('api/token/', TokenObtainPairView.as_view(), name='get_token'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='refresh_token'),
+    path('api/user/reset_password_request/', PasswordResetRequestView.as_view(), name='password_reset_request'),
+    path('api/user/reset_password/', PasswordResetView.as_view(), name='password_reset'),
     path('api-auth/', include('rest_framework.urls')),
     #SURVEYS
     path('api/survey/get/', GetSurveyView.as_view(), name='view_survey'),

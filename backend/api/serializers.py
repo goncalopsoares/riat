@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from api.models import AnswersBase, AnswersBoolean, AnswersInteger, AnswersText, CustomUser, Dimensions, Projects, Scales, Statements, Surveys, Users, UsersHasProjects, Reports, ReportsOverallScore, OverallRecommendations, OverallScoreLevels, Submissions, ReportsScore
+from django.utils.timezone import now
+from datetime import timedelta
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.utils.timezone import now
@@ -57,6 +59,33 @@ class LoginSerializer(serializers.Serializer):
                 'user_role': user.user_role
             }
             }
+        
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        if not Users.objects.filter(user_email=value).exists():
+            
+            pass
+        return value
+    
+class PasswordResetSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    new_password = serializers.CharField(min_length=8)
+
+    def validate(self, attrs):
+        token = attrs.get('token')
+        user = Users.objects.filter(password_reset_token=token).first()
+
+        if not user:
+            raise serializers.ValidationError("Token inválido.")
+
+        if now() - user.password_reset_requested_at > timedelta(hours=1):
+            raise serializers.ValidationError("Token expirado.")
+
+        attrs['user'] = user
+        return attrs
+
        
        
 # PROJECTS
@@ -205,10 +234,6 @@ class SurveySerializer(serializers.ModelSerializer):
 
 # SUBMISSIONS
 
-from rest_framework import serializers
-from django.utils.timezone import now
-from .models import Submissions
-
 class SubmissionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submissions
@@ -290,8 +315,6 @@ class ScaleSerializer(serializers.ModelSerializer):
     
 # DIMENSIONS
 
-from django.utils.timezone import now
-
 class DimensionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dimensions
@@ -340,10 +363,6 @@ class DimensionSerializer(serializers.ModelSerializer):
 
  
 #STATEMENTS
-
-from rest_framework import serializers
-from django.utils.timezone import now
-from .models import Statements
 
 class StatementSerializer(serializers.ModelSerializer):
     class Meta:

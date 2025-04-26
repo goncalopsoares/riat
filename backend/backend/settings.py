@@ -170,3 +170,5 @@ logging.basicConfig(
     level = logging.DEBUG,
     format = '%(asctime)s %(levelname)s %(message)s',
 )
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

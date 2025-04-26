@@ -65,6 +65,20 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
     }
   };
 
+  const handleResetPassword = async () => {
+    setLoading(true);
+    try {
+      await api.post("/api/user/reset_password_request/", { email });
+      alert("Password reset link sent to your email.");
+    } catch (error) {
+      setError("An error occurred. Please try again.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   return (
     <div className="login-page-container">
       <div className="login-content-wrapper">
@@ -78,101 +92,138 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
             <span className="tool-subtitle">by INESC TEC</span>
           </div>
         </div>
-
         {/* Right Section */}
-        <div className="right-section">
-          {/* Section #1 */}
-          <div className="welcome-section">
-            {method === "login" && (
-              <div className="welcome-title">Welcome Back!</div>
-            )}
-            {method === "login" ? (<div className="welcome-subtitle">
-              Login to start a new assessment.
-            </div>) : (
-              <div className="welcome-subtitle">
-                Create an account to start a new assessment.
-              </div>
-            )}
-          </div>
-          {/* Section #3 */}
-          <form onSubmit={handleSubmit} className="login-form-container">
-            <div className="form-group">
-              <label className="form-label">Email</label>
-              <input
-                className="form-input"
-                type="email"
-                placeholder="Your email here..."
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Password</label>
-              <input
-                className="form-input"
-                type="password"
-                placeholder="Your password here..."
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            {method === "register" && (
-              <>
-                <div className="form-group">
-                  <label className="form-label">Confirm Password</label>
-                  <input
-                    className="form-input"
-                    type="password"
-                    placeholder="Confirm your password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">First Name</label>
-                  <input
-                    className="form-input"
-                    type="text"
-                    placeholder="Enter your first name"
-                    value={first_name}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Last Name</label>
-                  <input
-                    className="form-input"
-                    type="text"
-                    placeholder="Enter your last name"
-                    value={last_name}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </div>
-              </>
-            )}
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <div className="forgot-password">Forgot password?</div>
-            <button
-              className="login-form-button"
-              type="submit"
-              disabled={loading}
-            >
-              {name}
-            </button>
-            {method === "login" ? (
-              <div className="register-link">
-                <span>Don't have an account? </span>
-                <a href="/register/" className="create-new">Create new</a>
+        {(method === "login" || method === "register") && (
+          <div className="right-section">
+            {/* Section #1 */}
+            <div className="welcome-section">
+              {method === "login" && (
+                <div className="welcome-title">Welcome Back!</div>
+              )}
+              {method === "login" ? (<div className="welcome-subtitle">
+                Login to start a new assessment.
               </div>) : (
-              <div className="register-link">
-                <span>Already have an account? </span>
-                <a href="/login/" className="create-new">Login</a>
+                <div className="welcome-subtitle">
+                  Create an account to start a new assessment.
+                </div>
+              )}
+            </div>
+            {/* Section #3 */}
+            <form onSubmit={handleSubmit} className="login-form-container">
+              <div className="form-group">
+                <label className="form-label">Email</label>
+                <input
+                  className="form-input"
+                  type="email"
+                  placeholder="Your email here..."
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
-            )}
-          </form>
-        </div>
+              <div className="form-group">
+                <label className="form-label">Password</label>
+                <input
+                  className="form-input"
+                  type="password"
+                  placeholder="Your password here..."
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              {method === "register" && (
+                <>
+                  <div className="form-group">
+                    <label className="form-label">Confirm Password</label>
+                    <input
+                      className="form-input"
+                      type="password"
+                      placeholder="Confirm your password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">First Name</label>
+                    <input
+                      className="form-input"
+                      type="text"
+                      placeholder="Enter your first name"
+                      value={first_name}
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Last Name</label>
+                    <input
+                      className="form-input"
+                      type="text"
+                      placeholder="Enter your last name"
+                      value={last_name}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </div>
+                </>
+              )}
+              {error && <p style={{ color: "red" }}>{error}</p>}
+              <a onClick={() => navigate('/forgotpassword/')} className="forgot-password">Forgot password?</a>
+              <button
+                className="login-form-button"
+                type="submit"
+                disabled={loading}
+              >
+                {name}
+              </button>
+              {method === "login" ? (
+                <div className="register-link">
+                  <span>Don't have an account? </span>
+                  <a href="/register/" className="create-new">Create new</a>
+                </div>) : (
+                <div className="register-link">
+                  <span>Already have an account? </span>
+                  <a href="/login/" className="create-new">Login</a>
+                </div>
+              )}
+            </form>
+          </div>)}
+        {method === "reset_password" && (
+          <div className="right-section">
+            {/* Section #1 */}
+            <div className="welcome-section">
+              {method === "login" && (
+                <div className="welcome-title">Welcome Back!</div>
+              )}
+              {method === "login" ? (<div className="welcome-subtitle">
+                Login to start a new assessment.
+              </div>) : (
+                <div className="welcome-subtitle">
+                  Create an account to start a new assessment.
+                </div>
+              )}
+            </div>
+            {/* Section #3 */}
+            <form onSubmit={handleResetPassword} className="login-form-container">
+              <div className="form-group">
+                <label className="form-label">Email</label>
+                <input
+                  className="form-input"
+                  type="email"
+                  placeholder="Your email here..."
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <button
+                className="login-form-button"
+                type="submit"
+                disabled={loading}
+              >
+                Reset Password
+              </button>
+            </form>
+          </div>
+        )}
       </div>
-    </div>
+    </div >
   );
 };
 
