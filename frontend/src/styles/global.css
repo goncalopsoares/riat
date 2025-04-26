@@ -1,0 +1,43 @@
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap');
+
+/* General styles */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9; /* Optional: Set a background color */
+}
+
+/* Specific styles for Space Grotesk text */
+.space-grotesk-title {
+    color: #0D141C;
+    font-size: 18px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    line-height: 23px;
+    word-wrap: break-word;
+}
+
+.space-grotesk-subtitle {
+    color: #0D141C;
+    font-size: 13px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 400;
+    line-height: 23px;
+    word-wrap: break-word;
+}
+
+/* Remove or adjust this */
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Remove these lines */
+    /* position: absolute; */
+    /* top: 25%; */
+    /* left: 50%; */
+    /* transform: translate(-50%, -50%); */
+    text-align: center;
+}
