@@ -83,20 +83,20 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
 
     e.preventDefault();
 
-    if (!token) {
-      console.log("Invalid or missing token.");
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
       return;
     }
 
-    console.log(token);
+    if (!token) {
+      return;
+    }
 
     setLoading(true);
 
 
     try {
-      const response = await api.post("/api/user/reset_password/", { new_password: password, token });
-
-      console.log(response.data);
+      await api.post("/api/user/reset_password/", { new_password: password, token });
 
       alert("Password reset successfully. You can now log in.");
       navigate("/login", { replace: true });
@@ -196,7 +196,7 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
                 </>
               )}
               {error && <p style={{ color: "red" }}>{error}</p>}
-              <p>Forgot Password? <a onClick={() => navigate('/forgotpassword/')} className="forgot-password">Click here</a></p>
+              {method === "login" && (<p>Forgot Password? <a onClick={() => navigate('/forgotpassword/')} className="forgot-password">Click here</a></p>)}
               <button
                 className="login-form-button"
                 type="submit"
@@ -276,6 +276,7 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </div>
+              {error && <p style={{ color: "red" }}>{error}</p>}
               <button
                 className="login-form-button"
                 type="submit"
