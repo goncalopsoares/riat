@@ -30,6 +30,8 @@ class Users(models.Model):
     user_password = models.CharField(max_length=32)
     user_creation_time = models.DateTimeField()
     last_login = models.DateTimeField(blank=True, null=True)
+    password_reset_token = models.CharField(max_length=64, blank=True, null=True)
+    password_reset_token_date = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -305,6 +307,8 @@ class CustomUser(AbstractBaseUser):
     password = models.CharField(max_length=128, db_column='user_password')
     user_creation_time = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(blank=True, null=True)
+    password_reset_token = models.CharField(max_length=64, blank=True, null=True)
+    password_reset_token_date = models.DateTimeField(blank=True, null=True)
 
     objects = CustomUserManager()
 

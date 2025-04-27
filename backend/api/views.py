@@ -48,10 +48,10 @@ class PasswordResetRequestView(APIView):
         if user:
             token = get_random_string(length=64)
             user.password_reset_token = token
-            user.password_reset_requested_at = now()
+            user.password_reset_token_date = now()
             user.save()
 
-            reset_link = f"https://localhost:5173/reset-password?token={token}"
+            reset_link = f"localhost:5173/resetpassword/{token}"
 
             send_mail(
                 'Password Reset',
@@ -63,7 +63,6 @@ class PasswordResetRequestView(APIView):
         return Response({"message": ""}, status=status.HTTP_200_OK)
     
 class PasswordResetView(APIView):
-    
     permission_classes = [AllowAny]
     
     def post(self, request):
@@ -75,10 +74,12 @@ class PasswordResetView(APIView):
 
         user.set_password(new_password)
         user.password_reset_token = None
-        user.password_reset_requested_at = None
+        user.password_reset_token_date = None
         user.save()
 
         return Response({"message": "Password reset successfully"}, status=status.HTTP_200_OK)
+
+
 
 
 # PROJECTS

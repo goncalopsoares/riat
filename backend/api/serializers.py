@@ -4,7 +4,6 @@ from django.utils.timezone import now
 from datetime import timedelta
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from django.utils.timezone import now
 
 # USERS_AUTH
 
@@ -70,24 +69,25 @@ class PasswordResetRequestSerializer(serializers.Serializer):
         return value
     
 class PasswordResetSerializer(serializers.Serializer):
+    
+    model = CustomUser
     token = serializers.CharField()
     new_password = serializers.CharField(min_length=8)
 
     def validate(self, attrs):
         token = attrs.get('token')
-        user = Users.objects.filter(password_reset_token=token).first()
+        user = CustomUser.objects.filter(password_reset_token=token).first()
 
         if not user:
             raise serializers.ValidationError("Token inválido.")
 
-        if now() - user.password_reset_requested_at > timedelta(hours=1):
+        if not user.password_reset_token_date or now() - user.password_reset_token_date > timedelta(hours=1):
             raise serializers.ValidationError("Token expirado.")
 
         attrs['user'] = user
         return attrs
 
-       
-       
+
 # PROJECTS
 
 class UserHasProjectsSerializer(serializers.ModelSerializer):
