@@ -179,7 +179,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     
 class SurveySerializer(serializers.ModelSerializer):
     
-    survey_name = serializers.CharField(validators=[])
+    id_surveys = serializers.CharField(validators=[])
     
     class Meta:
         model = Surveys
@@ -206,10 +206,10 @@ class SurveySerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         user = request.user if request else None
 
-        survey_name = validated_data.get('survey_name')
+        id_surveys = validated_data.get('id_surveys')
 
         try:
-            survey = Surveys.objects.get(survey_name=survey_name)
+            survey = Surveys.objects.get(id_surveys=id_surveys)
             exists = True
         except Surveys.DoesNotExist:
             exists = False
@@ -226,7 +226,7 @@ class SurveySerializer(serializers.ModelSerializer):
             })
 
         survey, created = Surveys.objects.update_or_create(
-            survey_name=survey_name,
+            id_surveys=id_surveys,
             defaults=defaults
         )
 

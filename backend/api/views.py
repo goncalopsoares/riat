@@ -196,9 +196,9 @@ class UpdateSurveyView(UpdateAPIView):
     queryset = Surveys.objects.all()
     lookup_field = 'id_surveys'
 
-    def update(self, request, pk=None):
-        dimension = self.get_object()
-        serializer = self.get_serializer(dimension, data=request.data, partial=True)
+    def update(self, request, *args, **kwargs):
+        survey = self.get_object()
+        serializer = self.get_serializer(survey, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"message": "Survey updated successfully"}, status=status.HTTP_200_OK)
