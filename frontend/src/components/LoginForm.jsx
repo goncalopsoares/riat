@@ -59,7 +59,7 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
         navigate("/login");
       }
     } catch (error) {
-      setError("An error occurred. Please try again.");
+      setError("Incorrect email address or password.");
       console.error(error);
     } finally {
       setLoading(false);
@@ -196,7 +196,7 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
                 </>
               )}
               {error && <p style={{ color: "red" }}>{error}</p>}
-              <a onClick={() => navigate('/forgotpassword/')} className="forgot-password">Forgot password?</a>
+              <p>Forgot Password? <a onClick={() => navigate('/forgotpassword/')} className="forgot-password">Click here</a></p>
               <button
                 className="login-form-button"
                 type="submit"
