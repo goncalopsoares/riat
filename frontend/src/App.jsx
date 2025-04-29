@@ -12,6 +12,7 @@ import NotFound from './pages/NotFound';
 import SurveyTools from './pages/SurveyTools';
 import ScaleTools from './pages/ScaleTools';
 import Navbar from './components/Navbar';
+import ToolBarAdmin from './components/ToolBarAdmin';
 import { UserProvider } from './contexts/UserContext';
 import { ProjectProvider } from './contexts/ProjectContext';
 import SurveyAdmin from './pages/SurveyAdmin';
@@ -37,6 +38,8 @@ function App() {
     <UserProvider>
       <BrowserRouter>
         <Navbar />
+
+        <ToolBarAdmin />
         <Routes>
           <Route path='/'
             element={

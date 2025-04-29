@@ -297,7 +297,7 @@ const SurveyAdmin = () => {
     }
 
     return (
-        <>
+        <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto' }}>
             <div>
                 {loading ? (
                     <p>Loading...</p>
@@ -324,7 +324,7 @@ const SurveyAdmin = () => {
                 {error && <p className="error">{error}</p>}
                 {success && <p className="success">{success}</p>}
             </div>
-        </>
+        </div>
     )
 }
 

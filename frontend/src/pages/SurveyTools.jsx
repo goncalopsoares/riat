@@ -61,7 +61,7 @@ const SurveyTools = () => {
     }
 
     return (
-        <>
+        <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto' }}>
             <div>
                 <button onClick={() => { setEditing(true); }}>
                     <p>Create assessment</p>
@@ -105,7 +105,7 @@ const SurveyTools = () => {
             /> ) : null}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && <p style={{ color: 'green' }}> {success} </p>}
-        </>
+        </div>
     );
 }
 

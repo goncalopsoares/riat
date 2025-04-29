@@ -115,7 +115,7 @@ const ScaleTools = () => {
     };
 
     return (
-        <>
+        <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto' }}>
             <div>
                 {loading ? (
                     <p>Loading...</p>
@@ -174,7 +174,7 @@ const ScaleTools = () => {
             <button onClick={handleScaleSubmit} disabled={loading}>
                 {loading ? "Submitting..." : "Submit "}
             </button>
-        </>
+        </div>
     );
 };
 
