@@ -455,6 +455,11 @@ const Assessment = () => {
     }
         , [existingAnswers]);
 
+
+    useEffect(() => {
+        console.log("selectedValues", selectedValues);
+    }, [selectedValues]);
+    
     // STEP 5 - SUBMIT ASSESSMENT
 
     const handleAssessmentSubmit = async (e) => {

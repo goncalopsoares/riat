@@ -159,10 +159,12 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                 if (dimensionStage === 1) {
                                     handleDimensionChange(currentDimension - 1);
                                     setDimensionStage(3);
+                                    setSelectedValues(existingAnswers[currentDimension - 1].answers);
                                 } else if (dimensionStage === 2) {
                                     setDimensionStage(dimensionStage - 1);
                                 } else if (dimensionStage === 3) {
                                     setDimensionStage(dimensionStage - 1);
+                                    setSelectedValues(existingAnswers[currentDimension].answers[existingAnswers[currentDimension].answers.length - 1]);
                                 }
                             }}>Back</button>)
                         }
@@ -170,10 +172,10 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
 
                             <button onClick={(e) => {
 
-                                if (Object.keys(selectedValues).length > 0) {
+                                if ((Object.keys(selectedValues).length > 0 && Object.values(selectedValues).every(value => value !== ''))) {
 
                                     handleAssessmentSubmit(e);
-                                    
+
                                 } else {
                                     alert("Please provide an answer before proceeding.");
                                 }
@@ -196,7 +198,7 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                         alert("Please provide an answer to every statement and to write an explanation for N/A options.");
                                     }
                                 } else if (dimensionStage === 3) {
-                                    if (Object.keys(selectedValues).length > 0) {
+                                    if (Object.keys(selectedValues).length > 0 && Object.values(selectedValues).every(value => value !== '')) {
                                         handleStatementAnswerSubmit();
                                         handleDimensionChange(currentDimension + 1);
                                     } else {
