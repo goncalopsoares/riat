@@ -10,9 +10,8 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     return (
-        <nav className="navbar bg-body-white sticky-top border-bottom border-secondary-subtle">
-            <div className="container-fluid mx-2 my-4">
-                <a href="/" className="text-dark text-decoration-none">
+        <nav className="navbar sticky-top border-bottom border-secondary-subtle" style={{ zIndex: 5, height: "8rem", backgroundColor: "white" }}>
+                <a href="/" className="text-dark text-decoration-none ms-4">
                     <span className="tool-title">
                         Responsible Innovation Assessment Tool
                         <br />
@@ -20,7 +19,7 @@ const Navbar = () => {
                     <span className="tool-subtitle">by INESC TEC</span>
                 </a>
                 {user && user.user_role === 1 ? (
-                    <ul className="navbar-nav d-flex flex-row me-3">
+                    <ul className="navbar-nav d-flex flex-row me-4">
                         <li className="nav-item mx-2 dropdown">
                             <button
                                 className="btn btn-link nav-link d-flex align-items-center dropdown-toggle"
@@ -67,7 +66,6 @@ const Navbar = () => {
                     </ul>
                 )
                 }
-            </div >
         </nav >
     );
 };
