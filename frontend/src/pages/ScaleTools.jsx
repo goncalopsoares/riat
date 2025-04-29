@@ -25,24 +25,12 @@ const ScaleTools = () => {
     const [labelsArray, setLabelsArray] = useState([]);
 
     useEffect(() => {
-        console.log('scaleId', scaleId);
-    }, [scaleId]);
-
-    useEffect(() => {
         console.log(labelsArray);
     }, [labelsArray]);
 
     useEffect(() => {
-        console.log('scalename', scaleName);
-    }, [scaleName]);
-
-    useEffect(() => {
-        console.log('scaleLevels', scaleLevels);
-    }, [scaleLevels]);
-
-    useEffect(() => {
-        console.log('numberinputs', numberInputs);
-    }, [numberInputs]);
+        console.log('scaleLabels', scaleLabels);
+    }, [scaleLabels]);
 
     useEffect(() => {
         const getAllScales = async () => {
@@ -79,85 +67,52 @@ const ScaleTools = () => {
     }
 
     const handleScaleSubmit = async (e) => {
-        setLoading(true)
         e.preventDefault();
+        setLoading(true);
+        setError('');
+        setSuccess('');
 
-        if (scaleId && scaleId !== '') {
+        const isEditMode = scaleId && scaleId !== '';
+        const name = isEditMode ? scaleNameEdit : scaleName;
+        const levels = isEditMode ? scaleLevelsEdit : scaleLevels;
+        const labels = isEditMode ? scaleLabelsEdit : scaleLabels;
 
-            if (scaleNameEdit === '' || scaleLevelsEdit === '' || labelsArray.length < numberInputs.length || labelsArray.some(label => label.trim() === '')) {
-                setError("Please make sure all fields are filled in correctly before submitting.");
-                setLoading(false);
-                return;
-
-            } else {
-
-                const stringData = labelsArray.toString();
-
-                setScaleLabels(stringData);
-
-            }
-
-            setError('');
-
-            try {
-                await api.put(`/api/scale/update/${scaleId}/`, { scale_name: scaleNameEdit, scale_levels: scaleLevelsEdit, scale_labels: scaleLabelsEdit });
-                setSuccess('Scale updated successfully!');
-                setScaleId('');
-                setScaleNameEdit('');
-                setScaleLevelsEdit('');
-                setScaleLabelsEdit('');
-
-                setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
-
-            } catch (error) {
-                alert(error);
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-
+        if (!name || !levels || labelsArray.length < numberInputs.length || labelsArray.some(label => label.trim() === '')) {
+            setError("Please make sure all fields are filled in correctly before submitting.");
+            setLoading(false);
             return;
-
-        } else {
-
-            if (scaleName === '' || scaleLevels === '' || labelsArray.length < numberInputs.length || labelsArray.some(label => label.trim() === '')) {
-                setError("11 Please make sure all fields are filled in correctly before submitting.");
-                setLoading(false);
-                return;
-
-            } else {
-
-                const stringData = labelsArray.toString();
-
-                setScaleLabels(stringData);
-
-            }
-
-            setError('');
-
-            try {
-
-                await api.post('/api/scale/create/', { scale_name: scaleName, scale_levels: scaleLevels, scale_labels: scaleLabels });
-
-                setSuccess('Scale created successfully!');
-                setScaleName('');
-                setScaleLevels('');
-
-                setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
-
-            } catch (error) {
-                alert(error);
-                console.error(error);
-
-            } finally {
-                setLoading(false);
-            }
         }
-    }
+
+        const stringData = labelsArray.toString();
+        setScaleLabels(stringData);
+
+        try {
+            if (isEditMode) {
+                await api.put(`/api/scale/update/${scaleId}/`, { scale_name: name, scale_levels: levels, scale_labels: stringData });
+                setSuccess('Scale updated successfully!');
+            } else {
+                await api.post('/api/scale/create/', { scale_name: name, scale_levels: levels, scale_labels: stringData });
+                setSuccess('Scale created successfully!');
+            }
+
+            resetForm();
+            setTimeout(() => window.location.reload(), 3000);
+        } catch (error) {
+            alert(error);
+            console.error(error);
+        }
+    };
+
+    const resetForm = () => {
+        setScaleId('');
+        setScaleName('');
+        setScaleLevels('');
+        setScaleLabels('');
+        setScaleNameEdit('');
+        setScaleLevelsEdit('');
+        setScaleLabelsEdit('');
+        setLabelsArray([]);
+    };
 
     return (
         <>

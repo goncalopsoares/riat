@@ -1,6 +1,6 @@
 import ScaleNumberInputs from './ScaleNumberInputs';
 
-const ScaleAdmin = ({ scaleName, setScaleName, scaleLevels, setScaleLevels, setNumberInputs, setLabelsArray }) => {
+const ScaleAdmin = ({ scaleName, setScaleName, scaleLevels, scaleLabels, setScaleLevels, setNumberInputs, setLabelsArray }) => {
 
     return (
         <div>
@@ -21,7 +21,7 @@ const ScaleAdmin = ({ scaleName, setScaleName, scaleLevels, setScaleLevels, setN
                 onChange={(e) => { setScaleLevels(e.target.value); setNumberInputs(e.target.value); }}
             >
             </input>
-            <ScaleNumberInputs scaleLevels={scaleLevels} setLabelsArray={setLabelsArray} />
+            <ScaleNumberInputs scaleLevels={scaleLevels} scaleLabels={scaleLabels} setLabelsArray={setLabelsArray} />
         </div>
     )
 }
