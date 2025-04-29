@@ -157,9 +157,15 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                         ) : (
                             <button onClick={() => {
                                 if (dimensionStage === 1) {
-                                    handleDimensionChange(currentDimension - 1);
-                                    setDimensionStage(3);
-                                    setSelectedValues(existingAnswers[currentDimension - 1].answers);
+                                    if (examplesStatement) {
+                                        handleDimensionChange(currentDimension - 1);
+                                        setDimensionStage(3);
+                                        setSelectedValues(existingAnswers[currentDimension - 1].answers);
+                                    } else {
+                                        handleDimensionChange(currentDimension - 1);
+                                        setDimensionStage(2);
+                                        setSelectedValues(existingAnswers[currentDimension - 1].answers);
+                                    }
                                 } else if (dimensionStage === 2) {
                                     setDimensionStage(dimensionStage - 1);
                                 } else if (dimensionStage === 3) {
@@ -188,14 +194,26 @@ const AssessmentFive = ({ allDimensions, dimensionsNumber, currentDimension, han
                                     setDimensionStage(dimensionStage + 1);
                                 } else if (dimensionStage === 2) {
                                     const selectedValuesCount = Object.keys(selectedValues).length;
-                                    if (
-                                        selectedValuesCount === allDimensions[currentDimension].statements.length - 1 &&
-                                        !Object.values(selectedValues).includes("N/A")
-                                    ) {
-                                        handleStatementAnswerSubmit();
-                                        setDimensionStage(dimensionStage + 1);
+
+                                    if (allDimensions[currentDimension].statements.filter(statement => statement.statement_name === 'Provide Examples').length > 0) {
+                                        if (
+                                            (selectedValuesCount === allDimensions[currentDimension].statements.length - 1 &&
+                                                !Object.values(selectedValues).includes("N/A")) ||
+                                            selectedValuesCount === allDimensions[currentDimension].statements.length
+                                        ) {
+                                            handleStatementAnswerSubmit();
+                                            setDimensionStage(dimensionStage + 1);
+                                        } else {
+                                            alert("Please provide an answer to every statement and write an explanation for N/A options.");
+                                        }
                                     } else {
-                                        alert("Please provide an answer to every statement and to write an explanation for N/A options.");
+                                        if (selectedValuesCount === allDimensions[currentDimension].statements.length) {
+                                            handleStatementAnswerSubmit();
+                                            handleDimensionChange(currentDimension + 1);
+                                            setDimensionStage(1);
+                                        } else {
+                                            alert("Please provide an answer to every statement.");
+                                        }
                                     }
                                 } else if (dimensionStage === 3) {
                                     if (Object.keys(selectedValues).length > 0 && Object.values(selectedValues).every(value => value !== '')) {
