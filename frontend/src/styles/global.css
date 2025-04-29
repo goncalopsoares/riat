@@ -1,13 +1,28 @@
 /* Import fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap');
 
-/* General styles */
+/* Apply global padding to the body */
 body {
-    font-family: 'Inter', sans-serif;
     margin: 0;
-    padding: 0;
-    background-color: #f9f9f9; /* Optional: Set a background color */
-}
+    padding: 16px; /* Adjust this value as needed */
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif; /* Ensure consistent font */
+    background-color: var(--Background-Default-Default, #ffffff);
+  }
+  
+  /* Ensure all elements respect box-sizing */
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+  
+  /* Optional: Add a global container class for consistent layout */
+  .global-container {
+    max-width: 1200px; /* Adjust based on your design */
+    margin: 0 auto; /* Center the content */
+    padding: 16px; /* Add consistent padding */
+  }
 
 /* Specific styles for Space Grotesk text */
 .space-grotesk-title {
