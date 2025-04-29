@@ -1,8 +1,10 @@
-const ScaleAdmin = ({ scaleName, setScaleName, scaleLevels, setScaleLevels, numberInputs}) => {
+import ScaleNumberInputs from './ScaleNumberInputs';
+
+const ScaleAdmin = ({ scaleName, setScaleName, scaleLevels, setScaleLevels, setNumberInputs, setLabelsArray }) => {
 
     return (
         <div>
-            <h1>Create or edit scale</h1>
+            <h1>Create a new scale</h1>
             <input
                 className='login-form-input'
                 type='text'
@@ -16,10 +18,10 @@ const ScaleAdmin = ({ scaleName, setScaleName, scaleLevels, setScaleLevels, numb
                 type='text'
                 placeholder='Insert the number of levels of the scale'
                 value={scaleLevels}
-                onChange={(e) => setScaleLevels(e.target.value)}
+                onChange={(e) => { setScaleLevels(e.target.value); setNumberInputs(e.target.value); }}
             >
             </input>
-            {numberInputs}
+            <ScaleNumberInputs scaleLevels={scaleLevels} setLabelsArray={setLabelsArray} />
         </div>
     )
 }

@@ -312,6 +312,16 @@ class GetScaleView(generics.ListAPIView):
         surveys = Scales.objects.all()
         serializer = ScaleSerializer(surveys, many=True)
         return Response(serializer.data)
+    
+class GetSingleScaleView(generics.ListAPIView):
+    
+    permission_classes = [IsAuthenticated, IsAdminUser]
+    
+    serializer_class = ScaleSerializer
+    
+    def get_queryset(self):
+        id_scales = self.kwargs.get("id_scales")
+        return Scales.objects.filter(id_scales=id_scales)
 
 
 class CreateScaleView(generics.CreateAPIView):
@@ -327,6 +337,21 @@ class CreateScaleView(generics.CreateAPIView):
 
         return Response(ScaleSerializer(survey).data, status=status.HTTP_201_CREATED)
     
+
+class UpdateScaleView(UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+    serializer_class = ScaleSerializer
+    queryset = Scales.objects.all()
+    lookup_field = 'id_scales'
+
+    def update(self, request, *args, **kwargs):
+        scale = self.get_object()
+        serializer = self.get_serializer(scale, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Scale updated successfully"}, status=status.HTTP_200_OK)
+
+
 # SUBMISSIONS
 
 class SubmissionViewSet(viewsets.ModelViewSet):
