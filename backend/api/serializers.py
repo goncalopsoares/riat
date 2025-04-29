@@ -343,6 +343,7 @@ class DimensionSerializer(serializers.ModelSerializer):
             surveys_id_surveys=validated_data.get('surveys_id_surveys'),
             dimension_name=validated_data.get('dimension_name'),
             dimension_description=validated_data.get('dimension_description', ''),
+            dimension_order = validated_data.get('dimension_order'),
             dimension_created_by=f"{user.user_first_name} {user.user_last_name}" if user else "Unknown",
             dimension_last_modified_by=f"{user.user_first_name} {user.user_last_name}" if user else "Unknown",
             dimension_last_modified_by_date=now()

@@ -3,8 +3,6 @@ import DimensionStatementDialog from './DimensionStatementDialog';
 
 const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editingDimensionDescription, setEditingDimensionDescription, handleDimensionSubmit, setUpdateDimensionDescription, editingDimensionName, setEditingDimensionName, allScales, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName, handleStatementSubmit, addStatement, setAddStatement, dialogRef, currentDimensionForStatement, setCurrentDimensionForStatement }) => {
 
-
-
     return (
         <>
             <div>
