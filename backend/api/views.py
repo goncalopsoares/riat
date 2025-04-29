@@ -525,12 +525,12 @@ class ReportViewSet(viewsets.ModelViewSet):
     serializer_class = ReportSerializer
 
     def create(self, request, *args, **kwargs):
-        submission_id = request.data.get('submissions_id_submissions')
+        submissions_id_submissions = request.data.get('submissions_id_submissions')
         final_score = request.data.get('final_score')
         survey_id = request.data.get('surveys_id_surveys') 
         ponderated_score = request.data.get('ponderated_score')
 
-        if submission_id is None:
+        if submissions_id_submissions is None:
             return Response({"error": "missing submission."}, status=status.HTTP_400_BAD_REQUEST)
         if final_score is None:
             return Response({"error": "missing final score."}, status=status.HTTP_400_BAD_REQUEST)
@@ -544,10 +544,9 @@ class ReportViewSet(viewsets.ModelViewSet):
         request.data['ponderated_score'] = ponderated_score
 
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            self.perform_create(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        report = serializer.save()
+        return Response(self.get_serializer(report).data, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, report_token, *args, **kwargs):
         try:

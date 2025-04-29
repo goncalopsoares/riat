@@ -558,6 +558,7 @@ class ReportSerializer(serializers.ModelSerializer):
     surveys_id_surveys = serializers.PrimaryKeyRelatedField(queryset=Surveys.objects.all(), write_only=True)
     dimension_scores = DimensionScoreSerializer(many=True, write_only=True)
     overall_score = ReportsOverallScoreSerializer(source='reports_overall_score_id_reports_overall_score', read_only=True)
+    report_token = serializers.CharField(read_only=True)
 
     class Meta:
         model = Reports
@@ -571,6 +572,8 @@ class ReportSerializer(serializers.ModelSerializer):
             'ponderated_score',
             'surveys_id_surveys',
             'dimension_scores',
+            'report_token',
+            'report_token_date',
         ]
         extra_kwargs = {
             'report_creation_date': {'read_only': True},
@@ -583,6 +586,10 @@ class ReportSerializer(serializers.ModelSerializer):
         max_possible_points = validated_data.pop('max_possible_points', None)
         ponderated_score = validated_data.pop('ponderated_score', None)
         survey = validated_data.pop('surveys_id_surveys', None)
+        submissions_id_submissions = validated_data.pop('submissions_id_submissions', None)
+        if submissions_id_submissions is None:
+            raise serializers.ValidationError("Submissions ID must be provided and cannot be null.")
+        
         # Generate a random token for the report
         report_token = get_random_string(length=32)
         validated_data['report_token'] = report_token
@@ -594,6 +601,8 @@ class ReportSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Ponderated score must be provided.")
         if survey is None:
             raise serializers.ValidationError("Survey ID must be provided.")
+        if submissions_id_submissions is None:
+            raise serializers.ValidationError("Submissions ID must be provided.")
         if report_token is None:
             raise serializers.ValidationError("Report token must be provided.")
 
@@ -628,6 +637,7 @@ class ReportSerializer(serializers.ModelSerializer):
         validated_data['reports_overall_score_id_reports_overall_score'] = overall_score_obj
         validated_data['report_token'] = report_token
         validated_data['report_token_date'] = now()  
+        validated_data['submissions_id_submissions'] = submissions_id_submissions
 
         dimension_scores = validated_data.pop('dimension_scores', None)
 

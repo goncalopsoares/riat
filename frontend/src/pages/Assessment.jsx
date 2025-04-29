@@ -500,7 +500,7 @@ const Assessment = () => {
                 submission_state: 2,
             });
 
-            await api.post(`api/report/${id}/`, {
+            const response = await api.post(`api/report/${id}/`, {
                 submissions_id_submissions: id,
                 final_score: finalScore,
                 max_possible_points: maxPointsPossible,
@@ -509,11 +509,11 @@ const Assessment = () => {
                 dimension_scores: dimensionsPoints,
             });
 
-            const reportResponse = await api.get(`/api/report/${id}/`);
+            const token = response.data.report_token;
 
-            const reportId = reportResponse.data.id_reports;
-
-            navigate(`/report/get/${reportId}`);
+            setTimeout(() => {
+                navigate(`/report/${token}`);
+            }, 6000);
 
         } catch (error) {
             alert(error);
