@@ -227,6 +227,8 @@ class Reports(models.Model):
     submissions_id_submissions = models.ForeignKey('Submissions', models.DO_NOTHING, db_column='submissions_id_submissions')
     reports_overall_score_id_reports_overall_score = models.ForeignKey('ReportsOverallScore', models.DO_NOTHING, db_column='reports_overall_score_id_reports_overall_score')
     report_creation_date = models.DateTimeField()
+    report_token = models.CharField(max_length=32, blank=True, null=True)
+    report_token_date = models.DateTimeField(blank=True, null=True)
     
     class Meta:
         managed = False

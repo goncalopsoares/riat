@@ -60,7 +60,7 @@ function App() {
               </ProjectProvider>
             </ProtectedRoute>}
           />
-          <Route path='/report/:id'
+          <Route path='/report/:token'
             element={<ProtectedRoute>
               <ProjectProvider>
                 <Report />

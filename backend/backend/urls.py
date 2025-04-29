@@ -64,11 +64,11 @@ urlpatterns = [
         'get': 'list'
     }), name='report-create-or-list'),
 
-    # get specific report by id
-    path('api/report/detail/<int:id_reports>/', ReportViewSet.as_view({
+    # get specific report by report_token
+    path('api/report/detail/<str:report_token>/', ReportViewSet.as_view({
         'get': 'retrieve',
         'put': 'update',
         'patch': 'partial_update',
         'delete': 'destroy'
-    }), name='report-detail'),
+    }), name='report-detail'),  
 ]

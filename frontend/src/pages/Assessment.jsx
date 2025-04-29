@@ -463,6 +463,36 @@ const Assessment = () => {
 
         setLoading(true);
 
+        const finalScore = Object.values(existingAnswers).reduce((sum, object) => {
+            const value = object.value;
+            return typeof value === 'number' ? sum + value : sum;
+        }, 0);
+
+        const totalStatements = allDimensions.flatMap(dimension => dimension.statements).filter(
+            (statement) => statement.statement_name !== 'Provide Examples');
+
+        const totalStatementsLength = allDimensions.flatMap(dimension => dimension.statements).filter(
+            (statement) => statement.statement_name !== 'Provide Examples'
+        ).length;
+
+        const maxPointsPossible = totalStatements.reduce((sum, statement) => {
+            return sum + (statement.scale?.scale_levels || 0);
+        }, 0);
+
+        const ponderatedScore = Math.round(finalScore / totalStatementsLength);
+
+        const pointsByDimension = () => {
+            return allDimensions.map(dimension => {
+                const totalPointsByDimension = dimension.statements.reduce((sum, statement) => {
+                    const value = existingAnswers[statement.id_statements]?.value;
+                    return typeof value === 'number' ? sum + value : sum;
+                }, 0);
+                return { dimensionId: dimension.id_dimensions, totalPointsByDimension };
+            });
+        };
+
+        const dimensionsPoints = pointsByDimension();
+
         try {
             await handleStatementAnswerSubmit();
 
@@ -470,32 +500,10 @@ const Assessment = () => {
                 submission_state: 2,
             });
 
-            const finalScore = Object.values(existingAnswers).reduce((sum, object) => {
-                const value = object.value;
-                return typeof value === 'number' ? sum + value : sum;
-            }, 0);
-
-            const totalStatements = allDimensions.flatMap(dimension => dimension.statements).filter(
-                (statement) => statement.statement_name !== 'Provide Examples'
-            ).length;
-
-            const ponderatedScore = ((finalScore) / (totalStatements)).toFixed(2);
-
-            const pointsByDimension = () => {
-                return allDimensions.map(dimension => {
-                    const totalPointsByDimension = dimension.statements.reduce((sum, statement) => {
-                        const value = existingAnswers[statement.id_statements]?.value;
-                        return typeof value === 'number' ? sum + value : sum;
-                    }, 0);
-                    return { dimensionId: dimension.id_dimensions, totalPointsByDimension };
-                });
-            };
-
-            const dimensionsPoints = pointsByDimension();
-
             await api.post(`api/report/${id}/`, {
                 submissions_id_submissions: id,
                 final_score: finalScore,
+                max_possible_points: maxPointsPossible,
                 ponderated_score: ponderatedScore,
                 surveys_id_surveys: surveyId,
                 dimension_scores: dimensionsPoints,

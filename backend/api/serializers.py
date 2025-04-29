@@ -4,6 +4,7 @@ from django.utils.timezone import now
 from datetime import timedelta
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from django.utils.crypto import get_random_string
 
 # USERS_AUTH
 
@@ -552,6 +553,7 @@ class ReportsScoreSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
 
     final_score = serializers.FloatField(write_only=True)
+    max_possible_points = serializers.IntegerField(write_only=True)
     ponderated_score = serializers.FloatField(write_only=True)
     surveys_id_surveys = serializers.PrimaryKeyRelatedField(queryset=Surveys.objects.all(), write_only=True)
     dimension_scores = DimensionScoreSerializer(many=True, write_only=True)
@@ -565,6 +567,7 @@ class ReportSerializer(serializers.ModelSerializer):
             'overall_score',
             'report_creation_date',
             'final_score',
+            'max_possible_points',
             'ponderated_score',
             'surveys_id_surveys',
             'dimension_scores',
@@ -577,8 +580,12 @@ class ReportSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
 
         final_score = validated_data.pop('final_score', None)
+        max_possible_points = validated_data.pop('max_possible_points', None)
         ponderated_score = validated_data.pop('ponderated_score', None)
         survey = validated_data.pop('surveys_id_surveys', None)
+        # Generate a random token for the report
+        report_token = get_random_string(length=32)
+        validated_data['report_token'] = report_token
         validated_data['report_creation_date'] = now()
 
         if final_score is None:
@@ -587,6 +594,14 @@ class ReportSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Ponderated score must be provided.")
         if survey is None:
             raise serializers.ValidationError("Survey ID must be provided.")
+        if report_token is None:
+            raise serializers.ValidationError("Report token must be provided.")
+
+        if ponderated_score is None or not isinstance(ponderated_score, (int, float)):
+            raise serializers.ValidationError("Ponderated score must be a valid number.")
+        
+        if max_possible_points is None or not isinstance(max_possible_points, (int)):
+            raise serializers.ValidationError("Max points must be a valid number.")
 
         score_level = OverallScoreLevels.objects.filter(
             overall_score_level_min_value__lte=ponderated_score,
@@ -606,10 +621,13 @@ class ReportSerializer(serializers.ModelSerializer):
 
         overall_score_obj = ReportsOverallScore.objects.create(
             overall_recommendations_id_overall_recommendations=recommendation,
-            reports_overall_score_value=final_score
+            reports_overall_score_value=final_score,
+            reports_overall_score_max_value=max_possible_points
         )
 
         validated_data['reports_overall_score_id_reports_overall_score'] = overall_score_obj
+        validated_data['report_token'] = report_token
+        validated_data['report_token_date'] = now()  
 
         dimension_scores = validated_data.pop('dimension_scores', None)
 
@@ -627,6 +645,12 @@ class ReportSerializer(serializers.ModelSerializer):
 
     def get_report_details(self, obj):
         report_details = {}
+        
+        # Get report ID using the report token
+        report_token = obj.report_token
+        report = Reports.objects.filter(report_token=report_token).first()
+        if report:
+            report_details['report_id'] = report.id_reports
 
         # Get dimension scores
         scores = ReportsScore.objects.filter(reports_id_reports=obj)
@@ -697,4 +721,5 @@ class ReportSerializer(serializers.ModelSerializer):
             })
 
         report_details['dimensions'] = dimension_details
+        
         return report_details

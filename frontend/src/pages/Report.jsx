@@ -29,15 +29,15 @@ const Report = () => {
 
 
 
-    const { id } = useParams();
+    const { token } = useParams();
 
     useEffect(() => {
         const getReport = async () => {
-            const response = await api.get(`api/report/detail/${id}/`);
+            const response = await api.get(`api/report/detail/${token}/`);
             setReportData(response.data);
         }
         getReport();
-    }, [id]);
+    }, [token]);
 
     // GENERAL REPORT DATA
     useEffect(() => {
@@ -103,7 +103,7 @@ const Report = () => {
 
     const [series, setSeries] = useState([
         {
-            name: "series-1",
+            name: "Total Dimension Score",
             data: []
         }
     ]);
@@ -111,7 +111,7 @@ const Report = () => {
     useEffect(() => {
         setSeries([
             {
-                name: "series-1",
+                name: "Total Dimension Score",
                 data: chartData
             }
         ]);

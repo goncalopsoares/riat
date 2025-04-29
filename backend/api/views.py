@@ -518,6 +518,7 @@ class AnswerViewSet(viewsets.ModelViewSet):
 
         return Response(result, status=status.HTTP_200_OK)
 
+# REPORTS
 
 class ReportViewSet(viewsets.ModelViewSet):
     queryset = Reports.objects.all()
@@ -530,13 +531,13 @@ class ReportViewSet(viewsets.ModelViewSet):
         ponderated_score = request.data.get('ponderated_score')
 
         if submission_id is None:
-            return Response({"error": "submission_id é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "missing submission."}, status=status.HTTP_400_BAD_REQUEST)
         if final_score is None:
-            return Response({"error": "final_score é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "missing final score."}, status=status.HTTP_400_BAD_REQUEST)
         if survey_id is None:
-            return Response({"error": "survey_id é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "missing survey."}, status=status.HTTP_400_BAD_REQUEST)
         if ponderated_score is None:
-            return Response({"error": "ponderated_score é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "missing ponderated score."}, status=status.HTTP_400_BAD_REQUEST)
 
         request.data['final_score'] = final_score
         request.data['surveys_id_surveys'] = survey_id
@@ -547,11 +548,10 @@ class ReportViewSet(viewsets.ModelViewSet):
             self.perform_create(serializer)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
-    def retrieve(self, request, id_reports, *args, **kwargs):
+    def retrieve(self, request, report_token, *args, **kwargs):
         try:
-            report = Reports.objects.get(id_reports=id_reports)
+            report = Reports.objects.get(report_token=report_token)
             serializer = self.get_serializer(report)
             data = serializer.data
             data['details'] = serializer.get_report_details(report)
