@@ -1,17 +1,10 @@
-import { useEffect } from "react";
 import { useUser } from "../contexts/UserContext";
-import { useNavigate, useParams } from 'react-router-dom';
 
 const ToolBarAdmin = () => {
 
     const { user } = useUser();
-    const navigate = useNavigate();
 
     const currentPage = window.location.pathname.split('/')[1];
-
-    useEffect(() => {
-        console.log("Current page:", currentPage);
-    }, [currentPage]);
 
     const userRole = user ? user.user_role : null;
 
@@ -58,6 +51,16 @@ const ToolBarAdmin = () => {
                                 aria-current={currentPage === 'reports' ? 'page' : undefined}
                             >
                                 Reports and Data
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="#"
+                                className={`nav-link ${currentPage === 'recommendations' ? 'text-decoration-underline' : 'link-body-emphasis'
+                                    }`}
+                                aria-current={currentPage === 'recommendations' ? 'page' : undefined}
+                            >
+                                Recommendations
                             </a>
                         </li>
                         <li>

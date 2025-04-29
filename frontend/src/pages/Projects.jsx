@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { useProject } from '../contexts/ProjectContext';
 import { useNavigate } from 'react-router-dom';
+import '../styles/projects.css';
 import api from '../api';
 
 const Projects = () => {
@@ -150,24 +151,32 @@ const Projects = () => {
 
 
     return (
-        <>
-            <div>
-                <button onClick={() => navigate('/assessment')}>
-                    <p>Create Project</p>
+        <div className='mt-5 mb-5' style={{ width: '90%', margin: 'auto' }}>
+            <div className='d-flex justify-content-between align-items-center mb-3'>
+                <h1>Active Projects</h1>
+                <button onClick={() => navigate('/assessment')} className='create-project-button'>
+                    <p className='m-0'>Create Project</p>
                 </button >
             </div>
             <div>
                 {loading ? (
                     <p>Loading...</p>
                 ) : (
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Project Name</th>
-                                <th>Phase</th>
-                                <th>Submissions</th>
-                                <th>Last Score Obtained </th>
-                                <th>Action</th>
+                    <table className='table table-responsive text-left align-middle' style={{ maxWidth: '100%' }}>
+                        <thead className='align-top'  style={{ fontWeight: 'regular' }}>
+                            <tr style={{ height: '6rem', fontWeight: 'regular' }}>
+                                <th className='table-headers-text pt-4'>Project Name</th>
+                                {surveySelector ? (
+                                    <th className='table-headers-text pt-4'>Select Assessment</th>
+                                ) : (
+                                    <>
+                                        <th className='table-headers-text pt-4'>Phase</th>
+                                        <th className='table-headers-text pt-4'>Submissions</th>
+                                        <th className='table-headers-text pt-4'>Last Score Obtained</th>
+                                        <th className='table-headers-text pt-4'>Action</th>
+                                    </>
+                                )}
+
                             </tr>
                         </thead>
                         <tbody>
@@ -179,52 +188,71 @@ const Projects = () => {
                                 const submissionsNumber = project.submissions.filter(submission => submission.submission_state === 2).length;
 
                                 return (
-                                    <tr key={project.id_projects}>
+                                    <tr key={project.id_projects} style={{ height: '6rem' }}>
                                         <td>{project.project_name}</td>
-                                        <td>{project.project_phase} {!lastSubmission && <a className='text-underline' onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
-                                        <td>{submissionsNumber}</td>
-                                        <td>{lastCompletedSubmission ? `${lastCompletedSubmission.reports_overall_score_value} / ${lastCompletedSubmission.reports_overall_score_max_value}` : 'No completed assessments'}</td>
-                                        <td>
-                                            <button
-                                                onClick={(e) => navigateToAssessement(
-                                                    e,
-                                                    project.id_projects,
-                                                    lastSubmission && lastSubmission.submission_state === 1
-                                                        ? lastSubmission.id_submissions
-                                                        : null
-                                                )}
-                                            >
-                                                {lastSubmission && lastSubmission.submission_state === 1 ? (
-                                                    <p>Resume Latest Assessment</p>
-                                                ) : (
-                                                    <p>New Assessment</p>
-                                                )}
-                                            </button>
-                                        </td>
-                                        <td>
-                                            {surveySelector === project.id_projects ? (
-                                                <form onSubmit={(e) => handleStartNewAssessment(e, idUserProject)}>
-                                                    <select value={selectedSurvey} onChange={handleSelectSurvey}>
-                                                        {allSurveys.map((survey) => {
-                                                            // Extract phase number from survey_name
-                                                            const surveyPhase = parseInt(survey.survey_name.match(/\d+/)?.[0], 10);
+                                        {surveySelector ? (
+                                            <td>
+                                                {surveySelector === project.id_projects ? (
+                                                    <form onSubmit={(e) => handleStartNewAssessment(e, idUserProject)} style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', alignItems: 'center' }} className="d-grid gap-0 row-gap-3">
+                                                        <select value={selectedSurvey} onChange={handleSelectSurvey} className='form-select'>
+                                                            {allSurveys.map((survey) => {
+                                                                // Extract phase number from survey_name
+                                                                const surveyPhase = parseInt(survey.survey_name.match(/\d+/)?.[0], 10);
 
-                                                            return (
-                                                                <option
-                                                                    key={survey.id_surveys}
-                                                                    value={survey.id_surveys}
-                                                                    // Disable if project phase is less than survey phase
-                                                                    disabled={project.project_phase < surveyPhase}
-                                                                >
-                                                                    {survey.survey_name}
-                                                                </option>
-                                                            );
-                                                        })}
-                                                    </select>
-                                                    <button type="submit">Start assessment</button>
-                                                </form>
-                                            ) : null}
-                                        </td>
+                                                                return (
+                                                                    <option
+                                                                        key={survey.id_surveys}
+                                                                        value={survey.id_surveys}
+                                                                        // Disable if project phase is less than survey phase
+                                                                        disabled={project.project_phase < surveyPhase}
+                                                                    >
+                                                                        {survey.survey_name}
+                                                                    </option>
+                                                                );
+                                                            })}
+                                                        </select>
+                                                        <button type="submit" className='create-project-button ms-3'>Start assessment</button>
+                                                    </form>
+                                                ) : null}
+                                            </td>) : (
+                                            <>
+                                                <td>{project.project_phase} {!lastSubmission && <a className='text-underline ms-3' onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
+                                                <td>{submissionsNumber}</td>
+                                                <td>
+                                                    {lastCompletedSubmission ? (
+                                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center' }} className="d-grid gap-0 row-gap-3">
+                                                            <div className="score-bar-container">
+                                                                <div
+                                                                    className="score-bar"
+                                                                    style={{
+                                                                        width: `${(lastCompletedSubmission.reports_overall_score_value / lastCompletedSubmission.reports_overall_score_max_value) * 100}%`
+                                                                    }}
+                                                                ></div>
+                                                            </div>
+                                                            <p className='m-0 align-middle' style={{ textAlign: 'center' }}>{`${lastCompletedSubmission.reports_overall_score_value} / ${lastCompletedSubmission.reports_overall_score_max_value}`}</p>
+                                                        </div>
+                                                    ) : 'No completed assessments'}
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        onClick={(e) => navigateToAssessement(
+                                                            e,
+                                                            project.id_projects,
+                                                            lastSubmission && lastSubmission.submission_state === 1
+                                                                ? lastSubmission.id_submissions
+                                                                : null
+                                                        )}
+                                                        className='new-assessment-button'
+                                                    >
+                                                        {lastSubmission && lastSubmission.submission_state === 1 ? (
+                                                            <p className='m-0'>Resume Latest Assessment</p>
+                                                        ) : (
+                                                            <p className='m-0'>New Assessment</p>
+                                                        )}
+                                                    </button>
+                                                </td>
+                                            </>
+                                        )}
                                     </tr>
                                 );
                             })}
@@ -232,7 +260,7 @@ const Projects = () => {
                     </table>
                 )}
             </div>
-        </>
+        </div>
     );
 }
 

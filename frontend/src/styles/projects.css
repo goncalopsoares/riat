@@ -1,0 +1,45 @@
+.create-project-button {
+    padding: 12px;
+    background: var(--Background-Brand-Default, #64c8eb);
+    border: 1px solid var(--Border-Brand-Default, #0091be);
+    border-radius: 8px;
+    color: var(--Text-Brand-On-Brand, #f5f5f5);
+    font-size: 16px;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-headers-text {
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 1rem;;
+}
+
+.new-assessment-button {
+    background: none;
+    border: none;
+    padding: 8px;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: left;
+}
+
+.score-bar-container {
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    height: 0.5rem;
+    width: 100%;
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+.score-bar {
+    background-color: #4285F4;
+    height: 100%;
+    border-radius: 8px;
+}
