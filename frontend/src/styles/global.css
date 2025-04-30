@@ -67,3 +67,13 @@ body {
     border: 1px solid #ffcccc; /* Red border */
     border-radius: 0.25rem;
 }
+
+.sucesss-message {
+    color: #008000; /* Green for success */
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    padding: 1rem;
+    background-color: #e6ffe6; /* Light green background */
+    border: 1px solid #ccffcc; /* Green border */
+    border-radius: 0.25rem;
+}

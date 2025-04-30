@@ -88,6 +88,12 @@
   background: var(--Background-Default-Default, white);
 }
 
+/* Radio button checked state */
+.radio-input:checked {
+  background: var(--Background-Brand-Default, #64c8eb);
+  border: 1px solid var(--Border-Brand-Default, #0091be);
+}
+
 /* Helper text */
 .helper-text {
   font-size: 14px;

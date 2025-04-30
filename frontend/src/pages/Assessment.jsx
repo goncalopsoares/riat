@@ -165,18 +165,25 @@ const Assessment = () => {
                 ]
             });
 
-            setSuccess('Projeto criado com sucesso');
+            setSuccess('Project created successfully!');
 
             const projectId = response.data.id_projects;
             setProjectId(projectId);
-            setStep(4);
+            setTimeout(() => {
+                setStep(4);
+            }, 2000);
+            setError('');
+
 
         } catch (error) {
             alert(error);
             console.error(error);
+            setError('Internal Server Error. Error creating project. Please try again.');
 
         } finally {
             setLoading(false);
+            setError('');
+            setSuccess('');
         }
 
     }
@@ -467,7 +474,7 @@ const Assessment = () => {
     useEffect(() => {
         console.log("selectedValues", selectedValues);
     }, [selectedValues]);
-    
+
     // STEP 5 - SUBMIT ASSESSMENT
 
     const handleAssessmentSubmit = async (e) => {
@@ -553,6 +560,10 @@ const Assessment = () => {
             {isAssessmentReady && (
                 <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} />
             )}
+            <button onClick={() => setStep(2)}>Go to Step 2</button>
+            <button onClick={() => setStep(3)}>Go to Step 3</button>
+            <button onClick={() => setStep(4)}>Go to Step 4</button>
+            <button onClick={() => setStep(5)}>Go to Step 5</button>
         </>
     );
 
