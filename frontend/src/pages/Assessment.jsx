@@ -324,7 +324,12 @@ const Assessment = () => {
 
         const requests = Object.entries(selectedValues).map(([key, value]) =>
             api.get(`/api/answer/${id}/${key}/`)
+
+        
                 .then(async () => {
+
+                    console.log(`Answer exists for statement ${key}. Updating...`);
+                    console.log('value', value);
 
                     if (isNaN(value)) {
 
@@ -338,6 +343,8 @@ const Assessment = () => {
                             value: value,
                         });
 
+
+
                     } else {
 
 
@@ -345,7 +352,10 @@ const Assessment = () => {
                             submissions_id_submissions: id,
                             statements_id_statements: key,
                             value: value,
+                            
                         });
+                        console.log('patch', id, key, value);
+                        
                     }
                 })
 
@@ -484,6 +494,8 @@ const Assessment = () => {
     useEffect(() => {
         console.log("dimensionStage", dimensionStage);
     }, [dimensionStage]);
+
+ 
 
     // STEP 5 - SUBMIT ASSESSMENT
 

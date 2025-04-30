@@ -118,17 +118,18 @@ const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimen
                             </div>)}
                         {dimensionStage === 3 && (() => {
                             const examplesStatement = allDimensions[currentDimension].statements.find(statement => statement.statement_name === 'Provide Examples');
-
+                        
+    
                             if (!examplesStatement) {
                                 return null; // No "Provide Examples" statement found
                             }
-
+                        
                             return (
                                 <div className="w-100">
                                     <h1 className="dimension-name-small">{allDimensions[currentDimension].dimension_name}</h1>
                                     <p className="dimension-description-small">{allDimensions[currentDimension].dimension_description}</p>
                                     <p className="statement-description">{examplesStatement.statement_description}</p>
-
+                        
                                     <textarea
                                         className="textarea"
                                         placeholder="1000 char. max"
@@ -145,8 +146,7 @@ const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimen
                                     </textarea>
                                 </div>
                             );
-                        })
-                        }
+                        })()}
                         <div className={`button-container d-flex justify-content-between w-100 ${dimensionStage === 1 ? 'mt-5' : ''}`} style={{ marginRight: '4rem' }}>
                             {currentDimension === 0 && dimensionStage === 1 ? (
                                 null // No back button on the first dimension

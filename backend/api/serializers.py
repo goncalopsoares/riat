@@ -606,6 +606,8 @@ class ReportSerializer(serializers.ModelSerializer):
         
         if max_possible_points is None or not isinstance(max_possible_points, (int)):
             raise serializers.ValidationError("Max points must be a valid number.")
+        
+        print(f"Final Score: {final_score}, Max Possible Points: {max_possible_points}, Ponderated Score: {ponderated_score}")
 
         score_level = OverallScoreLevels.objects.filter(
             overall_score_level_min_value__lte=ponderated_score,

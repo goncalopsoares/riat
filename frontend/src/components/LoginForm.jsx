@@ -23,7 +23,9 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
     setLoading(true);
     e.preventDefault();
 
-    if (method === "register" || method === "reset_password" && password !== confirmPassword) {
+    if ((method === "register" || method === "reset_password") && password !== confirmPassword) {
+      console.log("password", password);
+      console.log("confirmPassword", confirmPassword);
       setError("Passwords do not match");
       setLoading(false);
       return;
