@@ -4,7 +4,7 @@
 /* Apply global padding to the body */
 body {
     margin: 0;
-    padding: 16px; /* Adjust this value as needed */
+    /*padding: 16px; /* Adjust this value as needed */
     box-sizing: border-box;
     font-family: 'Inter', sans-serif; /* Ensure consistent font */
     background-color: var(--Background-Default-Default, #ffffff);
