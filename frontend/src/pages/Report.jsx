@@ -182,7 +182,7 @@ const Report = () => {
                             options={options}
                             series={series}
                             type="radar"
-                            width="1200"
+                            width="900"
                         />
                     </div>
                 </div>
