@@ -163,86 +163,86 @@ const Report = () => {
 
 
     return (
-        <>
-            <div style={{
-                backgroundColor: "#e0e0e0",
-                borderRadius: "8px",
-                height: "0.5rem",
-                width: "100%",
-                margin: "20px 0",
-                overflow: "hidden"
-            }}>
-                <div style={{
-                    width: "100%",
-                    backgroundColor: "#4285F4",
-                    height: "100%",
-                    borderRadius: "8px",
-                    transition: "width 0.3s ease-in-out"
-                }}>
-                </div>
-            </div>
-            <div>
-                <h1>Report</h1>
-                <p>{creationTime}</p>
-                <p>{projectName}</p>
-                <p>{projectOrganization}</p>
-            </div>
-            <div className="mixed-chart">
-                <Chart
-                    options={options}
-                    series={series}
-                    type="radar"
-                    width="700"
-                />
-            </div>
-            {showAnswers ? (
-                <button onClick={() => setShowAnswers(false)}>Hide Answers</button>
-            ) : (
-                <button onClick={() => setShowAnswers(true)}>Show Answers</button>
-            )}
-            {showAnswers && (<div>
-                {dimensionsData.map(dimension => (
-                    <div key={dimension.id} className="mb-4">
-                        <h2>{dimension.name}</h2>
-                        <p>{dimension.description}</p>
-
-                        {dimension.statements.map(statement => (
-                            <div key={statement.id} className="ml-4 mb-2">
-                                <strong>{statement.name}</strong>
-                                <p>{statement.description}</p>
-
-                                {statement.answers.map(answer => (
-                                    <div key={answer.id} className="ml-4 text-sm text-gray-600">
-                                        <span>Answer: {answer.value}</span><br />
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
+        <div className="global-container">
+            <div className="create-project-container">
+                <div className="progress-bar-container">
+                    <div className="progress-bar" style={{ width: "100%" }}>
                     </div>
-                ))}
-            </div>)}
-            <div>
-                <p>Score: {score} / {maxScore} </p>
-                <p>Overall Responsibility Level</p>
-                <p>{recommendationLevel}</p>
-                <p>The overall responsibility level is calculated based on the average score from the dimensions of the framework. The levels are based on the average score.</p>
-                <p>{recommendation}</p>
-            </div>
-            {loadedGeneralData && loadedChartData && loadedDimensionsData && loadedScoreData && (
-                <DownloadPDFButton
-                    creationTime={creationTime}
-                    projectName={projectName}
-                    projectOrganization={projectOrganization}
-                    series={series}
-                    options={options}
-                    dimensionsData={dimensionsData}
-                    score={score}
-                    maxScore={maxScore}
-                    recommendationLevel={recommendationLevel}
-                    recommendation={recommendation}
-                />
-            )}
-        </>
+                </div>
+
+                <div>
+                    <p>{creationTime}</p>
+                    <p>{projectName}</p>
+                    <p>{projectOrganization}</p>
+                </div>
+                <div className="text-center mb-4 w-100 justify-content-center margin-auto">
+                    <h1 className="dimension-name-small">Responsible Innovation Dimensions</h1>
+                    <div className="mixed-chart" style={{ display: "flex", justifyContent: "center" }}>
+                        <Chart
+                            options={options}
+                            series={series}
+                            type="radar"
+                            width="1200"
+                        />
+                    </div>
+                </div>
+                {
+                    showAnswers ? (
+                        <button onClick={() => setShowAnswers(false)} className="forms-button">Hide Answers</button>
+                    ) : (
+                        <button onClick={() => setShowAnswers(true)} className="forms-button">Show Answers</button>
+                    )
+                }
+                {
+                    showAnswers && (
+                        <div>
+                            {dimensionsData.map(dimension => (
+                                <div key={dimension.id} className="mb-4">
+                                    <h2>{dimension.name}</h2>
+                                    <p>{dimension.description}</p>
+
+                                    {dimension.statements.map(statement => (
+                                        <div key={statement.id} className="ml-4 mb-2">
+                                            <strong>{statement.name}</strong>
+                                            <p>{statement.description}</p>
+
+                                            {statement.answers.map(answer => (
+                                                <div key={answer.id} className="ml-4 text-sm text-gray-600">
+                                                    <span>Answer: {answer.value}</span><br />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    )
+                }
+                <div>
+                    <p>Score: {score} / {maxScore} </p>
+                    <p>Overall Responsibility Level</p>
+                    <p>{recommendationLevel}</p>
+                    <p>The overall responsibility level is calculated based on the average score from the dimensions of the framework. The levels are based on the average score.</p>
+                    <p>{recommendation}</p>
+                </div>
+                {
+                    loadedGeneralData && loadedChartData && loadedDimensionsData && loadedScoreData && (
+                        <DownloadPDFButton
+                            creationTime={creationTime}
+                            projectName={projectName}
+                            projectOrganization={projectOrganization}
+                            series={series}
+                            options={options}
+                            dimensionsData={dimensionsData}
+                            score={score}
+                            maxScore={maxScore}
+                            recommendationLevel={recommendationLevel}
+                            recommendation={recommendation}
+                        />
+                    )
+                }
+            </div >
+        </div >
     );
 };
 

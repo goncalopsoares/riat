@@ -96,7 +96,7 @@ const DownloadPDFButton = ({ series, options, ...props }) => {
                 <Chart options={options} series={series} type="radar" width="500" height="300" />
             </div>
 
-            <button onClick={handleDownload} disabled={loading}>
+            <button onClick={handleDownload} disabled={loading} className='forms-button'>
                 {loading ? 'Generating PDF...' : 'Save Report as PDF'}
             </button>
         </>
