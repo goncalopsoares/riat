@@ -19,7 +19,7 @@ const Home = () => {
             </div>
             <div className='w-100'>
                 <img
-                    src="/landing_page_img.jpg"
+                    src="/landing_page_img.png"
                     alt="Innovation Assessment"
                     className='w-100'
                 />
