@@ -1,0 +1,67 @@
+.dimension-name {
+    color: #0d141c;
+    font-size: 5rem;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    word-wrap: break-word;
+    margin: 2rem 0
+}
+
+.dimension-description {
+    color: #0d141c;
+    font-size: 1.2rem;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    word-wrap: break-word;
+    line-height: 2rem;
+    margin: 1rem 0;
+}
+
+.dimension-name-small {
+    color: #0d141c;
+    font-size: 3.5rem;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    word-wrap: break-word;
+    margin: 1rem 0
+}
+
+.dimension-description-small {
+    color: #0d141c;
+    font-size: 1rem;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    word-wrap: break-word;
+    line-height: 1.5rem;
+    margin: 0.5rem 0 3rem 0;
+}
+
+/*statements*/
+.statement-container {
+    padding: 2rem;
+    margin: 4rem auto;
+    background-color: #F8F9FA;
+    border: 1px solid #E9ECEF;
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.statement-name {
+    color: #0d141c;
+    font-size: 1.3rem;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    word-wrap: break-word;
+    margin: 2rem 0;
+}
+
+.statement-description {
+    color: #0d141c;
+    font-size: 1.1rem;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    word-wrap: break-word;
+    line-height: 2rem;
+    margin: 2rem 0;
+}

@@ -418,7 +418,11 @@ class StatementSerializer(serializers.ModelSerializer):
 # ANSWERS
 
 class AnswerBaseSerializer(serializers.ModelSerializer):
-    value = serializers.CharField(required=False, allow_blank=True, write_only=True)
+    value = serializers.SerializerMethodField()
+    dimensions_id_dimensions = serializers.IntegerField(
+        source='statements_id_statements.dimensions_id_dimensions.id_dimensions',
+        read_only=True
+    )
 
     class Meta:
         model = AnswersBase
@@ -428,32 +432,22 @@ class AnswerBaseSerializer(serializers.ModelSerializer):
             'submissions_id_submissions',
             'answer_creation_time',
             'value',
+            'dimensions_id_dimensions',
         ]
         read_only_fields = ['id_answers_base', 'answer_creation_time']
-        
-    def get(self, submissions_id_submissions):
-        answers_base = AnswersBase.objects.filter(submissions_id_submissions=submissions_id_submissions)
-        result = []
-        for answer in answers_base:
-            answer_data = {
-                'id_answers_base': answer.id_answers_base,
-                'statements_id_statements': answer.statements_id_statements.id_statements,
-                'submissions_id_submissions': answer.submissions_id_submissions.id_submissions,
-                'answer_creation_time': answer.answer_creation_time,
-                'value': None
-            }
+
+    def get_value(self, obj):
+        try:
+            return AnswersInteger.objects.get(answers_base_id_answers_base=obj).value
+        except AnswersInteger.DoesNotExist:
             try:
-                answer_data['value'] = AnswersInteger.objects.get(answers_base_id_answers_base=answer).value
-            except AnswersInteger.DoesNotExist:
+                return AnswersBoolean.objects.get(answers_base_id_answers_base=obj).value
+            except AnswersBoolean.DoesNotExist:
                 try:
-                    answer_data['value'] = AnswersBoolean.objects.get(answers_base_id_answers_base=answer).value
-                except AnswersBoolean.DoesNotExist:
-                    try:
-                        answer_data['value'] = AnswersText.objects.get(answers_base_id_answers_base=answer).value
-                    except AnswersText.DoesNotExist:
-                        pass
-            result.append(answer_data)
-        return result
+                    return AnswersText.objects.get(answers_base_id_answers_base=obj).value
+                except AnswersText.DoesNotExist:
+                    return None
+
 
     def create(self, validated_data):
         value = validated_data.pop('value', '')

@@ -490,33 +490,11 @@ class AnswerViewSet(viewsets.ModelViewSet):
         updated_answer = serializer.save()
         return Response(self.get_serializer(updated_answer).data, status=status.HTTP_200_OK)
     
-    def get(self, request, submissions_id_submissions):
+    def get(self, request, submissions_id_submissions=None):
         answers_base = AnswersBase.objects.filter(submissions_id_submissions=submissions_id_submissions)
-        result = []
+        serializer = AnswerBaseSerializer(answers_base, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        for answer in answers_base:
-            answer_data = {
-                'id_answers_base': answer.id_answers_base,
-                'statements_id_statements': answer.statements_id_statements.id_statements,
-                'submissions_id_submissions': answer.submissions_id_submissions.id_submissions,
-                'answer_creation_time': answer.answer_creation_time,
-                'value': None
-            }
-
-            try:
-                answer_data['value'] = AnswersInteger.objects.get(answers_base_id_answers_base=answer).value
-            except AnswersInteger.DoesNotExist:
-                try:
-                    answer_data['value'] = AnswersBoolean.objects.get(answers_base_id_answers_base=answer).value
-                except AnswersBoolean.DoesNotExist:
-                    try:
-                        answer_data['value'] = AnswersText.objects.get(answers_base_id_answers_base=answer).value
-                    except AnswersText.DoesNotExist:
-                        pass
-
-            result.append(answer_data)
-
-        return Response(result, status=status.HTTP_200_OK)
 
 # REPORTS
 

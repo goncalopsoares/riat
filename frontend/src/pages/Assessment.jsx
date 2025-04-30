@@ -9,6 +9,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from '../api';
 import '../styles/forms.css';
 import '../styles/global.css';
+import '../styles/assessment.css';
 
 const Assessment = () => {
 
@@ -384,7 +385,8 @@ const Assessment = () => {
                     const existingAnswers = response.data.reduce((acc, answer) => {
                         acc[answer.statements_id_statements] = {
                             value: answer.value,
-                            answer_creation_time: answer.answer_creation_time
+                            answer_creation_time: answer.answer_creation_time,
+                            id_dimension: answer.dimensions_id_dimensions
                         };
                         return acc;
                     }, {});
@@ -475,6 +477,14 @@ const Assessment = () => {
         console.log("selectedValues", selectedValues);
     }, [selectedValues]);
 
+    useEffect(() => {
+        console.log("stage", dimensionStage);
+    }, [dimensionStage]);
+
+    useEffect(() => {
+        console.log("dimensionStage", dimensionStage);
+    }, [dimensionStage]);
+
     // STEP 5 - SUBMIT ASSESSMENT
 
     const handleAssessmentSubmit = async (e) => {
@@ -558,9 +568,9 @@ const Assessment = () => {
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
             {isAssessmentReady && (
-                <AssessmentFive allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} />
+                <AssessmentFive loading={loading} allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} />
             )}
-            
+
         </>
     );
 
