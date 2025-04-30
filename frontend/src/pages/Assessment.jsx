@@ -7,6 +7,8 @@ import { useProject } from "../contexts/ProjectContext";
 import { useEffect, useState, useRef, use } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from '../api';
+import '../styles/forms.css';
+import '../styles/global.css';
 
 const Assessment = () => {
 
@@ -74,6 +76,9 @@ const Assessment = () => {
         setInstructionsRead(isChecked);
         if (isChecked) {
             setStep(2);
+            setError('');
+        } else {
+            setError("You must read the instructions and mark the checkbox to proceed.");
         }
     };
 
@@ -87,6 +92,9 @@ const Assessment = () => {
         setAgreement(isChecked);
         if (isChecked) {
             setStep(3);
+            setError('');
+        } else {
+            setError("You must agree to the terms and conditions to proceed.");
         }
     };
 

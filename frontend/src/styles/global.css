@@ -56,3 +56,14 @@ body {
     /* transform: translate(-50%, -50%); */
     text-align: center;
 }
+
+/* Alerts and notifications */
+.error-message {
+    color: #ff0000; /* Red for errors */
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    padding: 1rem;
+    background-color: #ffe6e6; /* Light red background */
+    border: 1px solid #ffcccc; /* Red border */
+    border-radius: 0.25rem;
+}

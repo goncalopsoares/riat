@@ -10,7 +10,7 @@ const AssessmentThree = ({ handleProjectSubmit }) => {
             <CreateProject />
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && <p style={{ color: 'green' }}> {success} </p>}
-            <button onClick={handleProjectSubmit} disabled={loading}>
+            <button onClick={handleProjectSubmit} disabled={loading} className='forms-button'>
                 {loading ? "Submitting..." : "Next"}
             </button>
         </>
