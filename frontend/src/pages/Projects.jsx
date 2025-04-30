@@ -162,18 +162,18 @@ const Projects = () => {
                 {loading ? (
                     <p>Loading...</p>
                 ) : (
-                    <table className='table table-responsive text-left align-middle' style={{ maxWidth: '100%' }}>
+                    <table className='table table-responsive text-left align-middle shadow-sm border border-2' style={{ maxWidth: '100%', borderRadius: '0.5rem', borderCollapse: 'separate' }}>
                         <thead className='align-top'  style={{ fontWeight: 'regular' }}>
                             <tr style={{ height: '6rem', fontWeight: 'regular' }}>
-                                <th className='table-headers-text pt-4'>Project Name</th>
+                                <th className='table-headers-text pt-4 ps-5'>Project Name</th>
                                 {surveySelector ? (
-                                    <th className='table-headers-text pt-4'>Select Assessment</th>
+                                    <th className='table-headers-text pt-4 ps-5'>Select Assessment</th>
                                 ) : (
                                     <>
-                                        <th className='table-headers-text pt-4'>Phase</th>
-                                        <th className='table-headers-text pt-4'>Submissions</th>
-                                        <th className='table-headers-text pt-4'>Last Score Obtained</th>
-                                        <th className='table-headers-text pt-4'>Action</th>
+                                        <th className='table-headers-text pt-4 ps-5'>Phase</th>
+                                        <th className='table-headers-text pt-4 ps-5'>Submissions</th>
+                                        <th className='table-headers-text pt-4 ps-5'>Last Score Obtained</th>
+                                        <th className='table-headers-text pt-4 ps-5'>Action</th>
                                     </>
                                 )}
 
@@ -189,7 +189,7 @@ const Projects = () => {
 
                                 return (
                                     <tr key={project.id_projects} style={{ height: '6rem' }}>
-                                        <td>{project.project_name}</td>
+                                        <td className='ps-5'>{project.project_name}</td>
                                         {surveySelector ? (
                                             <td>
                                                 {surveySelector === project.id_projects ? (
@@ -216,9 +216,9 @@ const Projects = () => {
                                                 ) : null}
                                             </td>) : (
                                             <>
-                                                <td>{project.project_phase} {!lastSubmission && <a className='text-underline ms-3' onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
-                                                <td>{submissionsNumber}</td>
-                                                <td>
+                                                <td className='ps-5'>{project.project_phase} {!lastSubmission && <a className='text-underline ms-3' onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
+                                                <td className='ps-5'>{submissionsNumber}</td>
+                                                <td className='ps-5'>
                                                     {lastCompletedSubmission ? (
                                                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center' }} className="d-grid gap-0 row-gap-3">
                                                             <div className="score-bar-container">
@@ -233,7 +233,7 @@ const Projects = () => {
                                                         </div>
                                                     ) : 'No completed assessments'}
                                                 </td>
-                                                <td>
+                                                <td className='ps-5'>
                                                     <button
                                                         onClick={(e) => navigateToAssessement(
                                                             e,
