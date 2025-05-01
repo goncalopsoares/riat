@@ -47,9 +47,27 @@
     width: 100%;
 }
 
+.statement-container-small {
+    padding: 1rem;
+    margin: 2rem auto;
+    background-color: #F8F9FA;
+    border: 1px solid #E9ECEF;
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.statement-number {
+    color: #3e3e3e;
+    font-size: 1.25rem;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    margin: 2rem 0;
+}
+
 .statement-name {
-    color: #0d141c;
-    font-size: 1.3rem;
+    color: #3e3e3e;
+    font-size: 1.2rem;
     font-family: "Inter", sans-serif;
     font-weight: 400;
     word-wrap: break-word;
@@ -58,10 +76,34 @@
 
 .statement-description {
     color: #0d141c;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-family: "Inter", sans-serif;
     font-weight: 400;
     word-wrap: break-word;
     line-height: 2rem;
     margin: 2rem 0;
+}
+
+.statemet-radio-buttons-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+    gap: 2rem;
+}
+
+.statement-radio-buttons {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 10rem;
+}
+
+.label-text {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    margin: 0 0 0.5rem 0;
+    height: 3rem;
+    align-content: center;
 }

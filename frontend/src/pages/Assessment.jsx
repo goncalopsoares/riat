@@ -34,9 +34,11 @@ const Assessment = () => {
     const [isAssessmentReady, setIsAssessmentReady] = useState(false);
     const [selectedValues, setSelectedValues] = useState([]);
     const [existingAnswers, setExistingAnswers] = useState([]);
+    const [statementCounter, setStatementCounter] = useState(0);
 
     const firstRender = useRef(true);
 
+    console.log('statementCounter', statementCounter);
 
     //GET SUBMISSION DATA
 
@@ -325,7 +327,7 @@ const Assessment = () => {
         const requests = Object.entries(selectedValues).map(([key, value]) =>
             api.get(`/api/answer/${id}/${key}/`)
 
-        
+
                 .then(async () => {
 
                     console.log(`Answer exists for statement ${key}. Updating...`);
@@ -352,10 +354,10 @@ const Assessment = () => {
                             submissions_id_submissions: id,
                             statements_id_statements: key,
                             value: value,
-                            
+
                         });
                         console.log('patch', id, key, value);
-                        
+
                     }
                 })
 
@@ -495,7 +497,7 @@ const Assessment = () => {
         console.log("dimensionStage", dimensionStage);
     }, [dimensionStage]);
 
- 
+
 
     // STEP 5 - SUBMIT ASSESSMENT
 
@@ -580,7 +582,7 @@ const Assessment = () => {
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
             {isAssessmentReady && (
-                <AssessmentFive loading={loading} allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} />
+                <AssessmentFive loading={loading} allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} />
             )}
 
         </>
