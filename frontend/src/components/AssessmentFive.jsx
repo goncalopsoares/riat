@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
-const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, existingAnswers, handleAssessmentSubmit, statementCounter }) => {
+const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, handleAssessmentSubmit, statementCounter }) => {
 
     const [naSelected, setNaSelected] = useState({});
-    const [naReason, setNaReason] = useState({});
+    const [explanation, setExplanation] = useState('');
+    const [example, setExample] = useState('');
 
     return (
         <>
@@ -37,41 +38,42 @@ const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimen
                                     return (
                                         <div key={statement.id_statements} className="statement-container">
                                             <h4 className="statement-name"><span className="statement-number">{currentDimension + 1}.{statementCounter}</span> {statement.statement_name}</h4>
-                                            <p className="statement-description">{statement.statement_description}</p>
-
-
-
+                                            <p className="statement-description"><em>{statement.statement_description}</em></p>
                                             <>
-                                                {(selectedValues[`${statement.id_statements}`] === undefined ||
-                                                    selectedValues[`${statement.id_statements}`] === null ||
-                                                    selectedValues[`${statement.id_statements}`] === "" ||
-                                                    !naSelected[statement.id_statements]) && (
+                                                {
 
-                                                        statement.scale.scale_levels > 0 ? (
-                                                            <>
-                                                                <div className="statemet-radio-buttons-container">
-                                                                    {scaleLabels.map((label, index) => (
-                                                                        <label key={index} className="statement-radio-buttons">
-                                                                            <span className="label-text">{label}</span>
-                                                                            <input
-                                                                                className="radio-input"
-                                                                                type="radio"
-                                                                                name={statement.id_statements}
-                                                                                value={index + 1}
-                                                                                checked={selectedValues[`${statement.id_statements}`] === index + 1}
-                                                                                onChange={(e) => {
-                                                                                    const selectedValue = parseInt(e.target.value, 10);
-                                                                                    setSelectedValues(prev => ({
-                                                                                        ...prev,
-                                                                                        [statement.id_statements]: selectedValue
-                                                                                    }));
-                                                                                }}
-                                                                            />
-                                                                        </label>
-                                                                    ))}
-                                                                </div>
+                                                    statement.scale.scale_levels > 0 ? (
+                                                        <>
 
-                                                                <div>
+                                                            <div className="statemet-radio-buttons-container">
+                                                                {scaleLabels.map((label, index) => (
+                                                                    <label key={index} className="statement-radio-buttons">
+                                                                        <span className="label-text">{label}</span>
+                                                                        <input
+                                                                            className="radio-input"
+                                                                            type="radio"
+                                                                            name={statement.id_statements}
+                                                                            value={index + 1}
+                                                                            checked={selectedValues[`${statement.id_statements}`] === index + 1}
+                                                                            onChange={(e) => {
+                                                                                const selectedValue = parseInt(e.target.value, 10);
+                                                                                setSelectedValues(prev => ({
+                                                                                    ...prev,
+                                                                                    [statement.id_statements]: selectedValue
+                                                                                }));
+                                                                                setNaSelected(prev => ({
+                                                                                    ...prev,
+                                                                                    [statement.id_statements]: false
+                                                                                }));
+
+                                                                            }}
+                                                                        />
+                                                                    </label>
+                                                                ))}
+                                                            </div>
+
+                                                            <div>
+                                                                <label>
                                                                     <input
                                                                         className="checkbox-input me-3 mt-5"
                                                                         type="checkbox"
@@ -83,73 +85,83 @@ const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimen
                                                                                 ...prev,
                                                                                 [statement.id_statements]: isChecked
                                                                             }));
-                                                                            if (!isChecked) {
-                                                                                setNaReason(prev => ({
-                                                                                    ...prev,
-                                                                                    [statement.id_statements]: ""
-                                                                                }));
+                                                                            if (isChecked) {
                                                                                 setSelectedValues(prev => ({
                                                                                     ...prev,
-                                                                                    [statement.id_statements]: null
+                                                                                    [statement.id_statements]: ''
                                                                                 }));
+
+
+
+                                                                            } else {
+                                                                                setSelectedValues(prev => ({
+                                                                                    ...prev,
+                                                                                    [statement.id_statements]: ''
+                                                                                }));
+
+
                                                                             }
+
                                                                         }}
                                                                     />
-                                                                    <label>
-                                                                        {naSelected[statement.id_statements] ? <b>N/A</b> : 'N/A'}
-                                                                    </label>
 
-                                                                    {naSelected[statement.id_statements] && (
-                                                                        <div>
-                                                                            <p style={{ marginLeft: '2rem' }}>
-                                                                                Please explain why you selected this option.
-                                                                            </p>
-                                                                            <textarea
-                                                                                className="textarea"
-                                                                                placeholder="200 char. max"
-                                                                                maxLength={200}
-                                                                                value={naReason?.[statement.id_statements] ?? ""}
-                                                                                onChange={(e) => {
-                                                                                    const value = e.target.value;
-                                                                                    console.log("Saving reason for:", statement.id_statements, "->", value);
+                                                                    {naSelected[statement.id_statements] ? <b>Prefer not to answer</b> : 'Prefer not to answer'}
+                                                                </label>
+                                                                {naSelected[statement.id_statements] || typeof (selectedValues[statement.id_statements]) === 'string' ? (
+                                                                    <>
 
-                                                                                    setNaReason(prev => ({
-                                                                                        ...prev,
-                                                                                        [statement.id_statements]: value
-                                                                                    }));
+                                                                        <p>Explain why you chose this option</p>
+                                                                        <textarea
+                                                                            className="textarea"
+                                                                            name={`${statement.id_statements}_explanation`}
+                                                                            placeholder="200 char. max"
+                                                                            maxLength={200}
+                                                                            value={explanation || selectedValues[`${statement.id_statements}`] || ''}
+                                                                            onChange={(e) => {
+                                                                                const newValue = e.target.value;
+                                                                                setExplanation(newValue);
+                                                                            }}
+                                                                            onBlur={() => {
 
-                                                                                    setSelectedValues(prev => ({
-                                                                                        ...prev,
-                                                                                        [statement.id_statements]: value
-                                                                                    }));
-                                                                                }}
-                                                                            ></textarea>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            </>
+                                                                                setSelectedValues(prev => ({
+                                                                                    ...prev,
+                                                                                    [statement.id_statements]: explanation
+                                                                                }));
+                                                                                setExplanation('');
 
-                                                        ) : (
-                                                            <textarea
-                                                                className="textarea"
-                                                                placeholder="1000 char. max"
-                                                                maxLength={1000}
-                                                                defaultValue={selectedValues[`${statement.id_statements}`]}
-                                                                onChange={(e) => {
-                                                                    const selectedValue = e.target.value;
-                                                                    setSelectedValues(prev => ({
-                                                                        ...prev,
-                                                                        [statement.id_statements]: selectedValue
-                                                                    }));
-                                                                }}
-                                                            />
-                                                        )
-                                                    )}
+                                                                            }}
+                                                                        />
+
+                                                                    </>
+                                                                ) : null
+                                                                }
+
+                                                            </div>
+                                                        </>
+
+                                                    ) : (
+                                                        <textarea
+                                                            className="textarea"
+                                                            placeholder="1000 char. max"
+                                                            maxLength={1000}
+                                                            value={example || selectedValues[`${statement.id_statements}`] || ''}
+                                                            onChange={(e) => {
+                                                                const newValue = e.target.value;
+                                                                setExample(newValue);
+                                                            }}
+                                                            onBlur={() => {
+
+                                                                setSelectedValues(prev => ({
+                                                                    ...prev,
+                                                                    [statement.id_statements]: example
+                                                                }));
+                                                                setExample('');
+
+                                                            }}
+                                                        />
+                                                    )
+                                                }
                                             </>
-
-
-
-
 
                                         </div>
                                     );
@@ -197,33 +209,18 @@ const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimen
                                     } else if (dimensionStage === 2) {
                                         const selectedValuesCount = Object.keys(selectedValues).length;
 
-                                        if (allDimensions[currentDimension].statements.filter(statement => statement.statement_name === 'Provide Examples').length > 0) {
-                                            if (
-                                                (selectedValuesCount === allDimensions[currentDimension].statements.length - 1 &&
-                                                    !Object.values(selectedValues).includes("N/A")) ||
-                                                selectedValuesCount === allDimensions[currentDimension].statements.length
-                                            ) {
-                                                handleStatementAnswerSubmit();
-                                                setDimensionStage(dimensionStage + 1);
-                                            } else {
-                                                alert("Please provide an answer to every statement and write an explanation for N/A options.");
-                                            }
-                                        } else {
-                                            if (selectedValuesCount === allDimensions[currentDimension].statements.length) {
-                                                handleStatementAnswerSubmit();
-                                                handleDimensionChange(currentDimension + 1);
-                                                setDimensionStage(1);
-                                            } else {
-                                                alert("Please provide an answer to every statement.");
-                                            }
-                                        }
-                                    } else if (dimensionStage === 3) {
-                                        if (Object.keys(selectedValues).length > 0 && Object.values(selectedValues).every(value => value !== '')) {
+
+                                        if (
+                                            (selectedValuesCount === allDimensions[currentDimension].statements.length &&
+                                                !Object.values(selectedValues).includes(''))
+                                        ) {
                                             handleStatementAnswerSubmit();
                                             handleDimensionChange(currentDimension + 1);
+                                            setDimensionStage(1);
                                         } else {
-                                            alert("Please provide an answer before proceeding.");
+                                            alert("Please provide an answer to every statement and write an explanation for 'Prefer not to answer' options.");
                                         }
+
                                     }
                                 }} className="forms-button">Next</button>)}
 

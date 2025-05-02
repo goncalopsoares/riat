@@ -354,25 +354,31 @@ const Assessment = () => {
                             submissions_id_submissions: id,
                             statements_id_statements: key,
                             value: value,
-
+                        }).then((response) => {
+                            console.log('Patched value:', value);
+                            console.log('API response:', response.data);
+                            return response;
                         });
-                        console.log('patch', id, key, value);
+
 
                     }
                 })
 
                 .catch((error) => {
 
-                    console.log(`Answer does not exist for statement ${key}. Creating...`);
+                    console.log(`Answer does not exist for statement ${key}. Creating... ${value}`);
 
                     if (error.response && error.response.status === 404) {
                         return api.post(`/api/answer/${id}/`, {
                             submissions_id_submissions: id,
                             statements_id_statements: key,
                             value: value,
+                        }).then((response) => {
+                            console.log('Answer created successfully:', response.data);
                         });
+                       
                     } else {
-                        console.error(`Erro ao obter a resposta para a statement ${key}:`, error);
+                        console.error(`Error fetching the answer for statement ${key}:`, error);
                         throw error;
                     }
                 })
@@ -449,7 +455,7 @@ const Assessment = () => {
         if (dimensionStage === 2) {
             const filteredAnswers = Object.keys(existingAnswers)
                 .filter(key => currentDimensionStatements.some(statement =>
-                    statement.id_statements.toString() === key && statement.statement_name !== 'Provide Examples'
+                    statement.id_statements.toString() === key && statement.scale.scale_levels > 0
                 ))
                 .reduce((obj, key) => {
                     obj[key] = existingAnswers[key].value; // Extract only the value
@@ -459,25 +465,9 @@ const Assessment = () => {
                 setSelectedValues(filteredAnswers);
             }
 
-        } else if (dimensionStage === 3) {
-
-            const examplesStatement = currentDimensionStatements.find(statement => statement.statement_name === 'Provide Examples');
-            if (examplesStatement) {
-
-                const examplesAnswer = {
-                    [examplesStatement.id_statements]:
-                        existingAnswers[examplesStatement.id_statements]?.value || ""
-                };
-
-                if (examplesAnswer !== "" && loading === false) {
-
-                    setSelectedValues(examplesAnswer);
-
-                }
-            }
         }
-
     }, [currentDimension, dimensionStage, loading]);
+
 
     useEffect(() => {
         console.log("existingAnswers", existingAnswers);

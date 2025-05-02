@@ -437,26 +437,27 @@ class AnswerBaseSerializer(serializers.ModelSerializer):
         read_only_fields = ['id_answers_base', 'answer_creation_time']
 
     def get_value(self, obj):
-        try:
-            return AnswersInteger.objects.get(answers_base_id_answers_base=obj).value
-        except AnswersInteger.DoesNotExist:
-            try:
-                return AnswersBoolean.objects.get(answers_base_id_answers_base=obj).value
-            except AnswersBoolean.DoesNotExist:
-                try:
-                    return AnswersText.objects.get(answers_base_id_answers_base=obj).value
-                except AnswersText.DoesNotExist:
-                    return None
+        models = [AnswersInteger, AnswersBoolean, AnswersText]
+        for model in models:
+            answer = model.objects.filter(answers_base_id_answers_base=obj.id_answers_base).first()
+            if answer:
+                return answer.value
+        return None
 
+                
 
     def create(self, validated_data):
         value = validated_data.pop('value', '')
+        print(f"Creating AnswerBase with value: {value}")  # Print the value
         base_answer = AnswersBase.objects.create(**validated_data)
         self._save_typed_answer(base_answer, value)
         return base_answer
+    
 
     def update(self, instance, validated_data):
+        print(f"Updating AnswerBase with ID: {validated_data}")  # Print the ID of the instance being updated
         value = validated_data.pop('value', '')
+        print(f"Creating AnswerBase with value: {value}")  # Print the value
         for attr, val in validated_data.items():
             setattr(instance, attr, val)
         instance.save()
