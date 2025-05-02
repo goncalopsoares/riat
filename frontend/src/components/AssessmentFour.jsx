@@ -1,4 +1,6 @@
 import { useProject } from "../contexts/ProjectContext";
+import ErrorIcon from '@mui/icons-material/Error';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SelectPhase from "./SelectPhase";
 
 const AssessmentFour = ({ handlePhaseUpdate }) => {

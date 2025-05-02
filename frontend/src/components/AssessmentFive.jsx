@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, handleAssessmentSubmit, statementCounter }) => {
+const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, handleAssessmentSubmit, statementCounter, setSubmittingAssessment }) => {
 
     const [naSelected, setNaSelected] = useState({});
     const [explanation, setExplanation] = useState('');
@@ -11,13 +11,22 @@ const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimen
             {allDimensions.length > 0 && loading === false && (
                 <div className="global-container">
                     <div className="create-project-container">
-                        <div className="progress-bar-container"
-                        >
-                            <div
-                                className="progress-bar"
-                                style={{ width: `${(currentDimension / dimensionsNumber) * 100}%` }} >
-                            </div>
-                        </div>
+                        {dimensionStage === 3 ? (
+                            <div className="progress-bar-container"
+                            >
+                                <div
+                                    className="progress-bar"
+                                    style={{ width: '100%' }} >
+                                </div>
+                            </div>)
+                            : (
+                                <div className="progress-bar-container"
+                                >
+                                    <div
+                                        className="progress-bar"
+                                        style={{ width: `${(currentDimension / dimensionsNumber) * 100}%` }} >
+                                    </div>
+                                </div>)}
                         {dimensionStage === 1 && (
                             <div>
                                 <h1 className="dimension-name">{allDimensions[currentDimension].dimension_name}</h1>
@@ -167,6 +176,21 @@ const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimen
                                     );
                                 })}
                             </div>)}
+                        {dimensionStage === 3 && (
+                            <div>
+                                <button onClick={(e) => {
+
+
+
+                                    handleAssessmentSubmit(e);
+
+
+                                    <p>Generating your results, please wait a moment.</p>;
+                                }
+
+
+                                } className="forms-button">Submit Assessment</button>
+                            </div>)}
                         <div className={`button-container d-flex justify-content-between w-100 ${dimensionStage === 1 ? 'mt-5' : ''}`} style={{ marginRight: '4rem' }}>
                             {currentDimension === 0 && dimensionStage === 1 ? (
                                 null // No back button on the first dimension
@@ -188,25 +212,9 @@ const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimen
                             }
                             {currentDimension === dimensionsNumber - 1 && dimensionStage === 2 ? (
 
-                                <button onClick={(e) => {
+                                <button onClick={
+                                    () => {
 
-                                    if ((Object.keys(selectedValues).length > 0 && Object.values(selectedValues).every(value => value !== ''))) {
-
-                                        handleAssessmentSubmit(e);
-
-                                    } else {
-                                        alert("Please provide an answer before proceeding.");
-                                    }
-
-                                    className = "forms-button"
-
-                                }}>Submit Assessment</button>
-
-                            ) : (
-                                <button onClick={() => {
-                                    if (dimensionStage === 1) {
-                                        setDimensionStage(dimensionStage + 1);
-                                    } else if (dimensionStage === 2) {
                                         const selectedValuesCount = Object.keys(selectedValues).length;
 
 
@@ -214,15 +222,44 @@ const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimen
                                             (selectedValuesCount === allDimensions[currentDimension].statements.length &&
                                                 !Object.values(selectedValues).includes(''))
                                         ) {
-                                            handleStatementAnswerSubmit();
-                                            handleDimensionChange(currentDimension + 1);
-                                            setDimensionStage(1);
+                                            const handleSubmit = async () => {
+                                                await handleStatementAnswerSubmit(); // Espera
+                                                setSubmittingAssessment(true);
+                                                setDimensionStage(3); // Só aqui!
+                                            };
+                                            handleSubmit();
                                         } else {
                                             alert("Please provide an answer to every statement and write an explanation for 'Prefer not to answer' options.");
                                         }
 
-                                    }
-                                }} className="forms-button">Next</button>)}
+
+                                    }} className="forms-button">Next</button>
+
+
+
+
+                            ) : (
+                                <button onClick={
+                                    () => {
+                                        if (dimensionStage === 1) {
+                                            setDimensionStage(dimensionStage + 1);
+                                        } else if (dimensionStage === 2) {
+                                            const selectedValuesCount = Object.keys(selectedValues).length;
+
+
+                                            if (
+                                                (selectedValuesCount === allDimensions[currentDimension].statements.length &&
+                                                    !Object.values(selectedValues).includes(''))
+                                            ) {
+                                                handleStatementAnswerSubmit();
+                                                handleDimensionChange(currentDimension + 1);
+                                                setDimensionStage(1);
+                                            } else {
+                                                alert("Please provide an answer to every statement and write an explanation for 'Prefer not to answer' options.");
+                                            }
+
+                                        }
+                                    }} className="forms-button">Next</button>)}
 
                         </div>
                     </div>

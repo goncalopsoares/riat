@@ -35,10 +35,10 @@ const Assessment = () => {
     const [selectedValues, setSelectedValues] = useState([]);
     const [existingAnswers, setExistingAnswers] = useState([]);
     const [statementCounter, setStatementCounter] = useState(0);
+    const [submittingAssessment, setSubmittingAssessment] = useState(false);
 
     const firstRender = useRef(true);
 
-    console.log('statementCounter', statementCounter);
 
     //GET SUBMISSION DATA
 
@@ -330,13 +330,11 @@ const Assessment = () => {
 
                 .then(async () => {
 
-                    console.log(`Answer exists for statement ${key}. Updating...`);
-                    console.log('value', value);
+                    
 
                     if (isNaN(value)) {
 
-                        console.log(`Answer exists for statement ${key}. Creating...`);
-
+                       
                         await api.delete(`/api/answer/${id}/${key}/`);
 
                         return api.post(`/api/answer/${id}/`, {
@@ -355,8 +353,7 @@ const Assessment = () => {
                             statements_id_statements: key,
                             value: value,
                         }).then((response) => {
-                            console.log('Patched value:', value);
-                            console.log('API response:', response.data);
+                           
                             return response;
                         });
 
@@ -366,7 +363,7 @@ const Assessment = () => {
 
                 .catch((error) => {
 
-                    console.log(`Answer does not exist for statement ${key}. Creating... ${value}`);
+                  
 
                     if (error.response && error.response.status === 404) {
                         return api.post(`/api/answer/${id}/`, {
@@ -374,9 +371,9 @@ const Assessment = () => {
                             statements_id_statements: key,
                             value: value,
                         }).then((response) => {
-                            console.log('Answer created successfully:', response.data);
+                            
                         });
-                       
+
                     } else {
                         console.error(`Error fetching the answer for statement ${key}:`, error);
                         throw error;
@@ -400,6 +397,7 @@ const Assessment = () => {
             const getExistingAnswers = async () => {
                 try {
                     const response = await api.get(`/api/answer/${id}/`);
+                    console.log('Existing answers function:', response.data);
                     const existingAnswers = response.data.reduce((acc, answer) => {
                         acc[answer.statements_id_statements] = {
                             value: answer.value,
@@ -417,7 +415,7 @@ const Assessment = () => {
             };
             getExistingAnswers();
         }
-    }, [id, currentDimension]);
+    }, [id, currentDimension, submittingAssessment]);
 
 
     // STEP 5 - SET CURRENT DIMENSION BASED ON LAST ANSWERED STATEMENT
@@ -470,23 +468,9 @@ const Assessment = () => {
 
 
     useEffect(() => {
-        console.log("existingAnswers", existingAnswers);
+        console.log("existingAnswersEffect", existingAnswers);
     }
         , [existingAnswers]);
-
-
-    useEffect(() => {
-        console.log("selectedValues", selectedValues);
-    }, [selectedValues]);
-
-    useEffect(() => {
-        console.log("stage", dimensionStage);
-    }, [dimensionStage]);
-
-    useEffect(() => {
-        console.log("dimensionStage", dimensionStage);
-    }, [dimensionStage]);
-
 
 
     // STEP 5 - SUBMIT ASSESSMENT
@@ -496,6 +480,8 @@ const Assessment = () => {
         e.preventDefault();
 
         setLoading(true);
+
+
 
         const finalScore = Object.values(existingAnswers).reduce((sum, object) => {
             const value = object.value;
@@ -572,7 +558,7 @@ const Assessment = () => {
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
             {isAssessmentReady && (
-                <AssessmentFive loading={loading} allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} />
+                <AssessmentFive loading={loading} allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} setSubmittingAssessment={setSubmittingAssessment} />
             )}
 
         </>

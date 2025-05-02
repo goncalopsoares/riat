@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { useProject } from '../contexts/ProjectContext';
 import { useNavigate } from 'react-router-dom';
@@ -90,6 +90,9 @@ const Projects = () => {
             navigate('/assessment/' + lastSubmission);
         }, 0);
     };
+
+
+    
 
     //SELECT SURVEY
 
@@ -183,6 +186,7 @@ const Projects = () => {
                             {allProjects.map(project => {
 
                                 const lastSubmission = project.submissions[project.submissions.length - 1];
+                                console.log(lastSubmission);
                                 const lastCompletedSubmission = project.submissions.filter(submission => submission.submission_state === 2).slice(-1)[0];
                                 const idUserProject = project.metadata[0].id_users_has_projects;
                                 const submissionsNumber = project.submissions.filter(submission => submission.submission_state === 2).length;
@@ -216,7 +220,7 @@ const Projects = () => {
                                                 ) : null}
                                             </td>) : (
                                             <>
-                                                <td className='ps-5'>{project.project_phase} {!lastSubmission && <a className='text-underline ms-3' onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
+                                                <td className='ps-5'>{project.project_phase} {!lastSubmission || (lastSubmission && lastSubmission.submission_state === 2) && <a className='text-underline ms-3' onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
                                                 <td className='ps-5'>{submissionsNumber}</td>
                                                 <td className='ps-5'>
                                                     {lastCompletedSubmission ? (

@@ -418,7 +418,7 @@ class StatementSerializer(serializers.ModelSerializer):
 # ANSWERS
 
 class AnswerBaseSerializer(serializers.ModelSerializer):
-    value = serializers.SerializerMethodField()
+    value = serializers.CharField(required=False, allow_blank=True, write_only=True)
     dimensions_id_dimensions = serializers.IntegerField(
         source='statements_id_statements.dimensions_id_dimensions.id_dimensions',
         read_only=True
@@ -436,23 +436,38 @@ class AnswerBaseSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id_answers_base', 'answer_creation_time']
 
-    def get_value(self, obj):
-        models = [AnswersInteger, AnswersBoolean, AnswersText]
-        for model in models:
-            answer = model.objects.filter(answers_base_id_answers_base=obj.id_answers_base).first()
-            if answer:
-                return answer.value
-        return None
-
-                
+    def get(self, submissions_id_submissions):
+        answers_base = AnswersBase.objects.filter(submissions_id_submissions=submissions_id_submissions)
+        result = []
+        for answer in answers_base:
+            answer_data = {
+                'id_answers_base': answer.id_answers_base,
+                'statements_id_statements': answer.statements_id_statements.id_statements,
+                'submissions_id_submissions': answer.submissions_id_submissions.id_submissions,
+                'answer_creation_time': answer.answer_creation_time,
+                'value': None
+            }
+            try:
+                answer_data['value'] = AnswersInteger.objects.get(answers_base_id_answers_base=answer).value
+            except AnswersInteger.DoesNotExist:
+                try:
+                    answer_data['value'] = AnswersBoolean.objects.get(answers_base_id_answers_base=answer).value
+                except AnswersBoolean.DoesNotExist:
+                    try:
+                        answer_data['value'] = AnswersText.objects.get(answers_base_id_answers_base=answer).value
+                    except AnswersText.DoesNotExist:
+                        pass
+            result.append(answer_data)
+        return result
+    
 
     def create(self, validated_data):
+        print(f"validated_data: {validated_data}")  # Print the validated data
         value = validated_data.pop('value', '')
         print(f"Creating AnswerBase with value: {value}")  # Print the value
         base_answer = AnswersBase.objects.create(**validated_data)
         self._save_typed_answer(base_answer, value)
         return base_answer
-    
 
     def update(self, instance, validated_data):
         print(f"Updating AnswerBase with ID: {validated_data}")  # Print the ID of the instance being updated
