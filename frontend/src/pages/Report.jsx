@@ -12,6 +12,7 @@ const Report = () => {
     const [projectName, setProjectName] = useState("");
     const [projectOrganization, setProjectOrganization] = useState("");
     const [loadedGeneralData, setLoadedGeneralData] = useState(false);
+    const [reportCode, setReportCode] = useState('');
     // chart data
     const [chartCategories, setChartCategories] = useState([]);
     const [chartData, setChartData] = useState([]);
@@ -35,6 +36,7 @@ const Report = () => {
         const getReport = async () => {
             const response = await api.get(`api/report/detail/${token}/`);
             setReportData(response.data);
+            setReportCode(token)
         }
         getReport();
     }, [token]);
@@ -87,8 +89,14 @@ const Report = () => {
             id: "basic-bar"
         },
         xaxis: {
-            categories: []
-        }
+            categories: [],
+            labels: {
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '0.7rem',
+                }
+            },
+        },
     });
 
     useEffect(() => {
@@ -147,9 +155,11 @@ const Report = () => {
                     id: statement.id,
                     name: statement.name,
                     description: statement.description,
+                    scale_labels: statement.scale_labels,
                     answers: statement.answers.map(answer => ({
                         id: answer.id,
                         value: answer.scale_label !== null ? answer.scale_label : answer.value,
+
                     }))
                 }))
             }));
@@ -165,18 +175,18 @@ const Report = () => {
     return (
         <div className="global-container">
             <div className="create-project-container">
-                <div className="progress-bar-container">
-                    <div className="progress-bar" style={{ width: "100%" }}>
+                <div className="d-flex flex-row justify-content-between w-100 mt-5">
+                    <div>
+                        <h1>Report</h1>
+                        <p>{reportCode}</p>
+                    </div>
+                    <div className="text-end">
+                        <p>Report created on <b>{creationTime}</b></p>
+                        <p>Regarding the project <b>{projectName}</b></p>
                     </div>
                 </div>
-
-                <div>
-                    <p>{creationTime}</p>
-                    <p>{projectName}</p>
-                    <p>{projectOrganization}</p>
-                </div>
-                <div className="text-center mb-4 w-100 justify-content-center margin-auto">
-                    <h1 className="dimension-name-small">Responsible Innovation Dimensions</h1>
+                <div className="text-center mb-4 w-100 justify-content-center margin-auto chart-container">
+                    <h4 className="m-0">Responsible Innovation Dimensions</h4>
                     <div className="mixed-chart" style={{ display: "flex", justifyContent: "center" }}>
                         <Chart
                             options={options}
@@ -195,24 +205,35 @@ const Report = () => {
                 }
                 {
                     showAnswers && (
-                        <div>
-                            {dimensionsData.map(dimension => (
+                        <div className="answers-container">
+                            {dimensionsData.map((dimension, dimensionIndex) => (
                                 <div key={dimension.id} className="mb-4">
-                                    <h2>{dimension.name}</h2>
+                                    <h2>{dimensionIndex + 1}. {dimension.name}</h2>
                                     <p>{dimension.description}</p>
 
-                                    {dimension.statements.map(statement => (
-                                        <div key={statement.id} className="ml-4 mb-2">
-                                            <strong>{statement.name}</strong>
-                                            <p>{statement.description}</p>
+                                    {dimension.statements.map((statement, statementIndex) => (
+                                        <div key={statement.id} className="my-4">
+                                            <b>{dimensionIndex + 1}.{statementIndex + 1}. {statement.name}</b>
+                                            <p><em>{statement.description}</em></p>
 
                                             {statement.answers.map(answer => (
                                                 <div key={answer.id} className="ml-4 text-sm text-gray-600">
-                                                    <span>Answer: {answer.value}</span><br />
+                                                    <p className="m-0">Your answer:</p>
+                                                    {statement.scale_labels.split(",").map((label, index) => (
+                                                        label === answer.value ? (
+                                                            <span key={index} className="scale-labels me-3"><b style={{ color: '#0091be' }}>{label}</b></span>
+                                                        ) : (
+                                                            <span key={index} className="scale-labels me-3">{label}</span>
+                                                        )
+                                                    ))}
                                                 </div>
                                             ))}
                                         </div>
                                     ))}
+
+                                    {dimensionIndex !== dimensionsData.length - 1 && (
+                                        <div className="border-bottom border-3 mb-4"></div>
+                                    )}
                                 </div>
                             ))}
                         </div>

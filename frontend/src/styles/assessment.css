@@ -107,3 +107,15 @@
     height: 3rem;
     align-content: center;
 }
+
+/* report */
+
+.chart-container, .answers-container {
+    padding: 1.5rem;
+    margin: 2rem auto;
+    background-color: #F8F9FA;
+    border: 1px solid #E9ECEF;
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}

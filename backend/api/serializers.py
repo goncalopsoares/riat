@@ -732,6 +732,7 @@ class ReportSerializer(serializers.ModelSerializer):
                 answer_details = []
                 for answer in answers:
                     value = None
+                    scale_labels = statement.scales_id_scales.scale_labels if statement.scales_id_scales else None
                     scale_label = None
                     try:
                         value = AnswersInteger.objects.get(answers_base_id_answers_base=answer).value
@@ -743,7 +744,7 @@ class ReportSerializer(serializers.ModelSerializer):
                                 value = AnswersText.objects.get(answers_base_id_answers_base=answer).value
                             except AnswersText.DoesNotExist:
                                 pass
-
+                    
                     # Get scale label if applicable
                     if statement.scales_id_scales and value is not None:
                         scale_labels = statement.scales_id_scales.scale_labels.split(',')
@@ -763,6 +764,8 @@ class ReportSerializer(serializers.ModelSerializer):
                     'name': statement.statement_name,
                     'description': statement.statement_description,
                     'answers': answer_details,
+                    'scale_labels': statement.scales_id_scales.scale_labels if statement.scales_id_scales else None,
+                    
                 })
             dimension_details.append({
                 'id': dimension.id_dimensions,
