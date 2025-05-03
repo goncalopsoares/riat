@@ -228,6 +228,7 @@ const AssessmentFive = ({ loading, allDimensions, dimensionsNumber, currentDimen
                                                 setDimensionStage(3); // Só aqui!
                                             };
                                             handleSubmit();
+                                            
                                         } else {
                                             alert("Please provide an answer to every statement and write an explanation for 'Prefer not to answer' options.");
                                         }

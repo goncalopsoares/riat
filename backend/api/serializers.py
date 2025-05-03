@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from api.models import AnswersBase, AnswersBoolean, AnswersInteger, AnswersText, CustomUser, Dimensions, Projects, Scales, Statements, Surveys, Users, UsersHasProjects, Reports, ReportsOverallScore, OverallRecommendations, OverallScoreLevels, Submissions, ReportsScore
 from django.utils.timezone import now
+import re
+from django.db.models import Q
 from datetime import timedelta
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
@@ -694,7 +696,33 @@ class ReportSerializer(serializers.ModelSerializer):
 
         # Get dimensions, statements, answers, and scales
         survey = obj.submissions_id_submissions.surveys_id_surveys
-        dimensions = Dimensions.objects.filter(surveys_id_surveys=survey)
+        survey_name = survey.survey_name
+
+        # Regex para extrair base do nome e número da fase
+        match = re.search(r'Phase\s*(\d+)', survey_name)
+        if match:
+            current_phase = int(match.group(1))
+        else:
+            current_phase = None
+
+        # Buscar surveys com nomes que indicam fases anteriores ou agrupadas (ex: Phase 1+2)
+        surveys = Surveys.objects.none()
+        if current_phase is not None:
+            all_surveys = Surveys.objects.filter(survey_name__icontains='Phase')
+            valid_survey_ids = []
+
+            for s in all_surveys:
+                phases = re.findall(r'\d+', s.survey_name)
+                if phases:
+                    phases_int = [int(p) for p in phases]
+                    if all(p <= current_phase for p in phases_int):
+                        valid_survey_ids.append(s.id_surveys)
+
+            surveys = Surveys.objects.filter(id_surveys__in=valid_survey_ids)
+            
+
+# Agora buscas todas as dimensões desses surveys
+        dimensions = Dimensions.objects.filter(surveys_id_surveys__in=surveys)
         dimension_details = []
         for dimension in dimensions:
             statements = Statements.objects.filter(dimensions_id_dimensions=dimension)
