@@ -23,8 +23,6 @@ class Projects(models.Model):
 
 class Users(models.Model):
     id_users = models.AutoField(primary_key=True)
-    user_first_name = models.CharField(max_length=50)
-    user_last_name = models.CharField(max_length=100)
     user_email = models.CharField(unique=True, max_length=100)
     user_role = models.IntegerField()
     user_password = models.CharField(max_length=32)
@@ -302,8 +300,6 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser):
     id = models.AutoField(primary_key=True, db_column='id_users')
-    user_first_name = models.CharField(max_length=50, null=False)
-    user_last_name = models.CharField(max_length=100, null=False)
     user_email = models.EmailField(unique=True, null=False)
     user_role = models.IntegerField(null=False, default=2)
     password = models.CharField(max_length=128, db_column='user_password')
@@ -315,7 +311,6 @@ class CustomUser(AbstractBaseUser):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'user_email'
-    REQUIRED_FIELDS = ['user_first_name', 'user_last_name']
 
     class Meta:
         db_table = 'users'
@@ -362,8 +357,6 @@ class AuthUser(models.Model):
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.IntegerField()
     username = models.CharField(unique=True, max_length=150)
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
     email = models.CharField(max_length=254)
     is_staff = models.IntegerField()
     is_active = models.IntegerField()

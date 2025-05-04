@@ -15,7 +15,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'user_first_name', 'user_last_name', 'user_email', 'user_role', 'password']
+        fields = ['id', 'user_email', 'user_role', 'password']
     
     def create(self, validated_data): 
         password = validated_data.pop('password')
@@ -30,8 +30,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             "user": {
                 "id": user.id,
                 "user_email": user.user_email,
-                "user_first_name": user.user_first_name,
-                "user_last_name": user.user_last_name,
                 "role": user.user_role
             }
         }
@@ -55,8 +53,6 @@ class LoginSerializer(serializers.Serializer):
             'access': str(refresh.access_token),
             'user': {
                 'id': user.id,
-                'user_first_name': user.user_first_name,
-                'user_last_name': user.user_last_name,
                 'user_email': user.user_email,
                 'user_role': user.user_role
             }
@@ -219,12 +215,12 @@ class SurveySerializer(serializers.ModelSerializer):
 
         defaults = {
             'survey_description': validated_data.get('survey_description'),
-            'survey_modified_by':  user.user_first_name + ' ' + user.user_last_name,
+            'survey_modified_by':  user.user_email,
             'survey_last_modified_by_date': now(),
         }
         if not exists:
             defaults.update({
-                'survey_created_by': user.user_first_name + ' ' + user.user_last_name,
+                'survey_created_by': user.user_email,
                 'survey_creation_time': now(),
             })
 
@@ -346,8 +342,8 @@ class DimensionSerializer(serializers.ModelSerializer):
             dimension_name=validated_data.get('dimension_name'),
             dimension_description=validated_data.get('dimension_description', ''),
             dimension_order = validated_data.get('dimension_order'),
-            dimension_created_by=f"{user.user_first_name} {user.user_last_name}" if user else "Unknown",
-            dimension_last_modified_by=f"{user.user_first_name} {user.user_last_name}" if user else "Unknown",
+            dimension_created_by=f"{user.user_email}" if user else "Unknown",
+            dimension_last_modified_by=f"{user.user_email}" if user else "Unknown",
             dimension_last_modified_by_date=now()
         )
         dimension.save()
@@ -359,7 +355,7 @@ class DimensionSerializer(serializers.ModelSerializer):
 
         instance.dimension_name = validated_data.get('dimension_name', instance.dimension_name)
         instance.dimension_description = validated_data.get('dimension_description', instance.dimension_description)
-        instance.dimension_last_modified_by = f"{user.user_first_name} {user.user_last_name}" if user else "Unknown"
+        instance.dimension_last_modified_by = f"{user.user_email}" if user else "Unknown"
         instance.dimension_last_modified_by_date = now()
 
         instance.save()
@@ -396,8 +392,8 @@ class StatementSerializer(serializers.ModelSerializer):
             scales_id_scales=validated_data.get('scales_id_scales'),
             statement_name=validated_data.get('statement_name'),
             statement_description=validated_data.get('statement_description', ''),
-            statement_created_by=f"{user.user_first_name} {user.user_last_name}" if user else "Unknown",
-            statement_modified_by=f"{user.user_first_name} {user.user_last_name}" if user else "Unknown",
+            statement_created_by=f"{user.user_user_email}" if user else "Unknown",
+            statement_modified_by=f"{user.user_email}" if user else "Unknown",
             statement_last_modified_by_date=now()
         )
         statement.save()
@@ -411,7 +407,7 @@ class StatementSerializer(serializers.ModelSerializer):
         instance.statement_description = validated_data.get('statement_description', instance.statement_description)
         instance.scales_id_scales = validated_data.get('scales_id_scales', instance.scales_id_scales)
 
-        instance.statement_modified_by = f"{user.user_first_name} {user.user_last_name}" if user else "Unknown"
+        instance.statement_modified_by = f"{user.user_email}" if user else "Unknown"
         instance.statement_last_modified_by_date = now()
 
         instance.save()

@@ -9,8 +9,6 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [first_name, setFirstName] = useState("");
-  const [last_name, setLastName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { setUser } = useUser();
@@ -38,8 +36,6 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
         api.post(routeOne, {
           user_email: email,
           password,
-          ...(method === "register" && { user_first_name: first_name }),
-          ...(method === "register" && { user_last_name: last_name }),
         }),
       ];
 
@@ -173,26 +169,6 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
                       placeholder="Confirm your password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">First Name</label>
-                    <input
-                      className="form-input"
-                      type="text"
-                      placeholder="Enter your first name"
-                      value={first_name}
-                      onChange={(e) => setFirstName(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Last Name</label>
-                    <input
-                      className="form-input"
-                      type="text"
-                      placeholder="Enter your last name"
-                      value={last_name}
-                      onChange={(e) => setLastName(e.target.value)}
                     />
                   </div>
                 </>
