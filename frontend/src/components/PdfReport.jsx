@@ -4,15 +4,173 @@ import Chart from "react-apexcharts";
 import html2canvas from 'html2canvas';
 
 const styles = StyleSheet.create({
-    page: { padding: 20 },
-    section: { marginBottom: 20 },
-    chartImage: { width: 500, height: 300 },
+    page: {
+        padding: 40,
+        fontSize: 12,
+        fontFamily: 'Helvetica',
+    },
+    firstSection: {
+        marginBottom: 20,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    firstSectionDetails: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    detailsText: {
+        fontSize: 8,
+        marginBottom: 4,
+    },
+    dimensionTitle: {
+        fontSize: 14,
+        marginBottom: 5,
+        fontWeight: 'bold',
+    },
+    dimesionDescription: {
+        fontSize: 10,
+        marginBottom: 10,
+        lineHeight: 1.5,
+    },
+    statementTitle: {
+        fontSize: 11,
+        marginBottom: 5,
+        fontWeight: 'bold',
+    },
+    statementDescription: {
+        fontSize: 11,
+        marginBottom: 10,
+        lineHeight: 1.5,
+        fontStyle: 'italic',
+    },
+    border: {
+        borderBottom: '2px solid #DEE2E6',
+        marginBottom: 10,
+        marginTop: 10,
+    },
+    scaleLabelsContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    scaleLabels: {
+        fontSize: 9,
+        color: '#000',
+        display: 'inline-block',
+        marginLeft: 5,
+    },
+    answerContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    answerLabel: {
+        fontSize: 9,
+        color: '#006C8E',
+        display: 'inline-block',
+        marginLeft: 5,
+        fontWeight: 'bold',
+        backgroundColor: '#DEE2E6',
+        padding: 2.5,
+    },
+    dot: {
+        height: 4,
+        width: 4,
+        backgroundColor: '#0091BE',
+        display: 'inline-block',
+    },
+    scoreFirstSection: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 4,
+    },
+    scoreTitleText: {
+        fontSize: 14,
+        color: '#000',
+        display: 'inline-block',
+    },
+    scoreContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    scoreText: {
+        fontSize: 17,
+        color: '#000',
+        display: 'inline-block',
+        marginLeft: 5,
+        fontWeight: 'bold',
+    },
+    maxScoreText: {
+        fontSize: 14,
+        color: '#A4A4A4',
+        display: 'inline-block',
+        marginLeft: 5,
+    },
+    title: {
+        fontSize: 20,
+        marginBottom: 10,
+        fontWeight: 'bold',
+    },
+    subtitle: {
+        fontSize: 14,
+        marginBottom: 5,
+        fontWeight: 'bold',
+        marginBottom: 13,
+    },
+    responsibilityLevelTextLabel: {
+        fontSize: 14,
+        color: '#000',
+        display: 'inline-block',
+    },
+    responsibilityLevelTextBad: {
+        fontSize: 14,
+        color: '#E0CA3C',
+        display: 'inline-block',
+        marginLeft: 5,
+    },
+    responsibilityLevelTextMedium: {
+        fontSize: 14,
+        color: '#53CAA1',
+        display: 'inline-block',
+        marginLeft: 5,
+    },
+    responsibilityLevelTextGood: {
+        fontSize: 14,
+        color: '#226F54',
+        display: 'inline-block',
+        marginLeft: 5,
+    },
+    infoText: {
+        fontSize: 9,
+        fontWeight: 'bold',
+    },
+    paragraph: {
+        marginBottom: 8,
+        lineHeight: 1.5,
+    },
+    chartImage: {
+        width: '100%',
+        objectFit: 'contain',
+        marginTop: 10,
+    },
+    boldText: {
+        fontWeight: 'bold',
+    },
+    section: {
+        marginBottom: 5,
+        padding: 10,
+    },
 });
 
 const ReportDocument = ({
+    token,
     creationTime,
     projectName,
-    projectOrganization,
     chartImage,
     dimensionsData,
     score,
@@ -22,48 +180,81 @@ const ReportDocument = ({
 }) => (
     <Document>
         <Page size="A4" style={styles.page}>
-            <View style={styles.section}>
-                <Text>Report</Text>
-                <Text>{creationTime}</Text>
-                <Text>{projectName}</Text>
-                <Text>{projectOrganization}</Text>
+            <Text style={styles.detailsText}>{token}</Text>
+            <View style={styles.firstSection}>
+                <Text style={styles.title}>Responsible Innovation Report</Text>
+                <View style={styles.firstSectionDetails} >
+                    <Text style={styles.detailsText}>Report created on: <Text style={styles.boldText}>{creationTime}</Text></Text>
+                    <Text style={styles.detailsText}>Regarding the project: <Text style={styles.boldText}>{projectName}</Text></Text>
+                </View>
             </View>
 
             <View style={styles.section}>
-                <Text>Radar Chart:</Text>
+                <Text style={styles.subtitle}>Responsible Innovation Dimensions</Text>
                 {chartImage && <Image style={styles.chartImage} src={chartImage} />}
             </View>
 
             <View style={styles.section}>
-                {dimensionsData.map(dimension => (
-                    <View key={dimension.id} className="mb-4">
-                        <Text>{dimension.name}</Text>
-                        <Text>{dimension.description}</Text>
+                <Text style={styles.subtitle}>Score Summary</Text>
+                <View style={styles.scoreFirstSection}>
+                    <Text style={styles.responsibilityLevelTextLabel}>Overall Responsibility Level  — &nbsp;
+                        <Text style={
+                            recommendationLevel.search("1") >= 0 ? styles.responsibilityLevelTextBad :
+                                recommendationLevel.search("2") >= 0 ? styles.responsibilityLevelTextMedium :
+                                    recommendationLevel.search("3") >= 0 ? styles.responsibilityLevelTextGood : styles.responsibilityLevelTextLabel}>
+                            {recommendationLevel}
+                        </Text>
+                    </Text>
+                    <View style={styles.scoreContainer}>
+                        <Text style={styles.responsibilityLevelTextLabel}>Score: <Text style={styles.scoreText}>{score}</Text><Text style={styles.maxScoreText}>/ {maxScore}</Text></Text>
+                    </View>
+                </View>
+                <View style={{ marginBottom: 15 }}>
+                    <Text style={styles.infoText}>
+                        The overall responsibility level is calculated based on the average score from the dimensions of the framework.
+                    </Text>
+                </View>
+                <View style={{ marginTop: 10 }}>
+                    <Text style={styles.dimesionDescription}>{recommendation}</Text>
+                </View>
+            </View>
 
-                        {dimension.statements.map(statement => (
-                            <View key={statement.id} className="ml-4 mb-2">
-                                <Text>{statement.name}</Text>
-                                <Text>{statement.description}</Text>
+            <View style={styles.section}>
+                <Text style={styles.subtitle}>Answers</Text>
+                {dimensionsData.map((dimension, dimIndex) => (
+                    <View key={dimension.id} style={{ marginBottom: 15 }}>
+                        <Text style={styles.dimensionTitle}>{dimIndex + 1}. {dimension.name}</Text>
+                        <Text style={styles.dimesionDescription}>{dimension.description}</Text>
 
-                                {statement.answers.map(answer => (
-                                    <View key={answer.id} className="ml-4 text-sm text-gray-600">
-                                        <Text>Answer: {answer.value}</Text><br />
-                                    </View>
-                                ))}
+                        {dimension.statements.map((statement, stmtIndex) => (
+                            <View key={statement.id} style={{ marginBottom: 10 }}>
+                                <Text style={styles.statementTitle}>{dimIndex + 1}.{stmtIndex + 1}. {statement.name}</Text>
+                                <Text style={styles.statementDescription}><Text>{statement.description}</Text></Text>
+
+                                <View style={styles.scaleLabelsContainer}>
+                                    {statement.scale_labels.split(",").map((label, index) => (
+                                        <Text
+                                            key={index}
+                                            style={
+                                                label === statement.answers[0]?.value
+                                                    ? { ...styles.answerLabel, display: 'flex', alignItems: 'center' }
+                                                    : styles.scaleLabels
+                                            }
+                                        >
+                                            {label}
+                                        </Text>
+                                    ))}
+                                </View>
                             </View>
                         ))}
+                        {dimIndex !== dimensionsData.length - 1 && (
+                            <View style={styles.border}></View>
+                        )}
                     </View>
                 ))}
             </View>
-            <View style={styles.section}>
-                <Text>Score: {score} / {maxScore}</Text>
-                <Text>Overall Responsibility Level</Text>
-                <Text>{recommendationLevel}</Text>
-                <Text>The overall responsibility level is calculated based on the average score from the dimensions of the framework. The levels are based on the average score.</Text>
-                <Text>{recommendation}</Text>
-            </View>
         </Page>
-    </Document>
+    </Document >
 );
 
 const DownloadPDFButton = ({ series, options, ...props }) => {
@@ -93,7 +284,43 @@ const DownloadPDFButton = ({ series, options, ...props }) => {
         <>
             {/* Hidden chart renderer */}
             <div ref={chartRef} style={{ position: 'absolute', top: '-10000px', left: '-10000px' }}>
-                <Chart options={options} series={series} type="radar" width="500" height="300" />
+                <Chart
+                    options={{
+                        ...options,
+                        chart: {
+                            ...options.chart,
+                        },
+                        plotOptions: {
+                            radar: {
+                                polygons: {
+                                    strokeColor: '#e8e8e8',
+                                    fill: {
+                                        colors: ['#f8f8f8', '#fff']
+                                    }
+                                }
+                            }
+                        },
+                        dataLabels: {
+                            enabled: true,
+                            background: {
+                                enabled: true,
+                                borderRadius: 2,
+                            }
+                        },
+                        xaxis: {
+                            ...options.xaxis,
+                            labels: {
+                                ...options.xaxis.labels,
+                                style: {
+                                    fontSize: '16px',
+                                }
+                            },
+                        },
+                    }}
+                    series={series}
+                    type="radar"
+                    width="1150"
+                />
             </div>
 
             <button onClick={handleDownload} disabled={loading} className='forms-button'>

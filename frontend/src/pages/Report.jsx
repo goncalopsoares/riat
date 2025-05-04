@@ -199,42 +199,43 @@ const Report = () => {
                 />
                 <div>
                     <h3 className="mt-5 fs-4">Score: <span className="fs-3"><b>{score}</b></span> <span className="text-body-tertiary fs-5">/ {maxScore}</span></h3>
-                <div className="d-flex flex-row align-items-center mb-2">
-                    <h3>Overall Responsibility Level  —
-                        {recommendationLevel && (
-                            <span className="ms-2" style={{
-                                color: recommendationLevel.search("1") >= 0 ? "#E0CA3C" :
-                                    recommendationLevel.search("2") >= 0 ? "#53CAA1" :
-                                        recommendationLevel.search("3") >= 0 ? "#226F54" : "000"
-                            }}>
-                                {recommendationLevel}
-                            </span>
-                        )}
-                    </h3>
+                    <div className="d-flex flex-row align-items-center mb-2">
+                        <h3>Overall Responsibility Level  —
+                            {recommendationLevel && (
+                                <span className="ms-2" style={{
+                                    color: recommendationLevel.search("1") >= 0 ? "#E0CA3C" :
+                                        recommendationLevel.search("2") >= 0 ? "#53CAA1" :
+                                            recommendationLevel.search("3") >= 0 ? "#226F54" : "000"
+                                }}>
+                                    {recommendationLevel}
+                                </span>
+                            )}
+                        </h3>
+                    </div>
+
+                    <p className="my-4"><b>The overall responsibility level is calculated based on the average score from the dimensions of the framework. The levels are based on the average score.</b></p>
+
+                    <h4 className="mt-5 mb-4">General Recommendations</h4>
+                    <p>{recommendation}</p>
                 </div>
-
-                <p className="my-4"><b>The overall responsibility level is calculated based on the average score from the dimensions of the framework. The levels are based on the average score.</b></p>
-
-                <h4 className="mt-5 mb-4">General Recommendations</h4>
-                <p>{recommendation}</p>
-            </div>
-            {
-                loadedGeneralData && loadedChartData && loadedDimensionsData && loadedScoreData && (
-                    <DownloadPDFButton
-                        creationTime={creationTime}
-                        projectName={projectName}
-                        projectOrganization={projectOrganization}
-                        series={series}
-                        options={options}
-                        dimensionsData={dimensionsData}
-                        score={score}
-                        maxScore={maxScore}
-                        recommendationLevel={recommendationLevel}
-                        recommendation={recommendation}
-                    />
-                )
-            }
-        </div >
+                {
+                    loadedGeneralData && loadedChartData && loadedDimensionsData && loadedScoreData && (
+                        <DownloadPDFButton
+                            token={token}
+                            creationTime={creationTime}
+                            projectName={projectName}
+                            projectOrganization={projectOrganization}
+                            series={series}
+                            options={options}
+                            dimensionsData={dimensionsData}
+                            score={score}
+                            maxScore={maxScore}
+                            recommendationLevel={recommendationLevel}
+                            recommendation={recommendation}
+                        />
+                    )
+                }
+            </div >
         </div >
     );
 };
