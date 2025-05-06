@@ -468,9 +468,16 @@ const Assessment = () => {
 
         if (existingAnswers.length === 0) return;
 
-        const currentDimensionStatements = topLevelDimensions[currentDimension]?.statements || [];
-
         if (dimensionStage === 2) {
+            const currentSubDimensions = allDimensions.filter(dimension =>
+                topLevelDimensions[currentDimension]?.sub_dimensions?.includes(dimension.id_dimensions)
+            );
+
+            const currentDimensionStatements = [
+                ...(topLevelDimensions[currentDimension]?.statements || []),
+                ...currentSubDimensions.flatMap(subDimension => subDimension.statements || [])
+            ];
+
             const filteredAnswers = Object.keys(existingAnswers)
                 .filter(key => currentDimensionStatements.some(statement =>
                     statement.id_statements.toString() === key
@@ -479,6 +486,7 @@ const Assessment = () => {
                     obj[key] = existingAnswers[key].value; // Extract only the value
                     return obj;
                 }, {});
+
             if (Object.keys(filteredAnswers).length !== 0 && loading === false) {
                 setSelectedValues(filteredAnswers);
             }
