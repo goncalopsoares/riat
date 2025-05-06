@@ -13,7 +13,7 @@ const Home = () => {
             </div>
             <div className='text-start mb-5' style={{ padding: '0 9.5rem 0 9.5rem' }}>
                 <h2 className='fs-1 mb-3'><b>What is RIAT?</b></h2>
-                <p className='fs-4'>The RIAT (Tesponsible Innovation Assessment Tool) is a self assessment and reflexive tool that introduces accountability among innovators, encouraging a proactive approach to address potential risks and unintended consequences of their innovation projects.</p>
+                <p className='fs-4'>The RIAT (Responsible Innovation Assessment Tool) is a self assessment and reflexive tool that introduces accountability among innovators, encouraging a proactive approach to address potential risks and unintended consequences of their innovation projects.</p>
             </div>
             <div className='text-start mb-5' style={{ padding: '0 9.5rem 0 9.5rem' }}>
                 <h2 className='fs-1 mb-3'><b>What kinds of change is this process aiming to promote?</b></h2>

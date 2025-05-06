@@ -187,10 +187,16 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
                   <span>Don't have an account? </span>
                   <a href="/register/" className="create-new">Create new</a>
                 </div>) : (
-                <div className="register-link">
-                  <span>Already have an account? </span>
-                  <a href="/login/" className="create-new">Login</a>
-                </div>
+                <>
+                  <div className="register-link">
+                    <span>Already have an account? </span>
+                    <a href="/login/" className="create-new">Login</a>
+                  </div>
+                  <div className="register-link">
+                    <span> </span>
+                    <a href="/" className="create-new">Click Here to read the GDPR</a>
+                  </div>
+                </>
               )}
             </form>
           </div>)}
