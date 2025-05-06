@@ -698,16 +698,17 @@ class ReportSerializer(serializers.ModelSerializer):
         survey = obj.submissions_id_submissions.surveys_id_surveys
         survey_name = survey.survey_name
 
-        # Regex para extrair base do nome e número da fase
-        match = re.search(r'Phase\s*(\d+)', survey_name)
+        # Regex para extrair base do nome e números das fases, incluindo agrupadas (ex: Phase 1+2)
+        match = re.findall(r'Phase\s*(\d+(?:\+\d+)*)', survey_name)
         if match:
-            current_phase = int(match.group(1))
+            phases = match[0].split('+')
+            current_phases = [int(phase) for phase in phases]
         else:
-            current_phase = None
+            current_phases = []
 
         # Buscar surveys com nomes que indicam fases anteriores ou agrupadas (ex: Phase 1+2)
         surveys = Surveys.objects.none()
-        if current_phase is not None:
+        if current_phases:
             all_surveys = Surveys.objects.filter(survey_name__icontains='Phase')
             valid_survey_ids = []
 
@@ -715,7 +716,7 @@ class ReportSerializer(serializers.ModelSerializer):
                 phases = re.findall(r'\d+', s.survey_name)
                 if phases:
                     phases_int = [int(p) for p in phases]
-                    if all(p <= current_phase for p in phases_int):
+                    if all(p in current_phases for p in phases_int):
                         valid_survey_ids.append(s.id_surveys)
 
             surveys = Surveys.objects.filter(id_surveys__in=valid_survey_ids)
