@@ -473,7 +473,7 @@ const Assessment = () => {
         if (dimensionStage === 2) {
             const filteredAnswers = Object.keys(existingAnswers)
                 .filter(key => currentDimensionStatements.some(statement =>
-                    statement.id_statements.toString() === key && statement.scale.scale_levels > 0
+                    statement.id_statements.toString() === key
                 ))
                 .reduce((obj, key) => {
                     obj[key] = existingAnswers[key].value; // Extract only the value
@@ -482,6 +482,8 @@ const Assessment = () => {
             if (Object.keys(filteredAnswers).length !== 0 && loading === false) {
                 setSelectedValues(filteredAnswers);
             }
+
+            console.log('Filtered answers:', filteredAnswers);
 
         }
     }, [currentDimension, dimensionStage, loading]);
