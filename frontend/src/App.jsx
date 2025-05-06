@@ -20,6 +20,7 @@ import Projects from './pages/Projects';
 import Assessment from './pages/Assessment';
 import Report from './pages/Report';
 import './styles/global.css';
+import Footer from './components/Footer';
 
 const Logout = () => {
   localStorage.clear();
@@ -96,6 +97,7 @@ function App() {
           <Route path='/resetpassword/:token' element={<ResetPassword />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </UserProvider>
   );

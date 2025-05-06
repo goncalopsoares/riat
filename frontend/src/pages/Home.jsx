@@ -24,26 +24,6 @@ const Home = () => {
                     className='w-100'
                 />
             </div>
-            <div className='mt-5' style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', alignItems: 'center' }}>
-                <div className='d-flex flex-row justify-content-center align-items-start'>
-                    <img src="/flag_eu.jpg"
-                        alt="Innovation Assessment"
-                        className='mx-4'
-                    />
-                    <p>This project has received funding from the
-                        European Union’s Horizon Europe research
-                        and innovation programme under the
-                        Grant Agreement 101058385.
-                        <br />
-                        <br />
-                        Views and opinions expressed are however
-                        those of the authors only and do not
-                        necessarily reflect those of the European
-                        Union or Horizon Europe. Neither the
-                        European Union nor the granting authority
-                        can be held responsible for them.</p>
-                </div>
-            </div>
         </div>
     );
 };
