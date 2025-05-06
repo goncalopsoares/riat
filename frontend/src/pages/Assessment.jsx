@@ -28,6 +28,7 @@ const Assessment = () => {
 
     // STEP 5
     const [allDimensions, setAllDimensions] = useState([]);
+    const [topLevelDimensions, setTopLevelDimensions] = useState([]);
     const [dimensionsNumber, setDimensionsNumber] = useState(0);
     const [currentDimension, setCurrentDimension] = useState(0);
     const [dimensionStage, setDimensionStage] = useState(1);
@@ -39,6 +40,11 @@ const Assessment = () => {
 
     const firstRender = useRef(true);
 
+    useEffect(() => {
+        console.log('selectedValues:', selectedValues);
+        console.log('existingAnswers:', existingAnswers);
+    }
+    , [selectedValues, existingAnswers]);
 
     //GET SUBMISSION DATA
 
@@ -285,7 +291,6 @@ const Assessment = () => {
                     ).flat(); // 4. Flatten the array of arrays
 
                     setAllDimensions(dimensionsWithStatements);
-                    setDimensionsNumber(dimensionsWithStatements.length);
 
 
                 } catch (error) {
@@ -299,8 +304,23 @@ const Assessment = () => {
             getDimensionsAndStatements();
 
         }
-
     }, [id, surveyId]);
+
+
+    // STEP 5 - GET DIMENSIONS THAT ARE NOT PART OF OTHER AS SUBDIMENSIONS
+
+    useEffect(() => {
+        if (allDimensions.length > 0) {
+
+            const subdimensionIds = new Set(
+                allDimensions.flatMap(d => d.sub_dimensions || [])
+            );
+
+            setTopLevelDimensions(allDimensions.filter(d => !subdimensionIds.has(d.id_dimensions)));
+
+            setDimensionsNumber(allDimensions.filter(d => !subdimensionIds.has(d.id_dimensions)).length);
+        }
+    }, [allDimensions]);
 
     // STEP 5 - RENDER ASSESSMENT IF READY
     useEffect(() => {
@@ -330,11 +350,11 @@ const Assessment = () => {
 
                 .then(async () => {
 
-                    
+
 
                     if (isNaN(value)) {
 
-                       
+
                         await api.delete(`/api/answer/${id}/${key}/`);
 
                         return api.post(`/api/answer/${id}/`, {
@@ -353,7 +373,7 @@ const Assessment = () => {
                             statements_id_statements: key,
                             value: value,
                         }).then((response) => {
-                           
+
                             return response;
                         });
 
@@ -363,7 +383,7 @@ const Assessment = () => {
 
                 .catch((error) => {
 
-                  
+
 
                     if (error.response && error.response.status === 404) {
                         return api.post(`/api/answer/${id}/`, {
@@ -371,7 +391,7 @@ const Assessment = () => {
                             statements_id_statements: key,
                             value: value,
                         }).then((response) => {
-                            
+
                         });
 
                     } else {
@@ -420,7 +440,7 @@ const Assessment = () => {
 
     // STEP 5 - SET CURRENT DIMENSION BASED ON LAST ANSWERED STATEMENT
     useEffect(() => {
-        if (existingAnswers.length === 0 || allDimensions.length === 0 || firstRender.current === false) return;
+        if (existingAnswers.length === 0 || allDimensions.length === 0 || topLevelDimensions.length === 0 || firstRender.current === false) return;
 
         const lastAnsweredStatementId = Object.keys(existingAnswers)
             .map(key => ({
@@ -429,12 +449,12 @@ const Assessment = () => {
             }))
             .sort((a, b) => new Date(b.creationTime) - new Date(a.creationTime))[0]?.id;
 
-        const dimensionWithLastAnswer = allDimensions.find(dimension =>
+        const dimensionWithLastAnswer = topLevelDimensions.find(dimension =>
             dimension.statements.some(statement => statement.id_statements === lastAnsweredStatementId)
         );
 
         if (dimensionWithLastAnswer) {
-            const dimensionIndex = allDimensions.indexOf(dimensionWithLastAnswer);
+            const dimensionIndex = topLevelDimensions.indexOf(dimensionWithLastAnswer);
             setCurrentDimension(dimensionIndex);
         }
 
@@ -448,7 +468,7 @@ const Assessment = () => {
 
         if (existingAnswers.length === 0) return;
 
-        const currentDimensionStatements = allDimensions[currentDimension]?.statements || [];
+        const currentDimensionStatements = topLevelDimensions[currentDimension]?.statements || [];
 
         if (dimensionStage === 2) {
             const filteredAnswers = Object.keys(existingAnswers)
@@ -465,12 +485,6 @@ const Assessment = () => {
 
         }
     }, [currentDimension, dimensionStage, loading]);
-
-
-    useEffect(() => {
-        console.log("existingAnswersEffect", existingAnswers);
-    }
-        , [existingAnswers]);
 
 
     // STEP 5 - SUBMIT ASSESSMENT
@@ -558,7 +572,7 @@ const Assessment = () => {
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
             {isAssessmentReady && (
-                <AssessmentFive loading={loading} allDimensions={allDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} setSubmittingAssessment={setSubmittingAssessment} />
+                <AssessmentFive loading={loading} allDimensions={allDimensions} topLevelDimensions={topLevelDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} setSubmittingAssessment={setSubmittingAssessment} />
             )}
 
         </>

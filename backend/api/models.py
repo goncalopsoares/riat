@@ -157,6 +157,9 @@ class Dimensions(models.Model):
     dimension_created_by = models.CharField(max_length=45)
     dimension_last_modified_by = models.CharField(max_length=45)
     dimension_last_modified_by_date = models.DateTimeField()
+    parent_dimension = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.SET_NULL, related_name='sub_dimensions'
+    )
 
     class Meta:
         managed = False
