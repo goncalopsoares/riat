@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import SubDimensions from './SubDimensions';
 
-const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, handleAssessmentSubmit, statementCounter, setSubmittingAssessment }) => {
+const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, handleAssessmentSubmit, statementCounter, submittingAssessment, setSubmittingAssessment }) => {
 
     const [naSelected, setNaSelected] = useState({});
     const [explanation, setExplanation] = useState('');
@@ -11,7 +11,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
         allDimensions[currentDimension].sub_dimensions.some(subId => subId === dimension.id_dimensions)
     );
 
-    
+
 
     return (
         <>
@@ -166,56 +166,47 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                             </div>
                         )}
                         {dimensionStage === 3 && (
-                            <div>
-                                <button onClick={(e) => {
-                                    handleAssessmentSubmit(e);
-                                    <p>Generating your results, please wait a moment.</p>;
-                                }} className="forms-button">Submit Assessment</button>
+                            <div className='w-100 text-center' style={{ minHeight: '45vh' }}>
+                                {submittingAssessment === true ? (
+                                    <div className='text-center'>
+                                        <p className='fs-4'>You have reached the end of the assessment.</p>
+                                        <p> Click on the 'Submit Assessment' button below to generate your report.</p>
+                                        <p>Click 'Cancel' to go back and rethink any questions.</p>
+                                        <div className='d-flex flex-direction-row justify-content-center align-items-center gap-5 mt-5'>
+                                            <a onClick={() => {
+                                                setDimensionStage(2);
+                                            }} style={{ textDecoration: 'underline', cursor: 'pointer', color: 'red' }} className="cancel-button">
+                                                Cancel
+                                            </a>
+                                            <button onClick={(e) => {
+                                                handleAssessmentSubmit(e);
+                                                setSubmittingAssessment(false);
+                                            }} className="forms-button">Submit Assessment</button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <p>Generating your results, please wait a moment.</p>
+                                    </div>
+                                )}
                             </div>
                         )}
-                        <div className={`button-container d-flex justify-content-between w-100 ${dimensionStage === 1 ? 'mt-5' : ''}`} style={{ marginRight: '4rem' }}>
-                            {currentDimension === 0 && dimensionStage === 1 ? (
-                                null // No back button on the first dimension
-                            ) : (
-                                <button onClick={() => {
-                                    if (dimensionStage === 1) {
-                                        handleDimensionChange(currentDimension - 1);
-                                        setDimensionStage(2);
-                                    } else if (dimensionStage === 2) {
-                                        setDimensionStage(dimensionStage - 1);
-                                    }
-                                }} className="forms-button">Back</button>
-                            )}
-                            {currentDimension === dimensionsNumber - 1 && dimensionStage === 2 ? (
-                                <button onClick={() => {
-                                    const selectedValuesCount = Object.keys(selectedValues).length;
-
-                                    const totalStatements = topLevelDimensions[currentDimension].statements.length +
-                                        subDimensionsInfo.reduce((sum, subDimension) => sum + subDimension.statements.length, 0);
-
-                                    if (
-                                        (selectedValuesCount === totalStatements &&
-                                            !Object.values(selectedValues).includes(''))
-                                    ) {
-                                        const handleSubmit = async () => {
-                                            await handleStatementAnswerSubmit();
-                                            setSubmittingAssessment(true);
-                                            setDimensionStage(3);
-                                        };
-                                        handleSubmit();
-                                    } else {
-                                        console.log('totalStatements', totalStatements);
-                                        alert("Please provide an answer to every statement and write an explanation for 'Prefer not to answer' options.");
-                                    }
-                                }} className="forms-button">Next</button>
-                            ) : (
-                                <button onClick={() => {
-                                    if (dimensionStage === 1) {
-                                        setDimensionStage(dimensionStage + 1);
-                                        setSelectedValues({});
-                                    } else if (dimensionStage === 2) {
-
-
+                        {dimensionStage !== 3 && (
+                            <div className={`button-container d-flex justify-content-between w-100 ${dimensionStage === 1 ? 'mt-5' : ''}`} style={{ marginRight: '4rem' }}>
+                                {currentDimension === 0 && dimensionStage === 1 ? (
+                                    null // No back button on the first dimension
+                                ) : (
+                                    <button onClick={() => {
+                                        if (dimensionStage === 1) {
+                                            handleDimensionChange(currentDimension - 1);
+                                            setDimensionStage(2);
+                                        } else if (dimensionStage === 2) {
+                                            setDimensionStage(dimensionStage - 1);
+                                        }
+                                    }} className="forms-button">Back</button>
+                                )}
+                                {currentDimension === dimensionsNumber - 1 && dimensionStage === 2 ? (
+                                    <button onClick={() => {
                                         const selectedValuesCount = Object.keys(selectedValues).length;
 
                                         const totalStatements = topLevelDimensions[currentDimension].statements.length +
@@ -225,18 +216,47 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                             (selectedValuesCount === totalStatements &&
                                                 !Object.values(selectedValues).includes(''))
                                         ) {
-                                            handleStatementAnswerSubmit();
-                                            handleDimensionChange(currentDimension + 1);
-                                            setDimensionStage(1);
+                                            const handleSubmit = async () => {
+                                                await handleStatementAnswerSubmit();
+                                                setSubmittingAssessment(true);
+                                                setDimensionStage(3);
+                                            };
+                                            handleSubmit();
                                         } else {
+                                            console.log('totalStatements', totalStatements);
                                             alert("Please provide an answer to every statement and write an explanation for 'Prefer not to answer' options.");
                                         }
-                                    }
-                                }} className="forms-button">Next</button>
-                            )}
-                        </div>
+                                    }} className="forms-button">Next</button>
+                                ) : (
+                                    <button onClick={() => {
+                                        if (dimensionStage === 1) {
+                                            setDimensionStage(dimensionStage + 1);
+                                            setSelectedValues({});
+                                        } else if (dimensionStage === 2) {
+
+
+                                            const selectedValuesCount = Object.keys(selectedValues).length;
+
+                                            const totalStatements = topLevelDimensions[currentDimension].statements.length +
+                                                subDimensionsInfo.reduce((sum, subDimension) => sum + subDimension.statements.length, 0);
+
+                                            if (
+                                                (selectedValuesCount === totalStatements &&
+                                                    !Object.values(selectedValues).includes(''))
+                                            ) {
+                                                handleStatementAnswerSubmit();
+                                                handleDimensionChange(currentDimension + 1);
+                                                setDimensionStage(1);
+                                            } else {
+                                                alert("Please provide an answer to every statement and write an explanation for 'Prefer not to answer' options.");
+                                            }
+                                        }
+                                    }} className="forms-button">Next</button>
+                                )}
+                            </div>
+                        )}
                     </div>
-                </div>
+                </div >
             )}
         </>
     );
