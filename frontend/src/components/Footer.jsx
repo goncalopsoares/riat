@@ -1,8 +1,20 @@
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+
 const Footer = () => {
 
-    const currentPath = window.location.pathname;
+    const [isHomePage, setIsHomePage] = useState(false);
+    const currentPath = useLocation().pathname;
 
-    const isHomePage = currentPath === '/';
+    useEffect(() => {
+
+        if (currentPath === '/') {
+            setIsHomePage(true);
+        }
+        else {
+            setIsHomePage(false);
+        }
+    }, [currentPath]);
 
     return (
         <footer
@@ -13,8 +25,8 @@ const Footer = () => {
                 className={isHomePage ? 'py-5' : 'border-top border-secondary-subtle py-2'}
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: isHomePage ? '2fr 1fr' : '1fr 1fr',
-                    alignItems: isHomePage ? '' : 'center', 
+                    gridTemplateColumns: '1fr 1fr',
+                    alignItems: isHomePage ? '' : 'center',
                 }}
             >
                 {isHomePage && (

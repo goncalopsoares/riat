@@ -154,7 +154,7 @@ const Projects = () => {
 
 
     return (
-        <div className='mt-5 mb-5' style={{ width: '90%', margin: 'auto' }}>
+        <div className='mt-5 mb-5' style={{ width: '90%', margin: 'auto', minHeight: '70vh' }}>
             <div className='d-flex justify-content-between align-items-center mb-3'>
                 <h1>Active Projects</h1>
                 <button onClick={() => navigate('/assessment')} className='create-project-button'>
