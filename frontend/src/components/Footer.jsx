@@ -19,7 +19,7 @@ const Footer = () => {
     return (
         <footer
             className={`bg-white text-black ${isHomePage ? '' : 'py-2'}`}
-            style={{ zIndex: 5 }}
+            style={{ zIndex: 5, height: '10vh' }}
         >
             <div
                 className={isHomePage ? 'py-5' : 'border-top border-secondary-subtle py-2'}
@@ -48,7 +48,7 @@ const Footer = () => {
                     </div>
                 )}
                 {isHomePage ? (
-                    <div className="d-flex flex-column align-items-center justify-content-end text-center ms-2">
+                    <div className="d-flex flex-column align-items-end justify-content-end ms-2">
                         <div className="d-flex flex-row justify-content-between align-items-center mb-2">
                             <img
                                 src="/SoTecIn_Logo_Horizontal.png"

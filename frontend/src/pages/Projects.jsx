@@ -152,12 +152,11 @@ const Projects = () => {
 
     }
 
-
     return (
-        <div className='mt-5 mb-5' style={{ width: '90%', margin: 'auto', minHeight: '70vh' }}>
-            <div className='d-flex justify-content-between align-items-center mb-3'>
+        <div className='mt-5 mb-5' style={{ width: '90%', margin: 'auto', minHeight: '60vh' }}>
+            <div className='d-flex justify-content-between align-items-center mb-4'>
                 <h1>Active Projects</h1>
-                <button onClick={() => navigate('/assessment')} className='create-project-button'>
+                <button onClick={() => navigate('/assessment')} className='login-form-button'>
                     <p className='m-0'>Create Project</p>
                 </button >
             </div>
@@ -167,7 +166,7 @@ const Projects = () => {
                 ) : (
                     <table className='table table-responsive text-left align-middle shadow-sm border border-2' style={{ maxWidth: '100%', borderRadius: '0.5rem', borderCollapse: 'separate' }}>
                         <thead className='align-top'  style={{ fontWeight: 'regular' }}>
-                            <tr style={{ height: '6rem', fontWeight: 'regular' }}>
+                            <tr style={{ height: '6rem' }}>
                                 <th className='table-headers-text pt-4 ps-5'>Project Name</th>
                                 {surveySelector ? (
                                     <th className='table-headers-text pt-4 ps-5'>Select Assessment</th>
@@ -220,7 +219,7 @@ const Projects = () => {
                                                 ) : null}
                                             </td>) : (
                                             <>
-                                                <td className='ps-5'>{project.project_phase} {!lastSubmission || (lastSubmission && lastSubmission.submission_state === 2) && <a className='text-underline ms-3' onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
+                                                <td className='ps-5'>{project.project_phase} {!lastSubmission || (lastSubmission && lastSubmission.submission_state === 2) && <a className='text-underline ms-3' style={{cursor: 'pointer'}} onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
                                                 <td className='ps-5'>{submissionsNumber}</td>
                                                 <td className='ps-5'>
                                                     {lastCompletedSubmission ? (
@@ -249,9 +248,9 @@ const Projects = () => {
                                                         className='new-assessment-button'
                                                     >
                                                         {lastSubmission && lastSubmission.submission_state === 1 ? (
-                                                            <p className='m-0'>Resume Latest Assessment</p>
+                                                            <p className='m-0 text-decoration-underline'>Resume Latest Assessment</p>
                                                         ) : (
-                                                            <p className='m-0'>New Assessment</p>
+                                                            <p className='m-0 text-decoration-underline'>New Assessment</p>
                                                         )}
                                                     </button>
                                                 </td>

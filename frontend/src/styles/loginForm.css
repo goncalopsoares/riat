@@ -130,14 +130,28 @@
 
 .login-form-button {
   padding: 12px;
-  background: var(--Background-Brand-Default, #64c8eb);
-  border: 1px solid var(--Border-Brand-Default, #0091be);
+  background: var(--Background-Brand-Default, #008bbe);
+  border : 1px solid var(--Border-Brand-Default, #008bbe);
   border-radius: 8px;
   color: var(--Text-Brand-On-Brand, #f5f5f5);
   font-size: 16px;
   font-family: "Inter", sans-serif;
   font-weight: 400;
   cursor: pointer;
+  box-shadow: 0px 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.sign-in-button {
+  padding: 12px;
+  background: var(--Background-Brand-Default, #64c7ea);
+  border: 1px solid var(--Border-Brand-Default, #64c7ea);
+  border-radius: 8px;
+  color: var(--Text-Brand-On-Brand, #f5f5f5);
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  cursor: pointer;
+  box-shadow: 0px 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
 }
 
 .register-link {
@@ -150,4 +164,5 @@
 .create-new {
   text-decoration: underline;
   cursor: pointer;
+  color: var(--Text-Brand-Default, #008bbe);
 }

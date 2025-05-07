@@ -174,7 +174,7 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
                 </>
               )}
               {error && <p style={{ color: "red" }}>{error}</p>}
-              {method === "login" && (<p>Forgot Password? <a onClick={() => navigate('/forgotpassword/')} className="forgot-password">Click here</a></p>)}
+              {method === "login" && (<p>Forgot Password? <a onClick={() => navigate('/forgotpassword/')} className="create-new">Click here</a></p>)}
               <button
                 className="login-form-button"
                 type="submit"

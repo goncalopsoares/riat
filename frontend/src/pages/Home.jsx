@@ -7,9 +7,15 @@ const Home = () => {
 
     return (
         <div className='w-100 h-screen flex flex-col items-center justify-center' style={{ backgroundColor: '#f0f0f0' }}>
-            <div className='text-center' style={{ padding: '8rem 9.5rem 8rem 9.5rem' }}>
+            <div className='text-center' style={{ padding: '8rem 9.5rem 4rem 9.5rem' }}>
                 <h1 className='main-title'>How responsible is your innovation?</h1>
                 <p className='sub-title'>Take our assessment to find out how your innovation strategy compares to the world's most innovative companies.</p>
+            </div>
+            <div className='w-100 text-center' style={{ marginBottom: '6rem' }}>
+                <button onClick={() => navigate('/assessment/')}
+                    className='forms-button w-25'>
+                    <p className='m-0 fs-5'>Start assessment</p>
+                </button>
             </div>
             <div className='text-start mb-5' style={{ padding: '0 9.5rem 0 9.5rem' }}>
                 <h2 className='fs-1 mb-3'><b>What is RIAT?</b></h2>
@@ -20,17 +26,11 @@ const Home = () => {
                 <p className='fs-4'>This is an interactive process by which innovators assume a responsible approach towards innovation that creates change and positive impacts on society and the environment.</p>
                 <p className='fs-4'>It does not intend to provoke judgments, but help reflect on impact and practices in a continuous improvement mode.</p>
             </div>
-            <div className='my-5 w-100 text-center'>
-                <button onClick={() => navigate('/assessment/')}
-                    className='forms-button'>
-                    <p className='m-0'>Start assessment</p>
-                </button>
-            </div>
-            <div className='w-100'>
+            <div className='w-100 text-center'>
                 <img
                     src="/landing_page_img.png"
                     alt="Innovation Assessment"
-                    className='w-100'
+                    className='w-75'
                 />
             </div>
         </div>

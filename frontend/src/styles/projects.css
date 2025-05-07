@@ -1,7 +1,7 @@
 .create-project-button {
     padding: 12px;
     background: var(--Background-Brand-Default, #64c8eb);
-    border: 1px solid var(--Border-Brand-Default, #0091be);
+    border: 1px solid var(--Border-Brand-Default, #64c8eb);
     border-radius: 8px;
     color: var(--Text-Brand-On-Brand, #f5f5f5);
     font-size: 16px;
@@ -13,7 +13,7 @@
 
 .table-headers-text {
     font-family: "Inter", sans-serif;
-    font-weight: 400;
+    font-weight: 600;
     font-size: 1rem;;
 }
 
