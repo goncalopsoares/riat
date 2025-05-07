@@ -21,6 +21,7 @@ import Assessment from './pages/Assessment';
 import Report from './pages/Report';
 import './styles/global.css';
 import Footer from './components/Footer';
+import Reports from './pages/Reports';
 
 const Logout = () => {
   localStorage.clear();
@@ -39,13 +40,19 @@ function App() {
     <UserProvider>
       <BrowserRouter>
         <Navbar />
-
         <ToolBarAdmin />
         <Routes>
           <Route path='/'
             element={
               <Home />
             }
+          />
+          <Route path='/projects'
+            element={<ProtectedRoute>
+              <ProjectProvider>
+                <Projects />
+              </ProjectProvider>
+            </ProtectedRoute>}
           />
           <Route path='/assessment/' element={
             <ProtectedRoute>
@@ -68,6 +75,13 @@ function App() {
               </ProjectProvider>
             </ProtectedRoute>}
           />
+          <Route path='/reports/'
+            element={<ProtectedRoute>
+              <ProjectProvider>
+                <Reports />
+              </ProjectProvider>
+            </ProtectedRoute>}
+          />
           <Route path='/surveytools'
             element={<ProtectedRoute>
               <SurveyTools />
@@ -81,13 +95,6 @@ function App() {
           <Route path='/scaletools'
             element={<ProtectedRoute>
               <ScaleTools />
-            </ProtectedRoute>}
-          />
-          <Route path='/projects'
-            element={<ProtectedRoute>
-              <ProjectProvider>
-                <Projects />
-              </ProjectProvider>
             </ProtectedRoute>}
           />
           <Route path='/login' element={<Login />} />

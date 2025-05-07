@@ -92,7 +92,7 @@ const Projects = () => {
     };
 
 
-    
+
 
     //SELECT SURVEY
 
@@ -165,7 +165,7 @@ const Projects = () => {
                     <p>Loading...</p>
                 ) : (
                     <table className='table table-responsive text-left align-middle shadow-sm border border-2' style={{ maxWidth: '100%', borderRadius: '0.5rem', borderCollapse: 'separate' }}>
-                        <thead className='align-top'  style={{ fontWeight: 'regular' }}>
+                        <thead className='align-top' style={{ fontWeight: 'regular' }}>
                             <tr style={{ height: '6rem' }}>
                                 <th className='table-headers-text pt-4 ps-5'>Project Name</th>
                                 {surveySelector ? (
@@ -219,7 +219,7 @@ const Projects = () => {
                                                 ) : null}
                                             </td>) : (
                                             <>
-                                                <td className='ps-5'>{project.project_phase} {!lastSubmission || (lastSubmission && lastSubmission.submission_state === 2) && <a className='text-underline ms-3' style={{cursor: 'pointer'}} onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
+                                                <td className='ps-5'>{project.project_phase} {!lastSubmission || (lastSubmission && lastSubmission.submission_state === 2) && <a className='text-underline ms-3' style={{ cursor: 'pointer' }} onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
                                                 <td className='ps-5'>{submissionsNumber}</td>
                                                 <td className='ps-5'>
                                                     {lastCompletedSubmission ? (

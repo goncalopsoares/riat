@@ -38,7 +38,7 @@ const Navbar = () => {
                 <ul className="navbar-nav d-flex flex-row me-3 align-items-center">
                     <li className="nav-item mx-2"><a className="nav-link" href="/projects">Projects</a></li>
                     <li className="nav-item mx-2"><a className="nav-link" href="/assessment">Assessments</a></li>
-                    <li className="nav-item mx-2"><a className="nav-link" href="/">Reports</a></li>
+                    <li className="nav-item mx-2"><a className="nav-link" href="/reports">Reports</a></li>
                     <li className="nav-item mx-2 dropdown">
                         {user ? (
                             <button
