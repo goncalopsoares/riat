@@ -141,6 +141,13 @@
   box-shadow: 0px 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
 }
 
+.login-form-button:hover {
+  background: var(--Background-Brand-Hover, #002d46);
+  border: 1px solid var(--Border-Brand-Hover, #002d46);
+  color: var(--Text-Brand-On-Brand-Hover, #ffffff);
+  box-shadow: 0px 0.35rem 0.7rem rgba(0, 0, 0, 0.15);
+}
+
 .sign-in-button {
   padding: 12px;
   background: var(--Background-Brand-Default, #64c7ea);

@@ -1,0 +1,7 @@
+.selected-toolbar {
+  background-color: #002d46;
+  border: 1px solid #002d46;
+  color: #fff;  
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}

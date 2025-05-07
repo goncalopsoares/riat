@@ -1,4 +1,5 @@
 import { useUser } from "../contexts/UserContext";
+import '../styles/admin.css';
 
 const ToolBarAdmin = () => {
 
@@ -19,13 +20,13 @@ const ToolBarAdmin = () => {
                         href="/"
                         className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
                     >
-                        <span className="fs-4">Dashboard</span>
+                        <span className="fs-4 mt-4">Dashboard</span>
                     </a>
-                    <ul className="nav nav-pills flex-column mb-auto">
+                    <ul className="nav nav-pills flex-column mb-auto gap-2 mt-4">
                         <li className="nav-item">
                             <a
                                 href="/surveytools"
-                                className={`nav-link ${currentPage === 'surveytools' || currentPage === 'surveyadmin' ? 'text-decoration-underline' : 'link-body-emphasis'
+                                className={`nav-link ${currentPage === 'surveytools' || currentPage === 'surveyadmin' ? 'selected-toolbar' : 'link-body-emphasis'
                                     }`}
                                 aria-current={currentPage === 'surveytools' || currentPage === 'surveyadmin' ? 'page' : undefined}
                             >
@@ -35,7 +36,7 @@ const ToolBarAdmin = () => {
                         <li>
                             <a
                                 href="#"
-                                className={`nav-link ${currentPage === 'projects' ? 'text-decoration-underline' : 'link-body-emphasis'
+                                className={`nav-link ${currentPage === 'projects' ? 'selected-toolbar' : 'link-body-emphasis'
                                     }`}
                                 aria-current={currentPage === 'projects' ? 'page' : undefined}
                             >
@@ -46,7 +47,7 @@ const ToolBarAdmin = () => {
                         <li>
                             <a
                                 href="#"
-                                className={`nav-link ${currentPage === 'reports' ? 'text-decoration-underline' : 'link-body-emphasis'
+                                className={`nav-link ${currentPage === 'reports' ? 'selected-toolbar' : 'link-body-emphasis'
                                     }`}
                                 aria-current={currentPage === 'reports' ? 'page' : undefined}
                             >
@@ -56,7 +57,7 @@ const ToolBarAdmin = () => {
                         <li>
                             <a
                                 href="#"
-                                className={`nav-link ${currentPage === 'recommendations' ? 'text-decoration-underline' : 'link-body-emphasis'
+                                className={`nav-link ${currentPage === 'recommendations' ? 'selected-toolbar' : 'link-body-emphasis'
                                     }`}
                                 aria-current={currentPage === 'recommendations' ? 'page' : undefined}
                             >
@@ -66,7 +67,7 @@ const ToolBarAdmin = () => {
                         <li>
                             <a
                                 href="/scaletools"
-                                className={`nav-link ${currentPage === 'scaletools' ? 'text-decoration-underline' : 'link-body-emphasis'
+                                className={`nav-link ${currentPage === 'scaletools' ? 'selected-toolbar' : 'link-body-emphasis'
                                     }`}
                                 aria-current={currentPage === 'scaletools' ? 'page' : undefined}
                             >
