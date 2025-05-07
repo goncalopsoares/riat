@@ -62,28 +62,32 @@ const SurveyTools = () => {
 
     return (
         <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto' }}>
-            <div>
-                <button onClick={() => { setEditing(true); }}>
-                    <p>Create assessment</p>
+            <div className='d-flex justify-content-between align-items-center mb-4 ms-4'>
+                <h1>Active Assessments</h1>
+                <button
+                    onClick={() => { setEditing(true); }}
+                    className='me-4 login-form-button'
+                >
+                    <p className='mb-0'>Create new assessment</p>
                 </button >
             </div>
-            <div>
+            <div className='mx-4'>
                 {loading ? (
                     <p>Loading...</p>
                 ) : (
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Assessment Name</th>
-                                <th>Description</th>
-                                <th>Creation Date</th>
-                                <th>Last Updated</th>
+                    <table className='table table-responsive text-left align-middle shadow-sm border border-2' style={{ maxWidth: '100%', borderRadius: '0.5rem', borderCollapse: 'separate' }}>
+                        <thead className='align-top' style={{ fontWeight: 'regular' }}>
+                            <tr style={{ height: '6rem' }}>
+                                <th className='table-headers-text pt-4 ps-4'>Assessment Name</th>
+                                <th className='table-headers-text pt-4'>Description</th>
+                                <th className='table-headers-text pt-4'>Creation Date</th>
+                                <th className='table-headers-text pt-4'>Last Updated</th>
                             </tr>
                         </thead>
                         <tbody>
                             {allSurveys.map(survey => (
                                 <tr key={survey.id_surveys}>
-                                    <td>
+                                    <td className='ps-4 py-3'>
                                         <a href={`/surveyadmin/${survey.id_surveys}`}>
                                             {survey.survey_name}
                                         </a>
@@ -98,11 +102,11 @@ const SurveyTools = () => {
                 )}
             </div>
             {editing === true ? (
-            <SurveyAddDialog
-                dialogRef={dialogRef}
-                setEditing={setEditing}
-                handleSurveySubmit={handleSurveySubmit}
-            /> ) : null}
+                <SurveyAddDialog
+                    dialogRef={dialogRef}
+                    setEditing={setEditing}
+                    handleSurveySubmit={handleSurveySubmit}
+                />) : null}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && <p style={{ color: 'green' }}> {success} </p>}
         </div>
