@@ -32,6 +32,7 @@ urlpatterns = [
     path('api/scale/create/', CreateScaleView.as_view(), name='create_scale'),
     path('api/scale/update/<int:id_scales>/', UpdateScaleView.as_view(), name='update_scale'),
     #PROJECTS
+    path('api/projects/get/', GetProjectView.as_view(), name='view_project'),
     path('api/project/get/<int:users_id_users>/', GetProjectView.as_view(), name='view_project'),
     path('api/project/create/', CreateProjectView.as_view(), name='create_project'),
     path('api/project/update/<int:id_projects>/', UpdateProjectPhaseView.as_view(), name="update-project-phase"),

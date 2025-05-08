@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import ProtectedRoute from './components/ProtectedRoute';
 import NotFound from './pages/NotFound';
 import SurveyTools from './pages/SurveyTools';
+import ProjectsAdmin from './pages/ProjectsAdmin';
 import ScaleTools from './pages/ScaleTools';
 import Navbar from './components/Navbar';
 import ToolBarAdmin from './components/ToolBarAdmin';
@@ -85,6 +86,13 @@ function App() {
           <Route path='/surveytools'
             element={<ProtectedRoute>
               <SurveyTools />
+            </ProtectedRoute>}
+          />
+          <Route path='/projectsadmin'
+            element={<ProtectedRoute>
+              <ProjectProvider>
+                <ProjectsAdmin />
+              </ProjectProvider>
             </ProtectedRoute>}
           />
           <Route path='/surveyadmin/:id'

@@ -11,6 +11,7 @@ from rest_framework.permissions import  AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
 from rest_framework import status
 from .permissions import IsAdminUser
 
@@ -126,6 +127,13 @@ class GetProjectView(generics.ListAPIView):
                 project_data['submissions'] = []
             projects.append(project_data)
         return Response(projects, status=status.HTTP_200_OK)
+    
+    def get(self, request, *args, **kwargs):
+        if not IsAdminUser().has_permission(request, self):
+            raise PermissionDenied("You must be an admin to view this list.")
+        projects_queryset = Projects.objects.all()
+        serializer = self.get_serializer(projects_queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     
 class CreateProjectView(generics.CreateAPIView):
