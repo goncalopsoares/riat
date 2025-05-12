@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
 import api from '../api';
 import Chart from "react-apexcharts";
 import DownloadPDFButton from "../components/PdfReport";
@@ -7,6 +8,10 @@ import ReportAnswers from "../components/ReportAnswers";
 
 const Report = () => {
 
+
+    const { user } = useUser();
+
+    console.log(user);
     // general report data
     const [reportData, setReportData] = useState(null);
     const [creationTime, setCreationTime] = useState("");
@@ -171,7 +176,7 @@ const Report = () => {
     }, [reportData]);
 
     return (
-        <div className="global-container">
+        <div className="global-container" style={user.user_role === 1 ? { marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto' } : null}>
             <div className="create-project-container">
                 <p>Report code <b>{reportCode}</b></p>
                 <div className="d-flex flex-row justify-content-between w-100 mt-5">

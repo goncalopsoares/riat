@@ -6,7 +6,7 @@ from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.utils.timezone import now
 from .serializers import AnswerBaseSerializer, UserRegistrationSerializer, LoginSerializer, SurveySerializer, ProjectSerializer, ScaleSerializer, DimensionSerializer, StatementSerializer, SubmissionsSerializer, ReportSerializer, PasswordResetRequestSerializer, PasswordResetSerializer
-from .models import AnswersBase, Surveys, Projects, Scales, Dimensions, Statements, UsersHasProjects, AnswersInteger, AnswersBoolean, AnswersText, Reports, Submissions
+from .models import AnswersBase, Surveys, Projects, Scales, Dimensions, Statements, UsersHasProjects, AnswersInteger, AnswersBoolean, AnswersText, Reports, Submissions, ReportsOverallScore
 from rest_framework.permissions import  AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
@@ -131,10 +131,43 @@ class GetProjectView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         if not IsAdminUser().has_permission(request, self):
             raise PermissionDenied("You must be an admin to view this list.")
+        
         projects_queryset = Projects.objects.all()
-        serializer = self.get_serializer(projects_queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
+        projects = []
+        
+        for project in projects_queryset:
+            project_data = ProjectSerializer(project).data
+            # Get user_has_projects entries associated with the project
+            user_projects = UsersHasProjects.objects.filter(projects_id_projects=project.id_projects)
+            
+            project_data['submissions'] = []
+            for user_project in user_projects:
+                # Get submissions associated with the user_project
+                submissions = Submissions.objects.filter(users_has_projects_id_users_has_projects=user_project.id_users_has_projects)
+                for submission in submissions:
+                    submission_data = {
+                        "id_submissions": submission.id_submissions,
+                        "submission_state": submission.submission_state,
+                        "reports_overall_score_value": None,
+                        "reports_overall_score_max_value": None,
+                        "report_token": None
+                    }
+                    # Get report associated with the submission
+                    report = Reports.objects.filter(submissions_id_submissions=submission.id_submissions).first()
+                    if report:
+                        submission_data["report_token"] = report.report_token
+                        #Get overall score associated with the report
+                        overall_score = report.reports_overall_score_id_reports_overall_score
+                        if overall_score:
+                            submission_data["reports_overall_score_value"] = overall_score.reports_overall_score_value
+                            submission_data["reports_overall_score_max_value"] = overall_score.reports_overall_score_max_value
+                        submission_data["report_token"] = report.report_token
+                    project_data['submissions'].append(submission_data)
+            
+            projects.append(project_data)
+        
+        return Response(projects, status=status.HTTP_200_OK)
+        
     
 class CreateProjectView(generics.CreateAPIView):
     

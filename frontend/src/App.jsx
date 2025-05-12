@@ -11,6 +11,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import NotFound from './pages/NotFound';
 import SurveyTools from './pages/SurveyTools';
 import ProjectsAdmin from './pages/ProjectsAdmin';
+import ProjectsAdminDetail from './pages/ProjectsAdminDetail';
 import ScaleTools from './pages/ScaleTools';
 import Navbar from './components/Navbar';
 import ToolBarAdmin from './components/ToolBarAdmin';
@@ -92,6 +93,13 @@ function App() {
             element={<ProtectedRoute>
               <ProjectProvider>
                 <ProjectsAdmin />
+              </ProjectProvider>
+            </ProtectedRoute>}
+          />
+          <Route path='/projectsadmin/:id'
+            element={<ProtectedRoute>
+              <ProjectProvider>
+                <ProjectsAdminDetail />
               </ProjectProvider>
             </ProtectedRoute>}
           />
