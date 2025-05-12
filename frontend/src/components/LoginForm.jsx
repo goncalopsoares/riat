@@ -3,7 +3,7 @@ import api from "../api";
 import { useNavigate, useParams } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import { useUser } from "../contexts/UserContext";
-import "../styles/LoginForm.css";
+import "../styles/loginForm.css";
 
 const LoginForm = ({ routeOne, routeTwo, method }) => {
   const [email, setEmail] = useState("");
