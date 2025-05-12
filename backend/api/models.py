@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
+from django.conf import settings
+
 
 #PROJECTS
 
@@ -39,7 +41,7 @@ class Users(models.Model):
 
 class UsersHasProjects(models.Model):
     id_users_has_projects = models.AutoField(primary_key=True)
-    users_id_users = models.ForeignKey('Users', models.DO_NOTHING, db_column='users_id_users')
+    users_id_users = models.ForeignKey(settings.AUTH_USER_MODEL, models.DO_NOTHING, db_column='users_id_users')
     projects_id_projects = models.ForeignKey('Projects', models.DO_NOTHING, db_column='projects_id_projects')
     users_has_projects_role = models.CharField(max_length=45)
     users_has_projects_function = models.CharField(max_length=45)
