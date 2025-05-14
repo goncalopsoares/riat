@@ -697,7 +697,7 @@ class ReportSerializer(serializers.ModelSerializer):
         survey = obj.submissions_id_submissions.surveys_id_surveys
         survey_name = survey.survey_name
 
-        # Regex para extrair base do nome e números das fases, incluindo agrupadas (ex: Phase 1+2)
+        # Regex to extract base name and phases, even agrouped ones /ex.1+2
         match = re.findall(r'Phase\s*(\d+(?:\+\d+)*)', survey_name)
         if match:
             phases = match[0].split('+')
@@ -705,23 +705,44 @@ class ReportSerializer(serializers.ModelSerializer):
         else:
             current_phases = []
 
-        # Buscar surveys com nomes que indicam fases anteriores ou agrupadas (ex: Phase 1+2)
+        # Find surveys that indicate previous phases, even agrouped ones
+        # Initialize surveys as an empty queryset
         surveys = Surveys.objects.none()
+
+        # Only proceed if current_phases is provided
         if current_phases:
             all_surveys = Surveys.objects.filter(survey_name__icontains='Phase')
-            valid_survey_ids = []
+            print(f'Initial surveys {all_surveys}')  # Log all surveys
 
+            valid_survey_ids = set()
+
+            # Loop over all surveys
             for s in all_surveys:
-                phases = re.findall(r'\d+', s.survey_name)
-                if phases:
-                    phases_int = [int(p) for p in phases]
-                    if all(p in current_phases for p in phases_int):
-                        valid_survey_ids.append(s.id_surveys)
+                phases = re.findall(r'\d+', s.survey_name)  # Extract all phase numbers from the survey name
+                print(f"Checking survey: {s.survey_name} with phases {phases}")
 
+                if phases:
+                    phases_int = [int(p) for p in phases]  # Convert to integers
+                    print(f"Phases int: {phases_int}")
+
+                    # Check if the survey contains any phases that match the current_phases
+                    if any(phase in current_phases for phase in phases_int):
+                        print(f"Adding survey {s.id_surveys} as it contains matching phase")
+                        valid_survey_ids.add(s.id_surveys)
+
+                    # Special case for multi-phase surveys (e.g., Phase 1+2, Phase 2+3)
+                    # We should also consider the earlier phases if a multi-phase survey contains phases prior to the current phase
+                    if max(phases_int) <= max(current_phases):  # If all phases in the survey are <= max(current_phases)
+                        print(f"Adding survey {s.id_surveys} because it's within the allowed phases")
+                        valid_survey_ids.add(s.id_surveys)
+
+            # Filter the surveys that match the valid survey ids
             surveys = Surveys.objects.filter(id_surveys__in=valid_survey_ids)
+            print(f'Final surveys: {surveys}')
+
             
 
-# Agora buscas todas as dimensões desses surveys
+# Get dimensions for all surveys
         dimensions = Dimensions.objects.filter(surveys_id_surveys__in=surveys)
         dimension_details = []
         for dimension in dimensions:
