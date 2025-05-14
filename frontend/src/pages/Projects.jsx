@@ -14,6 +14,9 @@ const Projects = () => {
     const [allSurveys, setAllSurveys] = useState([]);
     const [selectedSurvey, setSelectedSurvey] = useState(1);
     const [surveySelector, setSurveySelector] = useState(false);
+    const [selectedSurveyId, setSelectedSurveyId] = useState(null);
+    const [selectedPhase, setSelectedPhase] = useState(null);
+
 
     const navigate = useNavigate();
 
@@ -197,22 +200,49 @@ const Projects = () => {
                                             <td>
                                                 {surveySelector === project.id_projects ? (
                                                     <form onSubmit={(e) => handleStartNewAssessment(e, idUserProject)} style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', alignItems: 'center' }} className="d-grid gap-0 row-gap-3">
-                                                        <select value={selectedSurvey} onChange={handleSelectSurvey} className='form-select'>
-                                                            {allSurveys.map((survey) => {
-                                                                // Extract phase number from survey_name
-                                                                const surveyPhase = parseInt(survey.survey_name.match(/\d+/)?.[0], 10);
+                                                        <select
+                                                            onChange={(e) => {
+                                                                const [surveyIdStr, phaseStr] = e.target.value.split("|");
+                                                                setSelectedSurveyId(Number(surveyIdStr));
+                                                                setSelectedPhase(Number(phaseStr));
+                                                            }}
+                                                        >
 
+                                                            {allSurveys.flatMap((survey) => {
+                                                                const surveyName = survey.survey_name;
+
+                                                                // Match all phase numbers
+                                                                const phaseMatches = surveyName.match(/\d+/g);
+                                                                const phases = phaseMatches?.map(Number) || [];
+
+                                                                if (phases.length > 1) {
+                                                                    // Remove the "Phase X+Y+Z" part from the survey name
+                                                                    const baseName = surveyName.replace(/Phase\s*(\d+(\+\d+)*)/i, "").trim();
+
+                                                                    return phases
+                                                                        .filter((phase) => project.project_phase >= phase)
+                                                                        .map((phase) => (
+                                                                            <option
+                                                                                key={`${survey.id_surveys}-phase-${phase}`}
+                                                                                value={`${survey.id_surveys}|${phase}`}
+                                                                            >
+                                                                                {`${baseName} Phase ${phase}`}
+                                                                            </option>
+                                                                        ));
+                                                                }
+
+                                                                // Single-phase survey
+                                                                const phase = phases[0];
                                                                 return (
-                                                                    <option
-                                                                        key={survey.id_surveys}
-                                                                        value={survey.id_surveys}
-                                                                        // Disable if project phase is less than survey phase
-                                                                        disabled={project.project_phase < surveyPhase}
-                                                                    >
-                                                                        {survey.survey_name}
-                                                                    </option>
+                                                                    project.project_phase >= phase && (
+                                                                        <option key={survey.id_surveys} value={survey.id_surveys}>
+                                                                            {surveyName}
+                                                                        </option>
+                                                                    )
                                                                 );
                                                             })}
+
+
                                                         </select>
                                                         <button type="submit" className='create-project-button ms-3'>Start assessment</button>
                                                     </form>
