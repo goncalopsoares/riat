@@ -119,12 +119,6 @@ const Assessment = () => {
             return;
         }
 
-        if (projectOrganization === '') {
-            setError("Project Organization cannot be empty");
-            setLoading(false);
-            return;
-        }
-
         if (projectTrl === '') {
             setError("Project TRL cannot be empty");
             setLoading(false);
@@ -151,12 +145,6 @@ const Assessment = () => {
 
         if (projectValueChain === '') {
             setError("Value Chain cannot be empty");
-            setLoading(false);
-            return;
-        }
-
-        if (userFunction === '') {
-            setError("User Function cannot be empty");
             setLoading(false);
             return;
         }
@@ -504,8 +492,6 @@ const Assessment = () => {
         e.preventDefault();
 
         setLoading(true);
-
-
 
         const finalScore = Object.values(existingAnswers).reduce((sum, object) => {
             const value = object.value;

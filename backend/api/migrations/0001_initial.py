@@ -182,7 +182,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id_projects', models.AutoField(primary_key=True, serialize=False)),
                 ('project_name', models.CharField(max_length=100, unique=True)),
-                ('project_organization', models.CharField(max_length=100)),
+                ('project_organization', models.CharField(max_length=100, blank=True,  null=True)),
                 ('project_phase', models.IntegerField()),
                 ('project_trl', models.IntegerField()),
                 ('project_mrl', models.IntegerField()),
@@ -265,7 +265,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id_users_has_projects', models.AutoField(primary_key=True, serialize=False)),
                 ('users_has_projects_role', models.CharField(max_length=45)),
-                ('users_has_projectscol_function', models.CharField(max_length=45)),
+                ('users_has_projectscol_function', models.CharField(max_length=45, blank=True,  null=True)),
             ],
             options={
                 'db_table': 'users_has_projects',
