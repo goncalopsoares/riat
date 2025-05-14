@@ -133,9 +133,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         user = request.user if request else None
 
-        if user and not isinstance(user, Users):
-            user = Users.objects.get(pk=user.pk)
-
         project_name = validated_data.get('project_name')
 
         try:
@@ -170,6 +167,8 @@ class ProjectSerializer(serializers.ModelSerializer):
                         projects_id_projects=project,
                         **item
                     )
+                    
+        print(f"project {project}")
 
         return project  
         
