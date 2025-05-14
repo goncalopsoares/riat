@@ -81,68 +81,26 @@ class PasswordResetView(APIView):
         return Response({"message": "Password reset successfully"}, status=status.HTTP_200_OK)
 
 
-
-
 # PROJECTS
 
-class GetProjectView(generics.ListAPIView):
-    
-    permission_classes = [IsAuthenticated]
-    
+class AdminAllProjectsView(generics.GenericAPIView):
+    permission_classes = [IsAdminUser]
     serializer_class = ProjectSerializer
-    
-    def get_queryset(self):
-        users_id_users = self.kwargs.get("users_id_users")
-        # Get project IDs associated with the user from user_has_projects
-        user_projects = UsersHasProjects.objects.filter(users_id_users=users_id_users)
-        project_ids = user_projects.values_list('projects_id_projects', flat=True)
-        # Get project info from Projects using the retrieved project IDs
-        return Projects.objects.filter(id_projects__in=project_ids), user_projects
 
-    def list(self, request, *args, **kwargs):
-        projects_queryset, user_projects = self.get_queryset()
-        projects = []
-        for project in projects_queryset:
-            project_data = ProjectSerializer(project).data
-            # Get submissions associated with the user's project
-            user_project = user_projects.filter(projects_id_projects=project.id_projects).first()
-            if user_project:
-                submissions = user_project.submissions_set.all()
-                project_data['submissions'] = []
-                for submission in submissions:
-                    submission_data = {
-                        "id_submissions": submission.id_submissions,
-                        "submission_state": submission.submission_state,
-                        "reports_overall_score_value": None,
-                        "reports_overall_score_max_value": None
-                    }
-                    report = Reports.objects.filter(submissions_id_submissions=submission.id_submissions).first()
-                    if report:
-                        overall_score = report.reports_overall_score_id_reports_overall_score
-                        if overall_score:
-                            submission_data["reports_overall_score_value"] = overall_score.reports_overall_score_value
-                            submission_data["reports_overall_score_max_value"] = overall_score.reports_overall_score_max_value
-                    project_data['submissions'].append(submission_data)
-            else:
-                project_data['submissions'] = []
-            projects.append(project_data)
-        return Response(projects, status=status.HTTP_200_OK)
-    
     def get(self, request, *args, **kwargs):
-        if not IsAdminUser().has_permission(request, self):
-            raise PermissionDenied("You must be an admin to view this list.")
-        
         projects_queryset = Projects.objects.all()
-        projects = []
-        
+        return self._build_response_from_projects(projects_queryset)
+
+    def _build_response_from_projects(self, projects_queryset):
+        projects_data = []
+
         for project in projects_queryset:
             project_data = ProjectSerializer(project).data
-            # Get user_has_projects entries associated with the project
-            user_projects = UsersHasProjects.objects.filter(projects_id_projects=project.id_projects)
-            
             project_data['submissions'] = []
+
+            user_projects = UsersHasProjects.objects.filter(projects_id_projects=project.id_projects)
+
             for user_project in user_projects:
-                # Get submissions associated with the user_project
                 submissions = Submissions.objects.filter(users_has_projects_id_users_has_projects=user_project.id_users_has_projects)
                 for submission in submissions:
                     submission_data = {
@@ -152,23 +110,67 @@ class GetProjectView(generics.ListAPIView):
                         "reports_overall_score_max_value": None,
                         "report_token": None
                     }
-                    # Get report associated with the submission
                     report = Reports.objects.filter(submissions_id_submissions=submission.id_submissions).first()
                     if report:
                         submission_data["report_token"] = report.report_token
-                        #Get overall score associated with the report
                         overall_score = report.reports_overall_score_id_reports_overall_score
                         if overall_score:
                             submission_data["reports_overall_score_value"] = overall_score.reports_overall_score_value
                             submission_data["reports_overall_score_max_value"] = overall_score.reports_overall_score_max_value
-                        submission_data["report_token"] = report.report_token
                     project_data['submissions'].append(submission_data)
-            
-            projects.append(project_data)
-        
-        return Response(projects, status=status.HTTP_200_OK)
-        
+
+            projects_data.append(project_data)
+
+        return Response(projects_data, status=status.HTTP_200_OK)
     
+class UserOwnProjectsView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ProjectSerializer
+
+    def get(self, request, users_id_users, *args, **kwargs):
+        # Impede que um utilizador veja projetos de outros
+        if request.user.id != users_id_users and not request.user.is_staff:
+            return Response({"detail": "Não autorizado."}, status=status.HTTP_403_FORBIDDEN)
+        
+        user_projects = UsersHasProjects.objects.filter(users_id_users=users_id_users)
+        project_ids = user_projects.values_list('projects_id_projects', flat=True)
+        projects_queryset = Projects.objects.filter(id_projects__in=project_ids)
+        return self._build_response_from_projects(projects_queryset, user_projects)
+
+    def _build_response_from_projects(self, projects_queryset, user_projects):
+        projects_data = []
+
+        for project in projects_queryset:
+            project_data = ProjectSerializer(project).data
+            project_data['submissions'] = []
+
+            user_project = user_projects.filter(projects_id_projects=project.id_projects).first()
+            if not user_project:
+                continue
+
+            submissions = user_project.submissions_set.all()
+            for submission in submissions:
+                submission_data = {
+                    "id_submissions": submission.id_submissions,
+                    "submission_state": submission.submission_state,
+                    "reports_overall_score_value": None,
+                    "reports_overall_score_max_value": None,
+                    "report_token": None
+                }
+                report = Reports.objects.filter(submissions_id_submissions=submission.id_submissions).first()
+                if report:
+                    submission_data["report_token"] = report.report_token
+                    overall_score = report.reports_overall_score_id_reports_overall_score
+                    if overall_score:
+                        submission_data["reports_overall_score_value"] = overall_score.reports_overall_score_value
+                        submission_data["reports_overall_score_max_value"] = overall_score.reports_overall_score_max_value
+                project_data['submissions'].append(submission_data)
+
+            projects_data.append(project_data)
+
+        return Response(projects_data, status=status.HTTP_200_OK)
+
+
 class CreateProjectView(generics.CreateAPIView):
     
     permission_classes = [IsAuthenticated] 
