@@ -111,6 +111,9 @@ DATABASES = {
         'NAME': 'mydb',
         'USER': 'riat_admin',
         'PASSWORD': 'F]v8x9*04_gS',
+    #   'NAME': 'db_riat',
+    #   'USER': 'riat_user',
+    #   'PASSWORD': 'i%Mnq9p@K^m.1dq%4rG8',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
