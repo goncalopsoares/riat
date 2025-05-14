@@ -740,8 +740,6 @@ class ReportSerializer(serializers.ModelSerializer):
             surveys = Surveys.objects.filter(id_surveys__in=valid_survey_ids)
             print(f'Final surveys: {surveys}')
 
-            
-
 # Get dimensions for all surveys
         dimensions = Dimensions.objects.filter(surveys_id_surveys__in=surveys)
         dimension_details = []
