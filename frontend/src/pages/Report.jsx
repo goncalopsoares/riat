@@ -100,9 +100,21 @@ const Report = () => {
                 style: {
                     fontWeight: 'bold',
                     fontSize: '0.7rem',
+                    colors: new Array(30).fill('#002d46')
                 }
             },
         },
+        plotOptions: {
+            radar: {
+                polygons: {
+                    strokeColor: '#e8e8e8',
+                    strokeWidth: 2,
+                    fill: {
+                        colors: ['#f8f8f8', '#fff']
+                    }
+                }
+            }
+        }
     });
 
     useEffect(() => {
@@ -110,7 +122,7 @@ const Report = () => {
             ...prevOptions,
             xaxis: {
                 ...prevOptions.xaxis,
-                categories: chartCategories
+                categories: chartCategories,
             }
         }));
     }, [chartCategories]);
@@ -184,6 +196,7 @@ const Report = () => {
                     <div className="text-end">
                         <p>Report created on <b>{creationTime}</b></p>
                         <p>Regarding the project <b>{projectName}</b></p>
+                        <p>Organization  <b>{projectOrganization}</b></p>
                     </div>
                 </div>
                 <div className="text-center mb-4 w-100 justify-content-center margin-auto chart-container">
