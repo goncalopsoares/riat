@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, GetProjectView, SubmissionViewSet, AnswerViewSet, ReportViewSet, PasswordResetRequestView, PasswordResetView, GetSingleScaleView, UpdateScaleView
+from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, AdminAllProjectsView, UserOwnProjectsView, SubmissionViewSet, AnswerViewSet, ReportViewSet, PasswordResetRequestView, PasswordResetView, GetSingleScaleView, UpdateScaleView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView  
 
 urlpatterns = [
@@ -32,8 +32,8 @@ urlpatterns = [
     path('api/scale/create/', CreateScaleView.as_view(), name='create_scale'),
     path('api/scale/update/<int:id_scales>/', UpdateScaleView.as_view(), name='update_scale'),
     #PROJECTS
-    path('api/projects/get/', GetProjectView.as_view(), name='view_project'),
-    path('api/project/get/<int:users_id_users>/', GetProjectView.as_view(), name='view_project'),
+    path('api/projects/get/', AdminAllProjectsView.as_view(), name='admin_all_projects'),
+    path('api/project/get/<int:users_id_users>/', UserOwnProjectsView.as_view(), name='user_own_projects'),
     path('api/project/create/', CreateProjectView.as_view(), name='create_project'),
     path('api/project/update/<int:id_projects>/', UpdateProjectPhaseView.as_view(), name="update-project-phase"),
     #SUBMISSIONS
