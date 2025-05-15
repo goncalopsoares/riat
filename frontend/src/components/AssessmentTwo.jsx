@@ -14,7 +14,7 @@ const AssessmentTwo = ({ handleAgreement }) => {
                 <form className="form-container w-100 d-flex flex-column">
                     <label>
                         <input type="checkbox" id="agreement" name="agreement" />
-                        <span className="ms-2">Yes, I've read the <a href="/privacy_policy_riat.pdf">Provicy Policy</a> throughly and I'm ready to continue</span>
+                        <span className="ms-2">Yes, I've read the <a href="/privacy_policy_riat.pdf">Privacy Policy</a> thoroughly and I'm ready to continue</span>
                     </label>
                     <div className="button-container mt-5 text-end">
                         <button onClick={handleAgreement} disabled={loading} className='forms-button'>

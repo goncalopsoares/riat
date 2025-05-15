@@ -103,7 +103,7 @@ const Assessment = () => {
             setStep(3);
             setError('');
         } else {
-            setError("You must agree to the terms and conditions to proceed.");
+            setError("You must agree to the data privacy policy to proceed.");
         }
     };
 

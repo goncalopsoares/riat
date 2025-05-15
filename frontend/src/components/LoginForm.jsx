@@ -17,19 +17,30 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
 
   const name = method === "login" ? "Login" : "Register";
 
+  console.log(method);
+
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
 
     if ((method === "register" || method === "reset_password") && password !== confirmPassword) {
-      console.log("password", password);
-      console.log("confirmPassword", confirmPassword);
       setError("Passwords do not match");
       setLoading(false);
       return;
     }
 
-    setError("");
+    if (method === "register") {
+      const isChecked = document.getElementById("agreementRegister")?.checked;
+
+      if (!isChecked) {
+        setError("You must agree to the data privacy policy to proceed.");
+        setLoading(false);
+        return;
+      }
+
+      setError('');
+
+    }
 
     try {
       const requests = [
@@ -171,6 +182,12 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                   </div>
+                  <label htmlFor="agreementRegister">
+                    <input type="checkbox" id="agreementRegister" name="agreementRegister" className="mt-1" />
+                    <span className="ms-2">
+                      Yes, I've read the <a href="/privacy_policy_riat.pdf" target="_blank" rel="noopener noreferrer">Privacy Policy</a> thoroughly and I'm ready to continue
+                    </span>
+                  </label>
                 </>
               )}
               {error && <p style={{ color: "red" }}>{error}</p>}
