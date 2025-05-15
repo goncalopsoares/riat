@@ -8,7 +8,7 @@ const ProjectsAdminDetail = ({ selectedProject, handleBackClick }) => {
                 <div>
                     <h1 className="">{selectedProject.id_projects}. {selectedProject.project_name} ({selectedProject.project_acronym})</h1>
                     <div className="d-flex flex-direction-row gap-1">
-                        <p>Owned by <b>{selectedProject.metadata[0].user_email}</b></p>
+                        <p>Owned by <b>{selectedProject.metadata[0].user_email} ({selectedProject.project_owner_name})</b></p>
                         <p>with the project role <b>{selectedProject.metadata[0].users_has_projects_role}</b></p>
                     </div>
                 </div>
