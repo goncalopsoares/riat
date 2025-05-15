@@ -13,7 +13,7 @@ import '../styles/assessment.css';
 
 const Assessment = () => {
 
-    const { projectId, setProjectId, step, setStep, projectName, projectOrganization, projectPhase, projectTrl, projectMrl, projectSrl, projectValueChain, userRole, userFunction, setError, setSuccess, setLoading, loading } = useProject();
+    const { projectId, setProjectId, step, setStep, projectName, projectAcronym, projectOrganization, projectPhase, projectTrl, projectMrl, projectSrl, projectValueChain, userRole, userFunction, setError, setSuccess, setLoading, loading } = useProject();
 
     const [surveyId, setSurveyId] = useState('');
 
@@ -119,6 +119,12 @@ const Assessment = () => {
             return;
         }
 
+        if (projectAcronym === '') {
+            setError("Project acronym cannot be empty");
+            setLoading(false);
+            return;
+        }
+
         if (projectOrganization === '') {
             setError("Project Organization cannot be empty");
             setLoading(false);
@@ -166,7 +172,7 @@ const Assessment = () => {
         try {
 
             const response = await api.post('/api/project/create/', {
-                project_name: projectName, project_organization: projectOrganization, project_trl: projectTrl, project_mrl: projectMrl, project_srl: projectSrl, project_value_chain: projectValueChain, project_phase: 1, metadata: [
+                project_name: projectName, project_acronym: projectAcronym, project_organization: projectOrganization, project_trl: projectTrl, project_mrl: projectMrl, project_srl: projectSrl, project_value_chain: projectValueChain, project_phase: 1, metadata: [
                     {
                         users_has_projects_role: userRole,
                         users_has_projects_function: userFunction,

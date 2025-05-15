@@ -12,6 +12,7 @@ export const ProjectProvider = ({ children }) => {
 
     const [projectId, setProjectId] = useState(null);
     const [projectName, setProjectName] = useState('');
+    const [projectAcronym, setProjectAcronym] = useState('');
     const [projectOrganization, setProjectOrganization] = useState('');
     const [projectPhase, setProjectPhase] = useState(1);
     const [projectValueChain, setProjectValueChain] = useState('');
@@ -29,6 +30,7 @@ export const ProjectProvider = ({ children }) => {
             step, setStep,
             projectId, setProjectId,
             projectName, setProjectName,
+            projectAcronym, setProjectAcronym,
             projectOrganization, setProjectOrganization,
             projectPhase, setProjectPhase,
             projectValueChain, setProjectValueChain,

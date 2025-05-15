@@ -112,6 +112,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = [
             'id_projects',
             'project_name',
+            'project_acronym',
             'project_organization',
             'project_phase',
             'project_value_chain',
@@ -142,6 +143,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             exists = False
 
         defaults = {
+            'project_acronym': validated_data.get('project_acronym'),
             'project_organization': validated_data.get('project_organization'),
             'project_phase': validated_data.get('project_phase'),
             'project_value_chain': validated_data.get('project_value_chain'),

@@ -6,6 +6,8 @@ const CreateProject = () => {
   const {
     projectName,
     setProjectName,
+    projectAcronym,
+    setProjectAcronym,
     projectOrrganization,
     setProjectOrganization,
     projectValueChain,
@@ -77,6 +79,17 @@ const CreateProject = () => {
             placeholder="Insert the name of the project"
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3 w-100">
+          <label className="form-label">Project Acroynm</label>
+          <input
+            className="form-input"
+            type="text"
+            placeholder="Insert the acronym of the project"
+            value={projectAcronym}
+            onChange={(e) => setProjectAcronym(e.target.value)}
           />
         </div>
 

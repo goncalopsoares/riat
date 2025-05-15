@@ -7,7 +7,8 @@ from django.conf import settings
 
 class Projects(models.Model):
     id_projects = models.AutoField(primary_key=True)
-    project_name = models.CharField(unique=True, max_length=100)
+    project_name = models.CharField(max_length=100)
+    project_acronym = models.CharField(max_length=25)
     project_organization = models.CharField(max_length=100)
     project_phase = models.IntegerField()
     project_value_chain = models.CharField(max_length=25)
