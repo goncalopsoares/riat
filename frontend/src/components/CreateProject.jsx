@@ -65,178 +65,197 @@ const CreateProject = () => {
         <h1 className="create-project-title">
           Responsible Innovation Assessment
         </h1>
-        <h4 className="create-project-subtitle">
-          Identification of your venture
+        <h4 className="create-project-subtitle mb-4">
+          Identification of your project
         </h4>
 
-        <label className="form-label">Project name</label>
-        <input
-          className="form-input"
-          type="text"
-          placeholder="Insert the name of the project"
-          value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
-        />
-
-        <label className="form-label">Venture</label>
-        <input
-          className="form-input"
-          type="text"
-          placeholder="Insert the name of the organization"
-          value={projectOrrganization}
-          onChange={(e) => setProjectOrganization(e.target.value)}
-        />
-
-        <label className="form-label">Project Role</label>
-        <div className="radio-group">
-          <label className="radio-label">
-            <input
-              className="radio-input"
-              type="radio"
-              name="role"
-              value="Project Manager"
-              checked={userRole === "Project Manager"}
-              onChange={(e) => setUserRole(e.target.value)}
-            />
-            Project Manager
-          </label>
-          <label className="radio-label">
-            <input
-              className="radio-input"
-              type="radio"
-              name="role"
-              value="Other"
-              checked={userRole === "Other"}
-              onChange={(e) => setUserRole(e.target.value)}
-            />
-            Other
-          </label>
+        <div className="mb-3 w-100">
+          <label className="form-label">Project name</label>
+          <input
+            className="form-input"
+            type="text"
+            placeholder="Insert the name of the project"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
+          />
         </div>
 
-        <label className="form-label">Function</label>
-        <input
-          className="form-input"
-          type="text"
-          placeholder="Function (in the organization) of the responsible for the Assessment"
-          value={userFunction}
-          onChange={(e) => setUserFunction(e.target.value)}
-        />
+        <div className="mb-3 w-100">
+          <label className="form-label">Organization</label>
+          <input
+            className="form-input"
+            type="text"
+            placeholder="Insert the name of the organization"
+            value={projectOrrganization}
+            onChange={(e) => setProjectOrganization(e.target.value)}
+          />
+        </div>
 
-        <label className="form-label">Value Chain</label>
-        <p className="helper-text">
-          <HelpOutlineIcon /> Choose one of the following answers
-        </p>
-        <div className="radio-group">
-          <label className="radio-label">
-            <input
-              className="radio-input"
-              type="radio"
-              name="value-chain"
-              value="Food, Water and Nutrients"
-              checked={projectValueChain === "Food, Water and Nutrients"}
-              onChange={(e) => setProjectValueChain(e.target.value)}
-            />
-            Food, Water and Nutrients
+        <div className="mb-3 w-100">
+          <label className="form-label">Project Role</label>
+          <div className="radio-group">
+            <label className="radio-label">
+              <input
+                className="radio-input"
+                type="radio"
+                name="role"
+                value="Project Manager"
+                checked={userRole === "Project Manager"}
+                onChange={(e) => setUserRole(e.target.value)}
+              />
+              Project Manager
+            </label>
+            <label className="radio-label">
+              <input
+                className="radio-input"
+                type="radio"
+                name="role"
+                value="Other"
+                checked={userRole === "Other"}
+                onChange={(e) => setUserRole(e.target.value)}
+              />
+              Other
+            </label>
+          </div>
+        </div>
+
+        <div className="mb-3 w-100">
+          <label className="form-label">Function</label>
+          <input
+            className="form-input"
+            type="text"
+            placeholder="Function (in the organization) of the responsible for the Assessment"
+            value={userFunction}
+            onChange={(e) => setUserFunction(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3 w-100">
+          <label className="form-label">Value Chain</label>
+          <p className="helper-text my-2">
+            <HelpOutlineIcon style={{ color: '#002d46' }} /> Choose one of the following answers
+          </p>
+          <div className="radio-group">
+            <label className="radio-label">
+              <input
+                className="radio-input"
+                type="radio"
+                name="value-chain"
+                value="Food, Water and Nutrients"
+                checked={projectValueChain === "Food, Water and Nutrients"}
+                onChange={(e) => setProjectValueChain(e.target.value)}
+              />
+              Food, Water and Nutrients
+            </label>
+            <label className="radio-label">
+              <input
+                className="radio-input"
+                type="radio"
+                name="value-chain"
+                value="Plastics and Packaging"
+                checked={projectValueChain === "Plastics and Packaging"}
+                onChange={(e) => setProjectValueChain(e.target.value)}
+              />
+              Plastics and Packaging
+            </label>
+            <label className="radio-label">
+              <input
+                className="radio-input"
+                type="radio"
+                name="value-chain"
+                value="Textiles"
+                checked={projectValueChain === "Textiles"}
+                onChange={(e) => setProjectValueChain(e.target.value)}
+              />
+              Textiles
+            </label>
+          </div>
+        </div>
+
+        <div className="mt-3 w-100">
+          <p className="section-description">
+            Technology Readiness Level (TRL), Manufacturing Readiness Level (MRL),
+            and Service Readiness Level (SRL) are indices used to determine the
+            maturity of a technology or product. They are ranged between 1-9.
+          </p>
+          <p className="helper-text my-2">
+            <HelpOutlineIcon style={{ color: '#002d46' }} /> Hover on each level to read more info
+          </p>
+        </div>
+
+        <div className="mb-3 w-100">
+          <label className="form-label">
+            Indicate the current TRL of your project
           </label>
-          <label className="radio-label">
-            <input
-              className="radio-input"
-              type="radio"
-              name="value-chain"
-              value="Plastics and Packaging"
-              checked={projectValueChain === "Plastics and Packaging"}
-              onChange={(e) => setProjectValueChain(e.target.value)}
-            />
-            Plastics and Packaging
+          <div className="d-flex flex-direction-row gap-5">
+            {[...Array(9)].map((_, i) => (
+              <div className="tooltip-wrapper" key={`trl-${i + 1}`}>
+                <label className="radio-label">
+                  <input
+                    className="radio-input"
+                    type="radio"
+                    name="trl"
+                    value={i + 1}
+                    checked={projectTrl === String(i + 1)}
+                    onChange={(e) => setProjectTrl(e.target.value)}
+                  />
+                  {i + 1}
+                  <span className="tooltip-text">{tooltipTextsTrl[i]}</span>
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mb-3 w-100">
+          <label className="form-label">
+            Indicate the current MRL of your project
           </label>
-          <label className="radio-label">
-            <input
-              className="radio-input"
-              type="radio"
-              name="value-chain"
-              value="Textiles"
-              checked={projectValueChain === "Textiles"}
-              onChange={(e) => setProjectValueChain(e.target.value)}
-            />
-            Textiles
+          <div className="d-flex flex-direction-row gap-5">
+            {[...Array(9)].map((_, i) => (
+              <div className="tooltip-wrapper" key={`mrl-${i + 1}`}>
+                <label className="radio-label">
+                  <input
+                    className="radio-input"
+                    type="radio"
+                    name="mrl"
+                    value={i + 1}
+                    checked={projectMrl === String(i + 1)}
+                    onChange={(e) => setProjectMrl(e.target.value)}
+                  />
+                  {i + 1}
+                  <span className="tooltip-text">{tooltipTextsMrl[i]}</span>
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mb-3 w-100">
+          <label className="form-label">
+            Indicate the current SRL of your project
           </label>
+          <div className="d-flex flex-direction-row gap-5">
+            {[...Array(9)].map((_, i) => (
+              <div className="tooltip-wrapper" key={`srl-${i + 1}`}>
+                <label className="radio-label">
+                  <input
+                    className="radio-input"
+                    type="radio"
+                    name="srl"
+                    value={i + 1}
+                    checked={projectSrl === String(i + 1)}
+                    onChange={(e) => setProjectSrl(e.target.value)}
+                  />
+                  {i + 1}
+                  <span className="tooltip-text">{tooltipTextsSrl[i]}</span>
+                </label>
+              </div>
+            ))}
+          </div>
         </div>
-
-        <p className="section-description">
-          Technology Readiness Level (TRL), Manufacturing Readiness Level (MRL),
-          and Service Readiness Level (SRL) are indices used to determine the
-          maturity of a technology or product. They are ranged between 1-9.
-        </p>
-
-        <label className="form-label">
-          Indicate the current TRL of your project
-        </label>
-        <div className="d-flex flex-direction-row gap-5">
-          {[...Array(9)].map((_, i) => (
-            <div className="tooltip-wrapper" key={`trl-${i + 1}`}>
-              <label className="radio-label">
-                <input
-                  className="radio-input"
-                  type="radio"
-                  name="trl"
-                  value={i + 1}
-                  checked={projectTrl === String(i + 1)}
-                  onChange={(e) => setProjectTrl(e.target.value)}
-                />
-                {i + 1}
-                <span className="tooltip-text">{tooltipTextsTrl[i]}</span>
-              </label>
-            </div>
-          ))}
-        </div>
-
-        <label className="form-label">
-          Indicate the current MRL of your project
-        </label>
-        <div className="d-flex flex-direction-row gap-5">
-          {[...Array(9)].map((_, i) => (
-            <div className="tooltip-wrapper" key={`mrl-${i + 1}`}>
-              <label className="radio-label">
-                <input
-                  className="radio-input"
-                  type="radio"
-                  name="mrl"
-                  value={i + 1}
-                  checked={projectMrl === String(i + 1)}
-                  onChange={(e) => setProjectMrl(e.target.value)}
-                />
-                {i + 1}
-                <span className="tooltip-text">{tooltipTextsMrl[i]}</span>
-              </label>
-            </div>
-          ))}
-        </div>
-
-        <label className="form-label">
-          Indicate the current SRL of your project
-        </label>
-        <div className="d-flex flex-direction-row gap-5">
-          {[...Array(9)].map((_, i) => (
-            <div className="tooltip-wrapper" key={`srl-${i + 1}`}>
-              <label className="radio-label">
-                <input
-                  className="radio-input"
-                  type="radio"
-                  name="srl"
-                  value={i + 1}
-                  checked={projectSrl === String(i + 1)}
-                  onChange={(e) => setProjectSrl(e.target.value)}
-                />
-                {i + 1}
-                <span className="tooltip-text">{tooltipTextsSrl[i]}</span>
-              </label>
-            </div>
-          ))}
-        </div>
-
-
       </div>
-    </div>
+    </div >
   );
 };
 
