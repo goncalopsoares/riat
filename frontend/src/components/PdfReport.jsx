@@ -164,6 +164,15 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         padding: 10,
     },
+    freeText: {
+        fontSize: 10,
+        color: '#006C8E',
+        fontWeight: 'bold',
+    },
+    preferNotToAnswer: {
+        fontSize: 10,
+        fontWeight: 'bold',
+    },
 });
 
 const ReportDocument = ({
@@ -227,23 +236,49 @@ const ReportDocument = ({
 
                         {dimension.statements.map((statement, stmtIndex) => (
                             <View key={statement.id} style={{ marginBottom: 10 }}>
-                                <Text style={styles.statementTitle}>{dimIndex + 1}.{stmtIndex + 1}. {statement.name}</Text>
-                                <Text style={styles.statementDescription}><Text>{statement.description}</Text></Text>
+                                <Text style={styles.statementTitle}>
+                                    {dimIndex + 1}.{stmtIndex + 1}. {statement.name}
+                                </Text>
+                                <Text style={styles.statementDescription}>
+                                    {statement.description}
+                                </Text>
 
-                                <View style={styles.scaleLabelsContainer}>
-                                    {statement.scale_labels.split(",").map((label, index) => (
-                                        <Text
-                                            key={index}
-                                            style={
-                                                label === statement.answers[0]?.value
-                                                    ? { ...styles.answerLabel, display: 'flex', alignItems: 'center' }
-                                                    : styles.scaleLabels
-                                            }
-                                        >
-                                            {label}
-                                        </Text>
-                                    ))}
-                                </View>
+                                {statement.answers.map((answer, answerIndex) => {
+                                    const scaleLabels = statement.scale_labels?.split(',') || [];
+                                    const selectedValue = answer?.value;
+
+                                    if (statement.scale_labels && statement.scale_labels !== 'n/a' && scaleLabels.includes(selectedValue)) {
+                                        return (
+                                            <View key={answer.id || answerIndex} style={styles.scaleLabelsContainer}>
+                                                {statement.scale_labels.split(",").map((label, index) => (
+                                                    <Text
+                                                        key={index}
+                                                        style={
+                                                            label === statement.answers[0]?.value
+                                                                ? { ...styles.answerLabel, display: 'flex', alignItems: 'center' }
+                                                                : styles.scaleLabels
+                                                        }
+                                                    >
+                                                        {label}
+                                                    </Text>
+                                                ))}
+                                            </View>
+                                        );
+                                    } else if (statement.scale_labels && statement.scale_labels !== 'n/a') {
+                                        return (
+                                            <View key={answer.id || answerIndex} style={{ marginTop: 4 }}>
+                                                <Text style={styles.preferNotToAnswer}>Prefer not to answer</Text>
+                                                <Text style={styles.freeText}>{selectedValue}</Text>
+                                            </View>
+                                        );
+                                    } else {
+                                        return (
+                                            <View key={answer.id || answerIndex} style={{ marginTop: 4 }}>
+                                                <Text style={styles.freeText}>{selectedValue}</Text>
+                                            </View>
+                                        );
+                                    }
+                                })}
                             </View>
                         ))}
                         {dimIndex !== dimensionsData.length - 1 && (
@@ -293,6 +328,7 @@ const DownloadPDFButton = ({ series, options, ...props }) => {
                             radar: {
                                 polygons: {
                                     strokeColor: '#e8e8e8',
+                                    strokeWidth: 2,
                                     fill: {
                                         colors: ['#f8f8f8', '#fff']
                                     }
@@ -301,9 +337,13 @@ const DownloadPDFButton = ({ series, options, ...props }) => {
                         },
                         dataLabels: {
                             enabled: true,
+                            formatter: (val) => `${val}%`,
                             background: {
                                 enabled: true,
                                 borderRadius: 2,
+                            },
+                            style: {
+                                fontSize: '14px',
                             }
                         },
                         xaxis: {
@@ -311,8 +351,10 @@ const DownloadPDFButton = ({ series, options, ...props }) => {
                             labels: {
                                 ...options.xaxis.labels,
                                 style: {
-                                    fontSize: '16px',
-                                }
+                                    fontSize: '18px',
+                                    colors: new Array(30).fill('#002d46'),
+                                },
+                                offsetY: 0,
                             },
                         },
                     }}
