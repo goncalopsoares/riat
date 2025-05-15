@@ -13,7 +13,7 @@ import '../styles/assessment.css';
 
 const Assessment = () => {
 
-    const { projectId, setProjectId, step, setStep, projectName, projectAcronym, projectOrganization, projectPhase, projectTrl, projectMrl, projectSrl, projectValueChain, userRole, userFunction, setError, setSuccess, setLoading, loading } = useProject();
+    const { projectId, setProjectId, step, setStep, projectName, setProjectName, projectAcronym, setProjectAcronym, projectOrganization, setProjectOrganization, projectPhase, setProjectPhase, projectTrl, setProjectTrl, projectMrl, setProjectMrl, projectSrl, setProjectSrl, projectValueChain, setProjectValueChain, userRole, setUserRole, userFunction, setUserFunction, setError, setSuccess, setLoading, loading } = useProject();
 
     const [surveyId, setSurveyId] = useState('');
 
@@ -181,12 +181,22 @@ const Assessment = () => {
             });
 
             setSuccess('Project created successfully!');
+            setProjectId(null);
+            setProjectName('');
+            setProjectAcronym('');
+            setProjectOrganization('');
+            setUserRole('');
+            setUserFunction('');
+            setProjectTrl('');
+            setProjectMrl('');
+            setProjectSrl('');
+            setProjectValueChain('');
 
             const projectId = response.data.id_projects;
             setProjectId(projectId);
             setTimeout(() => {
                 setStep(4);
-            }, 2000);
+            });
             setError('');
 
 
