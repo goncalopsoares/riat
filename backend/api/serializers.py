@@ -103,10 +103,10 @@ class UserHasProjectsSerializer(serializers.ModelSerializer):
         }
 
 class ProjectSerializer(serializers.ModelSerializer):
-    
     project_name = serializers.CharField(validators=[])
-    metadata = UserHasProjectsSerializer(many=True, source='usershasprojects_set')
-    
+    # Add user_email to metadata by using a SerializerMethodField
+    metadata = serializers.SerializerMethodField()
+
     class Meta:
         model = Projects
         fields = [
@@ -122,14 +122,27 @@ class ProjectSerializer(serializers.ModelSerializer):
             'metadata',
         ]
         extra_kwargs = {
-            'project_creation_time': {'read_only': True},       
+            'project_creation_time': {'read_only': True},
         }
-        
+
+    def get_metadata(self, obj):
+        # Get all UsersHasProjects related to this project
+        metadata_qs = UsersHasProjects.objects.filter(projects_id_projects=obj)
+        result = []
+        for item in metadata_qs:
+            data = UserHasProjectsSerializer(item).data
+            # Add user_email from related Users model
+            if item.users_id_users:
+                data['user_email'] = item.users_id_users.user_email
+            else:
+                data['user_email'] = None
+            result.append(data)
+        return result
+
     def create(self, validated_data):
         return self.update_or_create(validated_data)
-    
+
     def update_or_create(self, validated_data):
-        
         metadata_data = validated_data.pop('usershasprojects_set', [])
         request = self.context.get('request')
         user = request.user if request else None
@@ -160,19 +173,18 @@ class ProjectSerializer(serializers.ModelSerializer):
             project_name=project_name,
             defaults=defaults
         )
-        
-        if user and created:
 
-                for item in metadata_data:
-                    UsersHasProjects.objects.create(
-                        users_id_users=user,
-                        projects_id_projects=project,
-                        **item
-                    )
-                    
+        if user and created:
+            for item in metadata_data:
+                UsersHasProjects.objects.create(
+                    users_id_users=user,
+                    projects_id_projects=project,
+                    **item
+                )
+
         print(f"project {project}")
 
-        return project  
+        return project
         
         
 # SURVEYS

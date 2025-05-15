@@ -60,6 +60,8 @@ const ProjectsAdmin = () => {
         getProjects();
     }, []);
 
+    console.log(projects)
+
     return (
         currentProjects.length > 0 && selectedProjectId === null ? (
             <ProjectsAdminTable

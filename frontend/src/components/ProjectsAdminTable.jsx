@@ -9,11 +9,13 @@ const ProjectsAdminTable = ({ currentProjects, paginate, totalPages, currentPage
                         <tr style={{ height: '6rem' }}>
                             <th className='table-headers-text pt-4 ps-4'>ID</th>
                             <th className='table-headers-text pt-4'>Project Name</th>
+                            <th className='table-headers-text pt-4'>Acronym</th>
                             <th className='table-headers-text pt-4'>Phase</th>
                             <th className='table-headers-text pt-4'>MRL</th>
                             <th className='table-headers-text pt-4'>SRL</th>
                             <th className='table-headers-text pt-4'>TRL</th>
-                            <th className='table-headers-text pt-4'>Function</th>
+                            <th className='table-headers-text pt-4'>Owner</th>
+                            <th className='table-headers-text pt-4'>Project Role</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -27,10 +29,12 @@ const ProjectsAdminTable = ({ currentProjects, paginate, totalPages, currentPage
                                     </a>
                                 </td>
                                 <td>{project.project_name}</td>
+                                <td>{project.project_acronym}</td>
                                 <td>{project.project_phase}</td>
                                 <td>{project.project_mrl}</td>
                                 <td>{project.project_srl}</td>
                                 <td>{project.project_trl}</td>
+                                <td>{project.metadata[0].user_email}</td>
                                 <td>{project.metadata[0].users_has_projects_role}</td>
                             </tr>
                         ))}
