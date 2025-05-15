@@ -4,32 +4,39 @@ import { useLocation } from "react-router-dom";
 const Footer = () => {
 
     const [isHomePage, setIsHomePage] = useState(false);
+    const [isLoginRegister, setIsLoginRegiser] = useState(false);
     const currentPath = useLocation().pathname;
 
     useEffect(() => {
+        const normalizedPath = currentPath.replace(/\/+$/, ''); // remove barras no fim
 
-        if (currentPath === '/') {
+        if (normalizedPath === '') {
             setIsHomePage(true);
-        }
-        else {
+            setIsLoginRegiser(false);
+        } else if (normalizedPath === '/login' || normalizedPath === '/register') {
             setIsHomePage(false);
+            setIsLoginRegiser(true);
+        } else {
+            setIsHomePage(false);
+            setIsLoginRegiser(false);
         }
     }, [currentPath]);
 
+
     return (
         <footer
-            className={`bg-white text-black ${isHomePage ? '' : 'py-2'}`}
+            className={`bg-white text-black ${(isHomePage || isLoginRegister) ? '' : 'py-2'}`}
             style={{ zIndex: 5, height: '10vh' }}
         >
             <div
-                className={isHomePage ? 'py-5' : 'border-top border-secondary-subtle py-2'}
+                className={(isHomePage || isLoginRegister) ? 'border-top border-secondary-subtle py-5' : 'border-top border-secondary-subtle py-2'}
                 style={{
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr',
-                    alignItems: isHomePage ? '' : 'center',
+                    alignItems: (isHomePage || isLoginRegister) ? '' : 'center',
                 }}
             >
-                {isHomePage && (
+                {(isHomePage || isLoginRegister) && (
                     <div className="d-flex flex-row justify-content-center align-items-start me-2">
                         <img
                             src="/flag_eu.jpg"
@@ -47,7 +54,7 @@ const Footer = () => {
                         </p>
                     </div>
                 )}
-                {isHomePage ? (
+                {(isHomePage || isLoginRegister) ? (
                     <div className="d-flex flex-column align-items-end justify-content-end ms-2">
                         <div className="d-flex flex-row justify-content-between align-items-center mb-2">
                             <img
