@@ -72,7 +72,7 @@ const CreateProject = () => {
         </h4>
 
         <div className="mb-3 w-100">
-          <label className="form-label">Project name</label>
+          <label className="form-label">Extended Project Name</label>
           <input
             className="form-input"
             type="text"

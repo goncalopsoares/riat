@@ -1,5 +1,4 @@
 import { useProject } from "../contexts/ProjectContext";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 const SelectPhase = () => {
 
@@ -11,10 +10,6 @@ const SelectPhase = () => {
                 <h1>What phase is your project in?</h1>
                 <p>This will help us tailor the questions to your current needs.</p>
 
-                <p className="helper-text">
-                    <HelpOutlineIcon /> If your project is at phase 1, just click next.
-                </p>
-
                 <div className="radio-group">
                     <label
                         htmlFor="option1"
@@ -24,7 +19,6 @@ const SelectPhase = () => {
                     >
                         <input
                             className="radio-input"
-                            disabled={parseInt(projectPhase) >= 1}
                             type="radio"
                             name="phase"
                             id="option1"
@@ -42,7 +36,6 @@ const SelectPhase = () => {
                     >
                         <input
                             className="radio-input"
-                            disabled={parseInt(projectPhase) >= 2}
                             type="radio"
                             name="phase"
                             id="option2"
@@ -60,7 +53,6 @@ const SelectPhase = () => {
                     >
                         <input
                             className="radio-input"
-                            disabled={parseInt(projectPhase) >= 3}
                             type="radio"
                             name="phase"
                             id="option3"

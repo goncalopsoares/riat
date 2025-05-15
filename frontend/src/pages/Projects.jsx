@@ -175,7 +175,8 @@ const Projects = () => {
                                     <th className='table-headers-text pt-4 ps-5'>Select Assessment</th>
                                 ) : (
                                     <>
-                                        <th className='table-headers-text pt-4 ps-5'>Phase</th>
+                                        <th className='table-headers-text pt-4 ps-5'>Acronym</th>
+                                        <th className='table-headers-text pt-4 ps-5'>Current Phase</th>
                                         <th className='table-headers-text pt-4 ps-5'>Submissions</th>
                                         <th className='table-headers-text pt-4 ps-5'>Last Score Obtained</th>
                                         <th className='table-headers-text pt-4 ps-5'>Action</th>
@@ -247,9 +248,22 @@ const Projects = () => {
                                                         <button type="submit" className='create-project-button ms-3'>Start assessment</button>
                                                     </form>
                                                 ) : null}
-                                            </td>) : (
+                                            </td>
+                                            ) : (
                                             <>
-                                                <td className='ps-5'>{project.project_phase} {!lastSubmission || (lastSubmission && lastSubmission.submission_state === 2) && <a className='text-underline ms-3' style={{ cursor: 'pointer' }} onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}>Update</a>}</td>
+                                                <td className='ps-5'>{project.project_acronym}</td>
+                                                <td className='ps-5'>
+                                                    {project.project_phase}
+                                                    {(!lastSubmission || (lastSubmission && lastSubmission.submission_state === 2)) && (
+                                                        <a
+                                                            className='text-underline ms-3'
+                                                            style={{ cursor: 'pointer' }}
+                                                            onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}
+                                                        >
+                                                            Update
+                                                        </a>
+                                                    )}
+                                                </td>
                                                 <td className='ps-5'>{submissionsNumber}</td>
                                                 <td className='ps-5'>
                                                     {lastCompletedSubmission ? (
