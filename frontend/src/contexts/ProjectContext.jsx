@@ -14,6 +14,7 @@ export const ProjectProvider = ({ children }) => {
     const [projectName, setProjectName] = useState('');
     const [projectAcronym, setProjectAcronym] = useState('');
     const [projectOrganization, setProjectOrganization] = useState('');
+    const [projectOwnerName, setProjectOwnerName] = useState('');
     const [projectPhase, setProjectPhase] = useState(1);
     const [projectValueChain, setProjectValueChain] = useState('');
     const [projectTrl, setProjectTrl] = useState('');
@@ -32,6 +33,7 @@ export const ProjectProvider = ({ children }) => {
             projectName, setProjectName,
             projectAcronym, setProjectAcronym,
             projectOrganization, setProjectOrganization,
+            projectOwnerName, setProjectOwnerName,
             projectPhase, setProjectPhase,
             projectValueChain, setProjectValueChain,
             projectTrl, setProjectTrl,

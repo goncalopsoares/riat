@@ -13,7 +13,7 @@ import '../styles/assessment.css';
 
 const Assessment = () => {
 
-    const { projectId, setProjectId, step, setStep, projectName, setProjectName, projectAcronym, setProjectAcronym, projectOrganization, setProjectOrganization, projectPhase, setProjectPhase, projectTrl, setProjectTrl, projectMrl, setProjectMrl, projectSrl, setProjectSrl, projectValueChain, setProjectValueChain, userRole, setUserRole, userFunction, setUserFunction, setError, setSuccess, setLoading, loading } = useProject();
+    const { projectId, setProjectId, step, setStep, projectName, setProjectName, projectAcronym, setProjectAcronym, projectOrganization, projectOwnerName, setProjectOwnerName, setProjectOrganization, projectPhase, setProjectPhase, projectTrl, setProjectTrl, projectMrl, setProjectMrl, projectSrl, setProjectSrl, projectValueChain, setProjectValueChain, userRole, setUserRole, userFunction, setUserFunction, setError, setSuccess, setLoading, loading } = useProject();
 
     const [surveyId, setSurveyId] = useState('');
 
@@ -131,6 +131,12 @@ const Assessment = () => {
             return;
         }
 
+         if (projectOwnerName === '') {
+            setError("Name of the responsible for the project cannot be empty");
+            setLoading(false);
+            return;
+        }
+
         if (projectTrl === '') {
             setError("Project TRL value must be selected");
             setLoading(false);
@@ -172,7 +178,7 @@ const Assessment = () => {
         try {
 
             const response = await api.post('/api/project/create/', {
-                project_name: projectName, project_acronym: projectAcronym, project_organization: projectOrganization, project_trl: projectTrl, project_mrl: projectMrl, project_srl: projectSrl, project_value_chain: projectValueChain, project_phase: 1, metadata_data: [
+                project_name: projectName, project_acronym: projectAcronym, project_organization: projectOrganization, project_owner_name: projectOwnerName, project_trl: projectTrl, project_mrl: projectMrl, project_srl: projectSrl, project_value_chain: projectValueChain, project_phase: 1, metadata_data: [
                     {
                         users_has_projects_role: userRole,
                         users_has_projects_function: userFunction,
@@ -185,6 +191,7 @@ const Assessment = () => {
             setProjectName('');
             setProjectAcronym('');
             setProjectOrganization('');
+            setProjectOwnerName('');
             setUserRole('');
             setUserFunction('');
             setProjectTrl('');

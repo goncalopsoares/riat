@@ -10,6 +10,7 @@ class Projects(models.Model):
     project_name = models.CharField(max_length=100)
     project_acronym = models.CharField(max_length=25)
     project_organization = models.CharField(max_length=100)
+    project_owner_name = models.CharField(max_length=100)
     project_phase = models.IntegerField()
     project_value_chain = models.CharField(max_length=25)
     project_trl = models.IntegerField()

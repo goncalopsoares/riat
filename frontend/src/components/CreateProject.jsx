@@ -10,6 +10,8 @@ const CreateProject = () => {
     setProjectAcronym,
     projectOrrganization,
     setProjectOrganization,
+    projectOwnerName,
+    setProjectOwnerName,
     projectValueChain,
     setProjectValueChain,
     projectTrl,
@@ -72,7 +74,7 @@ const CreateProject = () => {
         </h4>
 
         <div className="mb-3 w-100">
-          <label className="form-label">Extended Project Name</label>
+          <label className="form-label">Extended project name</label>
           <input
             className="form-input"
             type="text"
@@ -83,7 +85,7 @@ const CreateProject = () => {
         </div>
 
         <div className="mb-3 w-100">
-          <label className="form-label">Project Acroynm</label>
+          <label className="form-label">Project acroynm</label>
           <input
             className="form-input"
             type="text"
@@ -101,6 +103,17 @@ const CreateProject = () => {
             placeholder="Insert the name of the organization"
             value={projectOrrganization}
             onChange={(e) => setProjectOrganization(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3 w-100">
+          <label className="form-label">Person responsible for the project</label>
+          <input
+            className="form-input"
+            type="text"
+            placeholder="Insert the name of the person responsible for the project"
+            value={projectOrrganization}
+            onChange={(e) => setProjectOwnerName(e.target.value)}
           />
         </div>
 
