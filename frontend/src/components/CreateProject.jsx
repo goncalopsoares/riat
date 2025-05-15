@@ -22,6 +22,43 @@ const CreateProject = () => {
     setUserFunction,
   } = useProject();
 
+  //tooltips
+  const tooltipTextsSrl = [
+    "Identification of the generic societal need and associated readiness aspects",
+    "Formulation of proposed solution concept and potential impacts; appraisal of societal readiness issues; identification of relevant stakeholders for the development of the solution",
+    "Initial sharing of the proposed solution with relevant stakeholders (e.g. through visual mock-ups): a limited group of the society knows the solution or similar initiatives",
+    "Solution validated through pilot testing in controlled environments to substantiate proposed impacts and societal readiness: a limited group of the society tests the solution or similar initiatives",
+    "Solution validated through pilot testing in real or realistic environments and by relevant stakeholders: the society knows the solution or similar initiatives but is not aware of their benefits",
+    "Solution demonstrated in real world environments and in cooperation with relevant stakeholders to gain feedback on potential impacts: the society knows the solution or similar initiatives and awareness of their benefits increases",
+    "Refinement of the solution and, if needed, retesting in real world environments with relevant stakeholders: the society is completely aware of the solution's benefits, a part of the society starts to adopt similar solutions",
+    "Targeted solution, as well as a plan for societal adaptation, complete and qualified; society is ready to adopt the solution and have used similar solutions on the market",
+    "Actual solution proven in relevant societal environments after launch on the market; the society is using the solution available on the market"
+  ];
+
+  const tooltipTextsTrl = [
+    "Basic principles observed",
+    "Technology concept formulated",
+    "Experimental proof of concept",
+    "Technology validated in lab",
+    "Technology validated in relevant environment (industrially relevant environment in the case of key enabling technologies)",
+    "Technology demonstrated in relevant environment (industrially relevant environment in the case of key enabling technologies)",
+    "System prototype demonstration in operational environment",
+    "System complete and qualified",
+    "Actual system proven in operational environment (competitive manufacturing in the case of key enabling technologies; or in space)"
+  ];
+
+  const tooltipTextsMrl = [
+    "Basic research - An acceptance that viable improvements can be made",
+    "Needs formulation - Ability to highlight where the improvement can be made",
+    "Needs validation - Being able to identify what the system should do",
+    "Small Scale Stakeholder Campaign - Putting numbers on what is expected in terms of a solution, financially and technically",
+    "Large Scale Early Adopter Campaign - Ability to define how the system should operate and integrate",
+    "Proof of Traction - Identify on component level what the system should be comprised of",
+    "Proof of satisfaction - An understanding on who should be planning, designing and implementing the solution",
+    "Proof of Scalability - Having contact with the people, internally or externally, who will design and create the solution",
+    "Proof of Stability - Solution is being created to solve a defined problem"
+  ];
+
   return (
     <div className="global-container">
       <div className="create-project-container">
@@ -134,35 +171,70 @@ const CreateProject = () => {
         <label className="form-label">
           Indicate the current TRL of your project
         </label>
-        <input
-          className="form-input"
-          type="text"
-          placeholder="TRL (1-9)"
-          value={projectTrl}
-          onChange={(e) => setProjectTrl(e.target.value)}
-        />
+        <div className="d-flex flex-direction-row gap-5">
+          {[...Array(9)].map((_, i) => (
+            <div className="tooltip-wrapper" key={`trl-${i + 1}`}>
+              <label className="radio-label">
+                <input
+                  className="radio-input"
+                  type="radio"
+                  name="trl"
+                  value={i + 1}
+                  checked={projectTrl === String(i + 1)}
+                  onChange={(e) => setProjectTrl(e.target.value)}
+                />
+                {i + 1}
+                <span className="tooltip-text">{tooltipTextsTrl[i]}</span>
+              </label>
+            </div>
+          ))}
+        </div>
 
         <label className="form-label">
           Indicate the current MRL of your project
         </label>
-        <input
-          className="form-input"
-          type="text"
-          placeholder="MRL (1-9)"
-          value={projectMrl}
-          onChange={(e) => setProjectMrl(e.target.value)}
-        />
+        <div className="d-flex flex-direction-row gap-5">
+          {[...Array(9)].map((_, i) => (
+            <div className="tooltip-wrapper" key={`mrl-${i + 1}`}>
+              <label className="radio-label">
+                <input
+                  className="radio-input"
+                  type="radio"
+                  name="mrl"
+                  value={i + 1}
+                  checked={projectMrl === String(i + 1)}
+                  onChange={(e) => setProjectMrl(e.target.value)}
+                />
+                {i + 1}
+                <span className="tooltip-text">{tooltipTextsMrl[i]}</span>
+              </label>
+            </div>
+          ))}
+        </div>
 
         <label className="form-label">
           Indicate the current SRL of your project
         </label>
-        <input
-          className="form-input"
-          type="text"
-          placeholder="SRL (1-9)"
-          value={projectSrl}
-          onChange={(e) => setProjectSrl(e.target.value)}
-        />
+        <div className="d-flex flex-direction-row gap-5">
+          {[...Array(9)].map((_, i) => (
+            <div className="tooltip-wrapper" key={`srl-${i + 1}`}>
+              <label className="radio-label">
+                <input
+                  className="radio-input"
+                  type="radio"
+                  name="srl"
+                  value={i + 1}
+                  checked={projectSrl === String(i + 1)}
+                  onChange={(e) => setProjectSrl(e.target.value)}
+                />
+                {i + 1}
+                <span className="tooltip-text">{tooltipTextsSrl[i]}</span>
+              </label>
+            </div>
+          ))}
+        </div>
+
+
       </div>
     </div>
   );

@@ -14,7 +14,8 @@
 .table-headers-text {
     font-family: "Inter", sans-serif;
     font-weight: 600;
-    font-size: 1rem;;
+    font-size: 1rem;
+    ;
 }
 
 .new-assessment-button {
@@ -42,4 +43,32 @@
     background-color: #4285F4;
     height: 100%;
     border-radius: 8px;
+}
+
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 12rem;
+    background-color: #002d46;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    opacity: 0;
+    white-space: normal;
+    word-wrap: break-word;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.tooltip-wrapper:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
 }
