@@ -197,7 +197,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                             </div>
                         )}
                         {dimensionStage !== 3 && (
-                            <div className={`button-container d-flex justify-content-between w-100 ${dimensionStage === 1 ? 'mt-5' : ''}`} style={{ marginRight: '4rem' }}>
+                            <div className={`button-container d-flex ${currentDimension === 0 && dimensionStage === 1 ? 'justify-content-end' : 'justify-content-between'} w-100 ${dimensionStage === 1 ? 'mt-5' : ''}`} style={{ marginRight: '4rem' }}>
                                 {currentDimension === 0 && dimensionStage === 1 ? (
                                     null // No back button on the first dimension
                                 ) : (
