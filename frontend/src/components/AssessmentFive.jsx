@@ -11,6 +11,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
         allDimensions[currentDimension].sub_dimensions.some(subId => subId === dimension.id_dimensions)
     );
 
+    console.log(allDimensions)
 
 
     return (
@@ -53,8 +54,12 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                     return (
                                         <>
                                             <div key={statement.id_statements} className="statement-container">
-                                                <h4 className="statement-name"><span className="statement-number">{currentDimension + 1}.{statementCounter}</span> {statement.statement_name}</h4>
-                                                <p className="statement-description"><em>{statement.statement_description}</em></p>
+                                                {statement.scale.scale_levels > 0 ? (
+                                                    <h4 className="statement-name"><span className="statement-number">{currentDimension + 1}.{statementCounter}</span> {statement.statement_name}</h4>
+                                                ) : (
+                                                    <h4 className="statement-name">{statement.statement_name}</h4>
+                                                )}
+                                                <p className="statement-description" style={{color: '#002d46'}}><em>{statement.statement_description}</em></p>
                                                 <>
                                                     {statement.scale.scale_levels > 0 ? (
                                                         <>

@@ -10,7 +10,7 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                 return (
                     <div key={subDimension.id} className="sub-dimension-container">
                         <h2 className="sub-dimension-name">
-                            {currentDimension + 1}.{subDimensionIndex + 1}. {subDimension.dimension_name}
+                            {currentDimension + 1}.{subDimensionIndex + 2}. {subDimension.dimension_name}
                         </h2>
                         <p className="sub-dimension-description">{subDimension.dimension_description}</p>
 
@@ -21,7 +21,7 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                                 <div key={statement.id_statements} className="statement-container">
                                     <h4 className="statement-name">
                                         <span className="statement-number">
-                                            {currentDimension + 1}.{subDimensionIndex + 1}.{statementCounter}
+                                            {currentDimension + 1}.{subDimensionIndex + 2}.{statementCounter}
                                         </span>{" "}
                                         {statement.statement_name}
                                     </h4>
