@@ -15,14 +15,15 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                         <p className="sub-dimension-description">{subDimension.dimension_description}</p>
 
                         {subDimension.statements?.map((statement, statementIndex) => {
-                            currentSubDimension++
+                            currentSubDimension++;
                             statementCounter++;
                             return (
                                 <div key={statement.id_statements} className="statement-container">
                                     <h4 className="statement-name">
-                                        <span className="statement-number">
-                                            {currentDimension + 1}.{subDimensionIndex + 2}.{statementCounter}
-                                        </span>{" "}
+                                        {statement.scale.scale_levels > 0 && (
+                                            <span className="statement-number">
+                                                {currentDimension + 1}.{subDimensionIndex + 2}.{statementCounter}
+                                            {" "}</span>)}
                                         {statement.statement_name}
                                     </h4>
                                     <p className="statement-description">
@@ -82,7 +83,7 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                                                     )}
                                                 </label>
                                                 {naSelected[statement.id_statements] ||
-                                                typeof selectedValues[statement.id_statements] === "string" ? (
+                                                    typeof selectedValues[statement.id_statements] === "string" ? (
                                                     <>
                                                         <p>Explain why you chose this option</p>
                                                         <textarea
