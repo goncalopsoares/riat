@@ -64,7 +64,7 @@ const Footer = () => {
                             />
                         </div>
                         <p className="mb-0 me-4" style={{ fontSize: '0.75rem' }}>
-                            2025. Responsible Innovation Assessment Tool. All rights reserved.
+                            Responsible Innovation Assessment Tool. Copyright © INESC TEC 2025
                         </p>
                     </div>
                 ) : (
