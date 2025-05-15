@@ -78,9 +78,26 @@ const Report = () => {
 
     const getChartData = () => {
         if (reportData) {
-            const data = reportData.details.dimension_scores.map(item => item.reports_score_dimension_score);
-            setChartData(data);
-            return data;
+
+            // Sum all scale_labels (not 'n/a') for each dimension
+            const scaleLabelCounts = reportData.details.dimensions.map(dimension => {
+                return dimension.statements.reduce((sum, statement) => {
+                    if (statement.scale_labels && statement.scale_labels !== "n/a") {
+                        return sum + statement.scale_labels.split(',').length;
+                    }
+                    return sum;
+                }, 0);
+            });
+
+            // Get dimension_scores and divide by total scale_labels for each dimension
+            const normalizedScores = reportData.details.dimension_scores.map((item, idx) => {
+                const totalLabels = scaleLabelCounts[idx] || 1; // avoid division by zero
+                return item.reports_score_dimension_score / totalLabels;
+            });
+
+            const percentageScores = normalizedScores.map(score => Math.round(score * 100));
+            setChartData(percentageScores);
+
         }
     }
 
@@ -101,8 +118,20 @@ const Report = () => {
                     fontWeight: 'bold',
                     fontSize: '0.7rem',
                     colors: new Array(30).fill('#002d46')
-                }
+                },
+                offsetY: -1,
             },
+        },
+        yaxis: {
+            max: 100,
+            labels: {
+                formatter: (val) => `${val}%`,
+                style: {
+                    fontSize: '0.8rem',
+                    fontWeight: 'bold',
+                    colors: ['#002d46']
+                }
+            }
         },
         plotOptions: {
             radar: {
@@ -129,7 +158,7 @@ const Report = () => {
 
     const [series, setSeries] = useState([
         {
-            name: "Total Dimension Score",
+            name: "Dimension Score",
             data: []
         }
     ]);
@@ -137,7 +166,7 @@ const Report = () => {
     useEffect(() => {
         setSeries([
             {
-                name: "Total Dimension Score",
+                name: "Dimension Score",
                 data: chartData
             }
         ]);

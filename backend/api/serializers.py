@@ -763,12 +763,12 @@ class ReportSerializer(serializers.ModelSerializer):
                                 value = AnswersText.objects.get(answers_base_id_answers_base=answer).value
                             except AnswersText.DoesNotExist:
                                 pass
-                    
+
                     # Get scale label if applicable
                     if statement.scales_id_scales and value is not None:
-                        scale_labels = statement.scales_id_scales.scale_labels.split(',')
+                        scale_labels_list = statement.scales_id_scales.scale_labels.split(',')
                         try:
-                            scale_label = scale_labels[int(value) - 1] if isinstance(value, int) and 0 < value <= len(scale_labels) else None
+                            scale_label = scale_labels_list[int(value) - 1] if isinstance(value, int) and 0 < value <= len(scale_labels_list) else None
                         except (IndexError, ValueError):
                             scale_label = None
 
@@ -778,13 +778,14 @@ class ReportSerializer(serializers.ModelSerializer):
                         'scale_label': scale_label,
                         'creation_time': answer.answer_creation_time,
                     })
+                # Add scale_levels to the statement details
                 statement_details.append({
                     'id': statement.id_statements,
                     'name': statement.statement_name,
                     'description': statement.statement_description,
                     'answers': answer_details,
                     'scale_labels': statement.scales_id_scales.scale_labels if statement.scales_id_scales else None,
-                    
+                    'scale_levels': statement.scales_id_scales.scale_levels if statement.scales_id_scales else None,
                 })
             dimension_details.append({
                 'id': dimension.id_dimensions,
@@ -794,5 +795,5 @@ class ReportSerializer(serializers.ModelSerializer):
             })
 
         report_details['dimensions'] = dimension_details
-        
+
         return report_details
