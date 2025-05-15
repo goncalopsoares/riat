@@ -10,14 +10,14 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     return (
-        <nav className="navbar sticky-top border-bottom border-secondary-subtle" style={{ zIndex: 5, height: "18vh", backgroundColor: "white" }}>
-            <a href="/" className="text-dark text-decoration-none ms-4">
-                <span className="tool-title">
-                    Responsible Innovation Assessment Tool
-                    <br />
-                </span>
-                <span className="tool-subtitle">by INESC TEC</span>
-            </a>
+<nav className="navbar sticky-top border-bottom border-secondary-subtle" style={{ zIndex: 5, height: "10vh", backgroundColor: "white" }}>
+    <a href="/" className="text-dark text-decoration-none ms-4 d-flex flex-column align-items-center">
+        <img
+            src="/logo_draft02.svg"
+            alt="RIAT Logo"
+            style={{ height: "3.5rem" }}
+        />
+    </a>
             {user && user.user_role === 1 ? (
                 <ul className="navbar-nav d-flex flex-row me-4 align-items-center">
                     <li className="nav-item mx-2 dropdown">
