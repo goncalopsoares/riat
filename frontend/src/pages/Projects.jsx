@@ -12,7 +12,6 @@ const Projects = () => {
     const [error, setError] = useState('');
     const [allProjects, setAllProjects] = useState([]);
     const [allSurveys, setAllSurveys] = useState([]);
-    const [selectedSurvey, setSelectedSurvey] = useState(1);
     const [surveySelector, setSurveySelector] = useState(false);
     const [selectedSurveyId, setSelectedSurveyId] = useState(null);
     const [selectedPhase, setSelectedPhase] = useState(null);
@@ -95,14 +94,6 @@ const Projects = () => {
     };
 
 
-
-
-    //SELECT SURVEY
-
-    const handleSelectSurvey = (e) => {
-        setSelectedSurvey(e.target.value);
-    }
-
     //START NEW ASSESSMENT
 
     const handleStartNewAssessment = async (e, idUserProject) => {
@@ -113,7 +104,7 @@ const Projects = () => {
 
         try {
             const response = await api.post(`/api/submission/`, {
-                surveys_id_surveys: selectedSurvey,
+                surveys_id_surveys: selectedSurveyId,
                 users_has_projects_id_users_has_projects: idUserProject,
                 submission_state: 1,
             });
@@ -172,7 +163,7 @@ const Projects = () => {
                             <tr style={{ height: '6rem' }}>
                                 <th className='table-headers-text pt-4 ps-5'>Project Name</th>
                                 {surveySelector ? (
-                                    <th className='table-headers-text pt-4 ps-5'>Select Assessment</th>
+                                    <th className='table-headers-text pt-4'>Select Assessment</th>
                                 ) : (
                                     <>
                                         <th className='table-headers-text pt-4 ps-5'>Acronym</th>
