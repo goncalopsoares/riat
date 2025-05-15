@@ -105,7 +105,7 @@ const CreateProject = () => {
         </div>
 
         <div className="mb-3 w-100">
-          <label className="form-label">Project Role</label>
+          <label className="form-label">Role in the project</label>
           <div className="radio-group">
             <label className="radio-label">
               <input
@@ -133,7 +133,7 @@ const CreateProject = () => {
         </div>
 
         <div className="mb-3 w-100">
-          <label className="form-label">Function</label>
+          <label className="form-label">Function in the organization</label>
           <input
             className="form-input"
             type="text"

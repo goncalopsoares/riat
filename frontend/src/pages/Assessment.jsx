@@ -126,43 +126,43 @@ const Assessment = () => {
         }
 
         if (projectOrganization === '') {
-            setError("Project Organization cannot be empty");
+            setError("Organization cannot be empty");
             setLoading(false);
             return;
         }
 
         if (projectTrl === '') {
-            setError("Project TRL cannot be empty");
+            setError("Project TRL value must be selected");
             setLoading(false);
             return;
         }
 
         if (projectMrl === '') {
-            setError("Project MRL cannot be empty");
+            setError("Project MRL value must be selected");
             setLoading(false);
             return;
         }
 
         if (projectSrl === '') {
-            setError("Project SRL cannot be empty");
+            setError("Project SRL value must be selected");
             setLoading(false);
             return;
         }
 
         if (userRole === '') {
-            setError("User Role cannot be empty");
+            setError("Role in the project cannot be empty");
             setLoading(false);
             return;
         }
 
         if (projectValueChain === '') {
-            setError("Value Chain cannot be empty");
+            setError("Value Chain must be selected");
             setLoading(false);
             return;
         }
 
         if (userFunction === '') {
-            setError("User Function cannot be empty");
+            setError("Function in the organization cannot be empty");
             setLoading(false);
             return;
         }
@@ -172,7 +172,7 @@ const Assessment = () => {
         try {
 
             const response = await api.post('/api/project/create/', {
-                project_name: projectName, project_acronym: projectAcronym, project_organization: projectOrganization, project_trl: projectTrl, project_mrl: projectMrl, project_srl: projectSrl, project_value_chain: projectValueChain, project_phase: 1, metadata: [
+                project_name: projectName, project_acronym: projectAcronym, project_organization: projectOrganization, project_trl: projectTrl, project_mrl: projectMrl, project_srl: projectSrl, project_value_chain: projectValueChain, project_phase: 1, metadata_data: [
                     {
                         users_has_projects_role: userRole,
                         users_has_projects_function: userFunction,

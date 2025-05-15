@@ -106,6 +106,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     project_name = serializers.CharField(validators=[])
     # Add user_email to metadata by using a SerializerMethodField
     metadata = serializers.SerializerMethodField()
+    metadata_data = UserHasProjectsSerializer(many=True, source='usershasprojects_set')
 
     class Meta:
         model = Projects
@@ -120,6 +121,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             'project_mrl',
             'project_srl',
             'metadata',
+            'metadata_data',
         ]
         extra_kwargs = {
             'project_creation_time': {'read_only': True},
@@ -145,7 +147,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     def update_or_create(self, validated_data):
         metadata_data = validated_data.pop('usershasprojects_set', [])
         request = self.context.get('request')
-        user = request.user if request else None
+        user = request.user
 
         project_name = validated_data.get('project_name')
 
@@ -175,14 +177,17 @@ class ProjectSerializer(serializers.ModelSerializer):
         )
 
         if user and created:
+             
             for item in metadata_data:
-                UsersHasProjects.objects.create(
-                    users_id_users=user,
-                    projects_id_projects=project,
-                    **item
-                )
-
-        print(f"project {project}")
+                try:
+                    print("Creating user-project relation with:", item)
+                    UsersHasProjects.objects.create(
+                        users_id_users=user,
+                        projects_id_projects=project,
+                        **item
+                    )
+                except Exception as e:
+                    print("Failed to create UsersHasProjects:", e)
 
         return project
         

@@ -26,7 +26,7 @@ const SelectPhase = () => {
                             checked={projectPhase === "1"}
                             onChange={(e) => setProjectPhase(e.target.value)}
                         />
-                        <b className="ms-3">Phase 1</b> - At the beginning of the project planning while defining the scope and engaging the project team
+                        <p className="mb-0 ms-3"><b>Phase 1</b> - At the beginning of the project planning while defining the scope and engaging the project team</p>
                     </label>
                     <label
                         htmlFor="option2"
@@ -43,7 +43,7 @@ const SelectPhase = () => {
                             checked={projectPhase === "2"}
                             onChange={(e) => setProjectPhase(e.target.value)}
                         />
-                        <b className="ms-3">Phase 2</b> - During project development (with at least 25% of project activities executed, before testing and it is recommended to repeat every 6 months)
+                        <p className="mb-0 ms-3"><b>Phase 2</b> - During project development (with at least 25% of project activities executed, before testing and it is recommended to repeat RIAT every 6 months)</p>
                     </label>
                     <label
                         htmlFor="option3"
@@ -60,7 +60,7 @@ const SelectPhase = () => {
                             checked={projectPhase === "3"}
                             onChange={(e) => setProjectPhase(e.target.value)}
                         />
-                        <b className="ms-3">Phase 3</b> - At the end of the project, before launching the project results and go-to-market
+                        <p className="mb-0 ms-3"><b>Phase 3</b> - At the end of the project, before launching the project results and go-to-market</p>
                     </label>
                 </div>
             </div>
