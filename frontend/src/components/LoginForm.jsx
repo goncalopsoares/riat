@@ -125,11 +125,14 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
         {/* Left Section */}
         <div className="left-section">
           <div className="centered-content">
-            <span className="tool-title">
-              Responsible Innovation Assessment Tool
-              <br />
-            </span>
-            <span className="tool-subtitle">by INESC TEC</span>
+             <img
+              src="/login_register.svg"
+              alt="Responsible Innovation Graphic"
+              style={{
+                maxWidth: "100%",
+                objectFit: "contain",
+              }}
+            />
           </div>
         </div>
         {/* Right Section */}
