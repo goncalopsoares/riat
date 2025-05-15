@@ -43,7 +43,7 @@ const SelectPhase = () => {
                             checked={projectPhase === "2"}
                             onChange={(e) => setProjectPhase(e.target.value)}
                         />
-                        <b className="ms-3">Phase 2</b> - During project development (with at least 25% of project activities executed, after prototyping, ...)
+                        <b className="ms-3">Phase 2</b> - During project development (with at least 25% of project activities executed, before testing and it is recommended to repeat every 6 months)
                     </label>
                     <label
                         htmlFor="option3"
@@ -60,7 +60,7 @@ const SelectPhase = () => {
                             checked={projectPhase === "3"}
                             onChange={(e) => setProjectPhase(e.target.value)}
                         />
-                        <b className="ms-3">Phase 3</b> - At the end of the project, before launching the project results
+                        <b className="ms-3">Phase 3</b> - At the end of the project, before launching the project results and go-to-market
                     </label>
                 </div>
             </div>
