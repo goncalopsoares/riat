@@ -424,7 +424,7 @@ class StatementSerializer(serializers.ModelSerializer):
             scales_id_scales=validated_data.get('scales_id_scales'),
             statement_name=validated_data.get('statement_name'),
             statement_description=validated_data.get('statement_description', ''),
-            statement_created_by=f"{user.user_user_email}" if user else "Unknown",
+            statement_created_by=f"{user.user_email}" if user else "Unknown",
             statement_modified_by=f"{user.user_email}" if user else "Unknown",
             statement_last_modified_by_date=now()
         )
