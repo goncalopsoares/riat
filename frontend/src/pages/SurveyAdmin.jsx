@@ -4,6 +4,9 @@ import api from '../api';
 import SurveyAdminInfo from '../components/SurveyAdminInfo';
 import SurveyAdminDimensions from '../components/SurveyAdminDimensions';
 import SurveyDimensionDialog from '../components/SurveyDimensionDialog';
+import '../styles/global.css'
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+
 
 const SurveyAdmin = () => {
 
@@ -223,7 +226,7 @@ const SurveyAdmin = () => {
                 console.log(response)
 
                 setSuccess("Dimension created successfully");
-                setTimeout(() => setSuccess(''), 4000);
+                setTimeout(() => setSuccess(''), 2000);
             }
 
             setEditing(false);
@@ -238,48 +241,29 @@ const SurveyAdmin = () => {
 
     //CREATE/UPDATE STATEMENT NAME, DESCRIPTION AND SCALE
 
-    const handleStatementSubmit = async (e, id, existingData, existingDataExtra, selectedScale) => {
+    const handleStatementSubmit = async (e, id, existingName, existingDescription, selectedScale) => {
         e.preventDefault();
 
-        let formData;
+        const formData = selectedScale === undefined ? new FormData(e.target) : null;
 
-        if (selectedScale === undefined) {
-            formData = new FormData(e.target);
-        }
-
-        let statementName;
-        let statementDescription;
-        let statementScale;
+        let statementName = existingName;
+        let statementDescription = existingDescription;
+        let statementScale = selectedScale;
 
         if (updateStatementDescription) {
-            statementName = existingData;
             statementDescription = formData.get('statement_description');
         } else if (updateStatementName) {
             statementName = formData.get('statement_name');
-            statementDescription = existingData;
-        } else {
-            statementName = existingData;
-            statementDescription = existingDataExtra;
-            statementScale = selectedScale;
+        } else if (!existingName && !existingDescription) {
+            // Creating a new statement
+            statementName = formData.get('statement_name');
+            statementDescription = formData.get('statement_description');
+            statementScale = 1;
         }
 
         try {
-            if (existingData !== undefined && existingDataExtra === undefined) {
-                await api.put(`/api/statement/update/${id}/`, {
-                    statement_name: statementName,
-                    statement_description: statementDescription,
-                });
-
-                console.log(existingDataExtra, "chegou 1");
-
-                setSuccess("Statement updated successfully");
-                setEditingDimensionDescription(false);
-                setTimeout(() => setSuccess(''), 4000);
-
-            } else if (existingDataExtra !== undefined) {
-
-                console.log(statementScale, "chegou 2");
-
+            if (existingName && existingDescription && selectedScale !== undefined) {
+                // Updating scale
                 await api.put(`/api/statement/update/${id}/`, {
                     statement_name: statementName,
                     statement_description: statementDescription,
@@ -287,31 +271,42 @@ const SurveyAdmin = () => {
                 });
 
                 setSuccess("Scale updated successfully");
-                setTimeout(() => setSuccess(''), 4000);
+
+            } else if (existingName && !existingDescription) {
+                // Updating name or description only
+                await api.put(`/api/statement/update/${id}/`, {
+                    statement_name: statementName,
+                    statement_description: statementDescription,
+                });
+
+                setSuccess("Statement updated successfully");
 
             } else {
-
+                // Creating new statement
                 await api.post(`/api/statement/create/${id}/`, {
-                    statement_name: formData.get('statement_name'),
-                    statement_description: formData.get('statement_description'),
-                    scales_id_scales: 1,
+                    statement_name: statementName,
+                    statement_description: statementDescription,
+                    scales_id_scales: statementScale,
                     dimensions_id_dimensions: id,
                 });
 
                 setSuccess("Statement created successfully");
-                setTimeout(() => setSuccess(''), 4000);
-
             }
+
             setEditing(false);
+            setEditingStatementName(false);
+            setEditingStatementDescription(false);
+            setUpdateStatementName(false);
+            setUpdateStatementDescription(false);
             setError('');
+            setTimeout(() => setSuccess(''), 2000);
 
         } catch (error) {
-
-            alert(error);
             console.error(error);
             setError("An error occurred while saving the statement.");
         }
-    }
+    };
+
 
     return (
         <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto' }}>
@@ -322,7 +317,20 @@ const SurveyAdmin = () => {
                     <SurveyAdminInfo surveyName={surveyName} surveyDescription={surveyDescription} setSurveyDescription={setSurveyDescription} surveyCreatedBy={surveyCreatedBy} surveyCreationTime={surveyCreationTime} surveyModifiedBy={surveyModifiedBy} surveyLastModifiedByDate={surveyLastModifiedByDate} editingDescription={editingDescription} setEditingDescription={setEditingDescription} handleSurveySubmit={handleSurveySubmit} />
                 )}
             </div>
-            <h2>Dimensions and Statements</h2>
+            <div>
+                {error && <p className="error-message">{error}</p>}
+                {success && <p className="success-message">{success}</p>}
+            </div>
+            <h2 className='mt-5'>Dimensions and Statements</h2>
+            <p className="my-3">
+                <HelpOutlineIcon /> Click on a <b>dimension name</b> to show the list of its statements.
+            </p>
+            <p className="my-3">
+                <HelpOutlineIcon /> Double click on the <b>dimension short description</b>, <b>dimension description</b>, <b>statement name</b> or <b>statement description</b> to edit them.
+            </p>
+            <p className="mb-3">
+                <HelpOutlineIcon /> Select another scale from the <b>scales list</b> to change the scale associated to that statement.
+            </p>
             <div>
                 {loading ? (
                     <p>Loading...</p>
@@ -332,15 +340,11 @@ const SurveyAdmin = () => {
                 )}
             </div>
             <div>
-                <button onClick={() => { setEditing(true); }}>Add New Dimension</button>
+                <button className="btn btn-primary btn-sm" onClick={() => { setEditing(true); }}>Add New Dimension</button>
             </div>
             {editing ? (
                 <SurveyDimensionDialog allDimensions={allDimensions} dialogRef={dialogRef} setEditing={setEditing} id={id} handleDimensionSubmit={handleDimensionSubmit}
                 />) : null}
-            <div>
-                {error && <p className="error">{error}</p>}
-                {success && <p className="success">{success}</p>}
-            </div>
         </div>
     )
 }

@@ -13,11 +13,12 @@ const SurveyAdminInfo = ({ surveyName, surveyDescription, surveyCreatedBy, surve
                     <button type="submit">Save</button>
                 </form>
             ) : (
-                <p onClick={() => setEditingDescription(true)}>{surveyDescription}</p>
+                <p className="fs-5" onClick={() => setEditingDescription(true)}>{surveyDescription}</p>
             )}
-
-            <p>Created by {surveyCreatedBy} on {surveyCreationTime}</p>
-            <p>Last modified by {surveyModifiedBy} on {surveyLastModifiedByDate}</p>
+            <div className="d-flex flex-direction-row gap-5">
+                <p>Created by <b>{surveyCreatedBy}</b> on <b>{surveyCreationTime}</b></p>
+                <p>Last modified by <b>{surveyModifiedBy}</b> on <b>{surveyLastModifiedByDate}</b></p>
+            </div>
         </div>
     );
 }
