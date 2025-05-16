@@ -6,7 +6,7 @@ const AssessmentOne = ({ handleInstructionsRead }) => {
     const { error, loading } = useProject();
 
     return (
-        <div className="global-container mt-5" style={{ minHeight: '65vh' }}>
+        <div className="global-container mt-5" style={{ minHeight: '72vh' }}>
             <div className="create-project-container">
                 <h2>Instructions</h2>
                 <p>The RIAT it should be conducted by the responsible of the innovation project in 3 different phases of the innovation project:</p>
