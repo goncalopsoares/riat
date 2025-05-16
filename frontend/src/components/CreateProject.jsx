@@ -140,7 +140,7 @@ const CreateProject = () => {
                 checked={userRole === "Other"}
                 onChange={(e) => setUserRole(e.target.value)}
               />
-              Other
+              Team Member
             </label>
           </div>
         </div>
