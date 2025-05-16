@@ -339,7 +339,7 @@ const SurveyAdmin = () => {
                         setUpdateStatementDescription={setUpdateStatementDescription} setUpdateStatementName={setUpdateStatementName} handleStatementSubmit={handleStatementSubmit} addStatement={addStatement} setAddStatement={setAddStatement} currentDimensionForStatement={currentDimensionForStatement} setCurrentDimensionForStatement={setCurrentDimensionForStatement} dialogRef={dialogRef} />
                 )}
             </div>
-            <div>
+            <div className='mt-3 mb-5'>
                 <button className="btn btn-primary btn-sm" onClick={() => { setEditing(true); }}>Add New Dimension</button>
             </div>
             {editing ? (
