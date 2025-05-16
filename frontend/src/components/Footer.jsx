@@ -26,7 +26,7 @@ const Footer = () => {
     return (
         <footer
             className={`bg-white text-black ${(isHomePage || isLoginRegister) ? '' : 'py-2'}`}
-            style={{ zIndex: 5, height: '10vh' }}
+            style={{ zIndex: 5 }}
         >
             <div
                 className={(isHomePage || isLoginRegister) ? 'border-top border-secondary-subtle py-5' : 'border-top border-secondary-subtle py-2'}

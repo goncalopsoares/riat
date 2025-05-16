@@ -1,11 +1,39 @@
 .main-title {
-    color: #0D141C;
+    color: #fff;
     font-size: 5rem;
     font-weight: 700; 
 }
 
 .sub-title {
-    color: #0D141C;
+    color: #fff;
     font-size: 2rem;
     font-weight: 400; 
+}
+
+.banner-section {
+    background-image: url('/banner.png'); /* or .png */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    color: #F0F0F0; /* Adjust text color for contrast */
+    margin: 2rem auto;
+    max-width: 1100px;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .banner-section {
+        padding: 3rem 1rem;
+        max-width: 98vw;
+    }
+    .main-title, .sub-title {
+        font-size: 1.2rem;
+    }
 }

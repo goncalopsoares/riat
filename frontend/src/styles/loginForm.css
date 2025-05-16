@@ -5,7 +5,7 @@
   align-items: center;
   height: 100vh; /* Full viewport height */
   padding: 20px;
-  background-color: var(--Background-Default-Default, #ffffff);
+  background-color: var(--Background-Default-Default, #F0F0F0);
 }
 
 /* Wrapper for the two sections */

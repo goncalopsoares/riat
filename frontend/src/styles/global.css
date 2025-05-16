@@ -7,7 +7,7 @@ body {
     /*padding: 16px; /* Adjust this value as needed */
     box-sizing: border-box;
     font-family: 'Inter', sans-serif; /* Ensure consistent font */
-    background-color: var(--Background-Default-Default, #ffffff);
+    background-color: var(--Background-Default-Default, #F0F0F0);
   }
   
   /* Ensure all elements respect box-sizing */
