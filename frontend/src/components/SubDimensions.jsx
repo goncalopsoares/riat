@@ -12,7 +12,6 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                         <h2 className="sub-dimension-name">
                             {currentDimension + 1}.{subDimensionIndex + 2}. {subDimension.dimension_name}
                         </h2>
-                        <p className="sub-dimension-description" style={{color: "#002d46"}}><b>{subDimension.dimension_short_description}</b></p>
                         <p className="sub-dimension-description mb-0">{subDimension.dimension_description}</p>
 
                         {subDimension.statements?.map((statement, statementIndex) => {

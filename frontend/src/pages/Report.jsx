@@ -11,7 +11,6 @@ const Report = () => {
 
     const { user } = useUser();
 
-    console.log(user);
     // general report data
     const [reportData, setReportData] = useState(null);
     const [creationTime, setCreationTime] = useState("");

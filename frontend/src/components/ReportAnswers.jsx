@@ -22,7 +22,7 @@ const reportAnswers = ({ dimensionsData, showAnswers, setShowAnswers }) => {
                                 <p className="m-0 ms-2"><b style={{ color: "#0091be" }}>Your answer</b></p>
                             </div>
                         </div>
-                         <p style={{color: '#002d46'}}><b>{dimensionsData[0].short_description}</b></p>
+                        <p style={{ color: '#002d46' }}><b>{dimensionsData[0].short_description}</b></p>
                         <p>{dimensionsData[0].description}</p>
                         <div>
                             {dimensionsData[0].statements.map((statement, index) => (
@@ -82,8 +82,10 @@ const reportAnswers = ({ dimensionsData, showAnswers, setShowAnswers }) => {
                                         <p className="m-0 ms-2"><b style={{ color: "#0091be" }}>Your answer</b></p>
                                     </div>
                                 </div>
-                                <p style={{color: '#002d46'}}><b>{dimension.short_description}</b></p>
-                                <p>{dimension.description}</p>
+                                {dimension.short_description !== dimension.description && (
+                                    <p style={{ color: '#002d46' }}><b>{dimension.short_description}</b></p>
+                                )}
+                                <p>{dimension.description}</p>  
                                 {dimension.statements.map((statement, statementIndex) => (
 
                                     <div key={statement.id} className="my-5">
