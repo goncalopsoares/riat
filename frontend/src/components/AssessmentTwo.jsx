@@ -6,7 +6,7 @@ const AssessmentTwo = ({ handleAgreement }) => {
     const { error, loading } = useProject();
 
     return (
-        <div className="global-container mt-5" style={{ minHeight: '60vh' }}>
+        <div className="global-container mt-5" style={{ minHeight: '72vh' }}>
             <div className="create-project-container">
                 <h2>Informed Consent & Data Privacy Agreement</h2>
                 <p>The RIAT tool has been developed as part of the  Horizon Europe SoTecIn Factory project and any personal data will be processed in accordance with applicable national and EU legislation and will only be used by researchers for the purposes of scientific research within the scope of the SoTecIn Factory project.</p>
