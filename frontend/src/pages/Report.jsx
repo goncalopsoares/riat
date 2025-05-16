@@ -198,6 +198,7 @@ const Report = () => {
                 id: dimension.id,
                 name: dimension.name,
                 description: dimension.description,
+                short_description: dimension.short_description,
                 statements: dimension.statements.map(statement => ({
                     id: statement.id,
                     name: statement.name,

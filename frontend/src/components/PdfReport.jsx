@@ -232,6 +232,7 @@ const ReportDocument = ({
                 {dimensionsData.map((dimension, dimIndex) => (
                     <View key={dimension.id} style={{ marginBottom: 15 }}>
                         <Text style={styles.dimensionTitle}>{dimIndex + 1}. {dimension.name}</Text>
+                        <Text style={styles.dimesionDescription}>{dimension.short_description}</Text>
                         <Text style={styles.dimesionDescription}>{dimension.description}</Text>
 
                         {dimension.statements.map((statement, stmtIndex) => (

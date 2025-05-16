@@ -156,6 +156,7 @@ class Dimensions(models.Model):
     id_dimensions = models.AutoField(primary_key=True)
     surveys_id_surveys = models.ForeignKey('Surveys', models.DO_NOTHING, db_column='surveys_id_surveys')
     dimension_name = models.CharField(max_length=500)
+    dimension_short_description = models.CharField(max_length = 300)
     dimension_description = models.TextField(blank=True, null=True)
     dimension_order = models.IntegerField()
     dimension_created_by = models.CharField(max_length=45)

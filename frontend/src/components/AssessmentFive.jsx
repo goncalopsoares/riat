@@ -37,6 +37,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                         {dimensionStage === 1 && (
                             <div>
                                 <h1 className="dimension-name">{topLevelDimensions[currentDimension].dimension_name}</h1>
+                                <h2 style={{color: '#002d46'}}>{topLevelDimensions[currentDimension].dimension_short_description}</h2>
                                 <p className="dimension-description">{topLevelDimensions[currentDimension].dimension_description}</p>
                             </div>
                         )}

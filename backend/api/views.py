@@ -181,7 +181,6 @@ class CreateProjectView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         project = serializer.save()
-        print(f'project {project}')
         return Response(ProjectSerializer(project).data, status=status.HTTP_201_CREATED)
     
 

@@ -1,7 +1,7 @@
 import SurveyAdminStatements from "./SurveyAdminStatements";
 import DimensionStatementDialog from './DimensionStatementDialog';
 
-const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editingDimensionDescription, setEditingDimensionDescription, handleDimensionSubmit, setUpdateDimensionDescription, editingDimensionName, setEditingDimensionName, allScales, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName, handleStatementSubmit, addStatement, setAddStatement, dialogRef, currentDimensionForStatement, setCurrentDimensionForStatement }) => {
+const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editingDimensionShortDescription, setEditingDimensionShortDescription, setUpdateDimensionShortDescription, editingDimensionDescription, setEditingDimensionDescription, handleDimensionSubmit, setUpdateDimensionDescription, editingDimensionName, setEditingDimensionName, allScales, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName, handleStatementSubmit, addStatement, setAddStatement, dialogRef, currentDimensionForStatement, setCurrentDimensionForStatement }) => {
 
     return (
         <>
@@ -12,7 +12,7 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                             {editingDimensionName === dimension.id_dimensions ? (
                                 <form onSubmit={(e) => {
                                     e.preventDefault();
-                                    handleDimensionSubmit(e, dimension.id_dimensions, dimension.dimension_description);
+                                    handleDimensionSubmit(e, dimension.id_dimensions, dimension.dimension_short_description, dimension.dimension_description);
                                     setEditingDimensionName(false);
                                 }}>
                                     <input
@@ -38,18 +38,55 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                 </h3>
                             )}
                             {isShowing === dimension.id_dimensions && (
-                                editingDimensionDescription ? (
-                                    <form onSubmit={(e) => {
-                                        e.preventDefault();
-                                        setEditingDimensionDescription(true);
-                                        handleDimensionSubmit(e, dimension.id_dimensions, dimension.dimension_name);
+                                editingDimensionShortDescription ? (
+                                    <form onSubmit={(e) =>
+                                        handleDimensionSubmit(
+                                            e,
+                                            dimension.id_dimensions,
+                                            {
+                                                dimension_name: dimension.dimension_name,
+                                                dimension_description: dimension.dimension_description,
+                                                dimension_short_description: dimension.dimension_short_description
+                                            },
+                                            'short_description'
+                                        )
+                                    }>
+                                        <textarea
+                                            name="dimension_short_description"
+                                            defaultValue={dimension.dimension_short_description}
+                                            autoFocus
+                                        />
+                                        <button type="submit">Save</button>
+                                    </form>
+                                ) : (
+                                    <p onDoubleClick={() => {
+                                        setEditingDimensionShortDescription(true);
+                                        setUpdateDimensionShortDescription(true);
                                     }}>
+                                        {dimension.dimension_short_description}
+                                    </p>
+                                )
+                            )}
+
+                            {isShowing === dimension.id_dimensions && (
+                                editingDimensionDescription ? (
+                                    <form onSubmit={(e) =>
+                                        handleDimensionSubmit(
+                                            e,
+                                            dimension.id_dimensions,
+                                            {
+                                                dimension_name: dimension.dimension_name,
+                                                dimension_description: dimension.dimension_description,
+                                                dimension_short_description: dimension.dimension_short_description
+                                            },
+                                            'description'
+                                        )
+                                    }>
                                         <textarea
                                             name="dimension_description"
                                             defaultValue={dimension.dimension_description}
                                             autoFocus
-                                        >
-                                        </textarea>
+                                        />
                                         <button type="submit">Save</button>
                                     </form>
                                 ) : (

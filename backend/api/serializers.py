@@ -341,6 +341,7 @@ class DimensionSerializer(serializers.ModelSerializer):
             'id_dimensions',
             'surveys_id_surveys',
             'dimension_name',
+            'dimension_short_description',
             'dimension_description',
             'dimension_order',
             'dimension_created_by',
@@ -364,6 +365,7 @@ class DimensionSerializer(serializers.ModelSerializer):
         dimension = Dimensions(
             surveys_id_surveys=validated_data.get('surveys_id_surveys'),
             dimension_name=validated_data.get('dimension_name'),
+            dimension_short_description=validated_data.get('dimension_short_description'),
             dimension_description=validated_data.get('dimension_description', ''),
             dimension_order = validated_data.get('dimension_order'),
             dimension_created_by=f"{user.user_email}" if user else "Unknown",
@@ -378,6 +380,7 @@ class DimensionSerializer(serializers.ModelSerializer):
         user = request.user if request and request.user.is_authenticated else None
 
         instance.dimension_name = validated_data.get('dimension_name', instance.dimension_name)
+        instance.dimension_short_description = validated_data.get('dimension_short_description', instance.dimension_short_description)
         instance.dimension_description = validated_data.get('dimension_description', instance.dimension_description)
         instance.dimension_last_modified_by = f"{user.user_email}" if user else "Unknown"
         instance.dimension_last_modified_by_date = now()
@@ -811,6 +814,7 @@ class ReportSerializer(serializers.ModelSerializer):
             dimension_details.append({
                 'id': dimension.id_dimensions,
                 'name': dimension.dimension_name,
+                'short_description': dimension.dimension_short_description,
                 'description': dimension.dimension_description,
                 'statements': statement_details,
             })

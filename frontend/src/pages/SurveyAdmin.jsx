@@ -26,8 +26,10 @@ const SurveyAdmin = () => {
     //DIMENSIONS DATA
     const [allDimensions, setAllDimensions] = useState([]);
     const [editingDimensionDescription, setEditingDimensionDescription] = useState(false);
+    const [editingDimensionShortDescription, setEditingDimensionShortDescription] = useState(false);
     const [editingDimensionName, setEditingDimensionName] = useState(false);
     const [updateDimensionDescription, setUpdateDimensionDescription] = useState(false);
+    const [updateDimensionShortDescription, setUpdateDimensionShortDescription] = useState(false);
     const [currentDimensionForStatement, setCurrentDimensionForStatement] = useState(null);
     const [dimensionsNumber, setDimensionsNumber] = useState(0);
 
@@ -166,50 +168,50 @@ const SurveyAdmin = () => {
 
     //CREATE/UPDATE DIMENSION NAME AND DESCRIPTION
 
-    const handleDimensionSubmit = async (e, id, exisitingData) => {
+    const handleDimensionSubmit = async (e, id, existingData = {}, updateType = null) => {
         e.preventDefault();
         const formData = new FormData(e.target);
 
-        let dimensionName;
-        let dimensionDescription;
+        let dimensionName = existingData.dimension_name || '';
+        let dimensionShortDescription = existingData.dimension_short_description || '';
+        let dimensionDescription = existingData.dimension_description || '';
         const dimensionOrder = dimensionsNumber + 1;
 
-        if (updateDimensionDescription) {
-            dimensionName = exisitingData;
+        if (updateType === 'description') {
             dimensionDescription = formData.get('dimension_description');
+        } else if (updateType === 'short_description') {
+            dimensionShortDescription = formData.get('dimension_short_description');
         } else {
             dimensionName = formData.get('dimension_name');
-            dimensionDescription = exisitingData;
+            dimensionShortDescription = formData.get('dimension_name');
+            dimensionDescription = formData.get('dimension_description');
         }
 
         try {
-            if (exisitingData !== undefined) {
-
+            if (Object.keys(existingData).length > 0) {
                 await api.put(`/api/dimension/update/${id}/`, {
                     dimension_name: dimensionName,
+                    dimension_short_description: dimensionShortDescription,
                     dimension_description: dimensionDescription,
                     dimension_order: dimensionOrder,
                 });
 
                 setSuccess("Dimension updated successfully");
                 setEditingDimensionDescription(false);
+                setEditingDimensionShortDescription(false);
                 setTimeout(() => setSuccess(''), 4000);
-
             } else {
-
-                dimensionName = formData.get('dimension_name');
-                dimensionDescription = formData.get('dimension_description');
-
                 await api.post(`/api/dimension/create/${id}/`, {
-                   dimension_name: dimensionName,
-                   dimension_description: dimensionDescription,
-                   dimension_order: dimensionOrder,
+                    dimension_name: dimensionName,
+                    dimension_short_description: dimensionShortDescription,
+                    dimension_description: dimensionDescription,
+                    dimension_order: dimensionOrder,
                 });
 
                 setSuccess("Dimension created successfully");
                 setTimeout(() => setSuccess(''), 4000);
-
             }
+
             setEditing(false);
             setError('');
         } catch (error) {
@@ -217,7 +219,8 @@ const SurveyAdmin = () => {
             console.error(error);
             setError("An error occurred while saving the dimension.");
         }
-    }
+    };
+
 
     //CREATE/UPDATE STATEMENT NAME, DESCRIPTION AND SCALE
 
@@ -310,7 +313,7 @@ const SurveyAdmin = () => {
                 {loading ? (
                     <p>Loading...</p>
                 ) : (
-                    <SurveyAdminDimensions allDimensions={allDimensions} editing={editing} setEditing={setEditing} isShowing={isShowing} setIsShowing={setIsShowing} setUpdateDimensionDescription={setUpdateDimensionDescription} editingDimensionDescription={editingDimensionDescription} setEditingDimensionDescription={setEditingDimensionDescription} handleDimensionSubmit={handleDimensionSubmit} editingDimensionName={editingDimensionName} setEditingDimensionName={setEditingDimensionName} allScales={allScales} editingStatementDescription={editingStatementDescription} setEditingStatementDescription={setEditingStatementDescription} editingStatementName={editingStatementName} setEditingStatementName={setEditingStatementName}
+                    <SurveyAdminDimensions allDimensions={allDimensions} editing={editing} setEditing={setEditing} isShowing={isShowing} setIsShowing={setIsShowing} setUpdateDimensionShortDescription={setUpdateDimensionShortDescription} editingDimensionShortDescription={editingDimensionShortDescription} setEditingDimensionShortDescription={setEditingDimensionShortDescription} setUpdateDimensionDescription={setUpdateDimensionDescription} editingDimensionDescription={editingDimensionDescription} setEditingDimensionDescription={setEditingDimensionDescription} handleDimensionSubmit={handleDimensionSubmit} editingDimensionName={editingDimensionName} setEditingDimensionName={setEditingDimensionName} allScales={allScales} editingStatementDescription={editingStatementDescription} setEditingStatementDescription={setEditingStatementDescription} editingStatementName={editingStatementName} setEditingStatementName={setEditingStatementName}
                         setUpdateStatementDescription={setUpdateStatementDescription} setUpdateStatementName={setUpdateStatementName} handleStatementSubmit={handleStatementSubmit} addStatement={addStatement} setAddStatement={setAddStatement} currentDimensionForStatement={currentDimensionForStatement} setCurrentDimensionForStatement={setCurrentDimensionForStatement} dialogRef={dialogRef} />
                 )}
             </div>

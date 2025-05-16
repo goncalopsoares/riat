@@ -19,6 +19,9 @@ const SurveyDimensionDialog = ({ dialogRef, setEditing, id, handleDimensionSubmi
                 <label htmlFor="dimension_name">Dimension Name</label>
                 <textarea id="dimension_name" name="dimension_name" required></textarea>
 
+                <label htmlFor="dimension_short_description">Dimension Short Description</label>
+                <textarea id="dimension_short_description" name="dimension_short_description" required></textarea>
+
                 <label htmlFor="dimension_description">Dimension Description</label>
                 <textarea id="dimension_description" name="dimension_description" required></textarea>
 

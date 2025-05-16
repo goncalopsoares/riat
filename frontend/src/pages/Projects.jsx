@@ -13,7 +13,7 @@ const Projects = () => {
     const [allProjects, setAllProjects] = useState([]);
     const [allSurveys, setAllSurveys] = useState([]);
     const [surveySelector, setSurveySelector] = useState(false);
-    const [selectedSurveyId, setSelectedSurveyId] = useState(null);
+    const [selectedSurveyId, setSelectedSurveyId] = useState(1);
     const [selectedPhase, setSelectedPhase] = useState(null);
 
 
