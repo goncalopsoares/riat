@@ -8,7 +8,7 @@ const Reports = () => {
     const [token, setToken] = useState('');
 
     return (
-        <div className='mt-5 mb-5' style={{ width: '90%', margin: 'auto', minHeight: '60vh' }}>
+        <div className='mt-5 mb-5' style={{ width: '90%', margin: 'auto', minHeight: '70vh' }}>
             <div className="w-100">
                 <h3 className="my-4">Insert the code of the report to access it</h3>
                 <form className="d-flex flex-row align-items-center justify-content-start gap-5">
