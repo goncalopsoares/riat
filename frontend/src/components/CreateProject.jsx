@@ -200,8 +200,8 @@ const CreateProject = () => {
 
         <div className="mt-3 w-100">
           <p className="section-description">
-            Technology Readiness Level (TRL), Manufacturing Readiness Level (MRL),
-            and Service Readiness Level (SRL) are indices used to determine the
+            Technology Readiness Level (TRL), Market Readiness Level (MRL),
+            and Societal Readiness Level (SRL) are indices used to determine the
             maturity of a technology or product. They are ranged between 1-9.
           </p>
           <p className="helper-text my-2">
