@@ -11,7 +11,7 @@ const ScaleNumberInputs = ({ scaleLevels, scaleLabels, setLabelsArray }) => {
     const numberInputs = Array.from({ length: scaleLevels }, (_, i) => (
         <input
             key={i}
-            className='login-form-input'
+            className='form-input my-2'
             type='text'
             placeholder={`Insert label for scale level ${i + 1}`}
             onBlur={(e) => {

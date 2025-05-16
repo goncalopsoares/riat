@@ -112,7 +112,7 @@ const CreateProject = () => {
             className="form-input"
             type="text"
             placeholder="Insert the name of the person responsible for the project"
-            value={projectOrrganization}
+            value={projectOwnerName}
             onChange={(e) => setProjectOwnerName(e.target.value)}
           />
         </div>

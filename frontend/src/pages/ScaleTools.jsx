@@ -120,13 +120,13 @@ const ScaleTools = () => {
                 {loading ? (
                     <p>Loading...</p>
                 ) : (
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Scale Name</th>
-                                <th>Scale Levels</th>
-                                <th>Scale Labels</th>
-                                <th>Actions</th>
+                    <table className='table table-responsive text-left align-middle shadow-sm border-2' style={{ maxWidth: '100%', borderRadius: '0.5rem', borderCollapse: 'separate' }}>
+                        <thead className='align-top' style={{ fontWeight: 'regular' }}>
+                            <tr style={{ height: '6rem' }}>
+                                <th className='table-headers-text pt-4 ps-4'>Scale Name</th>
+                                <th className='table-headers-text pt-4'>Scale Levels</th>
+                                <th className='table-headers-text pt-4'>Scale Labels</th>
+                                <th className='table-headers-text pt-4'>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -135,10 +135,10 @@ const ScaleTools = () => {
                                     <td>{scale.scale_name}</td>
                                     <td>{scale.scale_levels}</td>
                                     <td>{scale.scale_labels}</td>
-                                    <td><button onClick={(e) => {
+                                    <td><a className='m-0 text-decoration-underline text-black' style={{cursor: 'pointer'}} onClick={(e) => {
                                         setScaleId(scale.id_scales);
                                         getSingleScale(scale.id_scales);
-                                    }}>Edit scale</button></td>
+                                    }}><b>Edit scale</b></a></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -171,7 +171,7 @@ const ScaleTools = () => {
             ) : null}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && <p style={{ color: 'green' }}> {success} </p>}
-            <button onClick={handleScaleSubmit} disabled={loading}>
+            <button className='btn btn-primary mt-3 mb-5' onClick={handleScaleSubmit} disabled={loading}>
                 {loading ? "Submitting..." : "Submit "}
             </button>
         </div>

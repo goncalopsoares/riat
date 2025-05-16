@@ -20,24 +20,27 @@ const EditScaleDialog = ({ dialogRef, setScaleId, scaleName, setScaleName, scale
                 setScaleId(null);
 
             }}>
+                <p className='my-3'><b>Name of the scale</b></p>
                 <input
-                    className='login-form-input'
+                    className='form-input'
                     type='text'
                     placeholder='Insert the name of the scale'
                     value={scaleName}
                     onChange={(e) => setScaleName(e.target.value)}
                 >
                 </input>
+                <p className='my-3'><b>Number of levels of the scale</b></p>
                 <input
-                    className='login-form-input'
+                    className='form-input'
                     type='text'
                     placeholder='Insert the number of levels of the scale'
                     value={scaleLevels}
                     onChange={(e) => { setScaleLevels(e.target.value); setNumberInputs(e.target.value); }}
                 >
                 </input>
+                <p className='my-3'><b>Scale Labels</b></p>
                 <ScaleNumberInputs scaleLevels={scaleLevels} scaleLabels={scaleLabels} setLabelsArray={setLabelsArray} />
-                <button type='submit' className='dialog-submit'>Submit</button>
+                <button type='submit' className='dialog-submit btn btn-primary'>Submit</button>
             </form>
         </dialog>
     )
