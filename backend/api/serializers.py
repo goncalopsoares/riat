@@ -347,16 +347,15 @@ class DimensionSerializer(serializers.ModelSerializer):
             'dimension_created_by',
             'dimension_last_modified_by',
             'dimension_last_modified_by_date',
+            'parent_dimension',   # Use FK field here
             'sub_dimensions',
         ]
         extra_kwargs = {
             'dimension_created_by': {'read_only': True},
             'dimension_last_modified_by': {'read_only': True},
             'dimension_last_modified_by_date': {'read_only': True},
+            'sub_dimensions': {'read_only': True},
         }
-        
-    def get_sub_dimensions(self, obj):
-        return DimensionSerializer(obj.sub_dimensions.all(), many=True).data
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -367,10 +366,11 @@ class DimensionSerializer(serializers.ModelSerializer):
             dimension_name=validated_data.get('dimension_name'),
             dimension_short_description=validated_data.get('dimension_short_description'),
             dimension_description=validated_data.get('dimension_description', ''),
-            dimension_order = validated_data.get('dimension_order'),
+            dimension_order=validated_data.get('dimension_order'),
+            parent_dimension=validated_data.get('parent_dimension'),  # FK instance or None
             dimension_created_by=f"{user.user_email}" if user else "Unknown",
             dimension_last_modified_by=f"{user.user_email}" if user else "Unknown",
-            dimension_last_modified_by_date=now()
+            dimension_last_modified_by_date=now(),
         )
         dimension.save()
         return dimension
@@ -385,8 +385,13 @@ class DimensionSerializer(serializers.ModelSerializer):
         instance.dimension_last_modified_by = f"{user.user_email}" if user else "Unknown"
         instance.dimension_last_modified_by_date = now()
 
+        if 'parent_dimension' in validated_data:
+            instance.parent_dimension = validated_data.get('parent_dimension')
+
         instance.save()
         return instance
+
+
 
  
 #STATEMENTS

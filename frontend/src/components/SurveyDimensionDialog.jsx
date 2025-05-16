@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const SurveyDimensionDialog = ({ dialogRef, setEditing, id, handleDimensionSubmit }) => {
+const SurveyDimensionDialog = ({ allDimensions, dialogRef, setEditing, id, handleDimensionSubmit }) => {
 
     useEffect(() => {
         if (dialogRef.current) {
@@ -10,12 +10,13 @@ const SurveyDimensionDialog = ({ dialogRef, setEditing, id, handleDimensionSubmi
 
     return (
         <dialog className="dialog" ref={dialogRef}>
-            <button onClick={() => { setEditing(false); }}>Close</button>
+            <button onClick={() => setEditing(false)}>Close</button>
             <form method="dialog" className="dialog-form" onSubmit={(e) => {
                 e.preventDefault();
                 handleDimensionSubmit(e, id);
             }}>
                 <h2>Add New Dimension</h2>
+
                 <label htmlFor="dimension_name">Dimension Name</label>
                 <textarea id="dimension_name" name="dimension_name" required></textarea>
 
@@ -24,6 +25,16 @@ const SurveyDimensionDialog = ({ dialogRef, setEditing, id, handleDimensionSubmi
 
                 <label htmlFor="dimension_description">Dimension Description</label>
                 <textarea id="dimension_description" name="dimension_description" required></textarea>
+
+                <label htmlFor="parent_dimension">Parent Dimension (optional)</label>
+                <select id="parent_dimension" name="parent_dimension">
+                    <option value="">None</option>
+                    {allDimensions.map((dim) => (
+                        <option key={dim.id_dimensions} value={dim.id_dimensions}>
+                            {dim.dimension_name}
+                        </option>
+                    ))}
+                </select>
 
                 <button type="submit">Submit</button>
             </form>

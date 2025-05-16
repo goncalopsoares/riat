@@ -176,6 +176,7 @@ const SurveyAdmin = () => {
         let dimensionShortDescription = existingData.dimension_short_description || '';
         let dimensionDescription = existingData.dimension_description || '';
         const dimensionOrder = dimensionsNumber + 1;
+        const parentDimension = formData.get('parent_dimension') || null;
 
         if (updateType === 'description') {
             dimensionDescription = formData.get('dimension_description');
@@ -183,7 +184,7 @@ const SurveyAdmin = () => {
             dimensionShortDescription = formData.get('dimension_short_description');
         } else {
             dimensionName = formData.get('dimension_name');
-            dimensionShortDescription = formData.get('dimension_name');
+            dimensionShortDescription = formData.get('dimension_short_description');
             dimensionDescription = formData.get('dimension_description');
         }
 
@@ -201,12 +202,25 @@ const SurveyAdmin = () => {
                 setEditingDimensionShortDescription(false);
                 setTimeout(() => setSuccess(''), 4000);
             } else {
-                await api.post(`/api/dimension/create/${id}/`, {
+
+                const payload = {
                     dimension_name: dimensionName,
                     dimension_short_description: dimensionShortDescription,
                     dimension_description: dimensionDescription,
                     dimension_order: dimensionOrder,
+                    parent_dimension: parentDimension ? Number(parentDimension) : null,
+                };
+                console.log(payload);
+
+                const response = await api.post(`/api/dimension/create/${id}/`, {
+                    dimension_name: dimensionName,
+                    dimension_short_description: dimensionShortDescription,
+                    dimension_description: dimensionDescription,
+                    dimension_order: dimensionOrder,
+                    parent_dimension_id: parentDimension ? Number(parentDimension) : null,
                 });
+
+                console.log(response)
 
                 setSuccess("Dimension created successfully");
                 setTimeout(() => setSuccess(''), 4000);
@@ -321,7 +335,7 @@ const SurveyAdmin = () => {
                 <button onClick={() => { setEditing(true); }}>Add New Dimension</button>
             </div>
             {editing ? (
-                <SurveyDimensionDialog dialogRef={dialogRef} setEditing={setEditing} id={id} handleDimensionSubmit={handleDimensionSubmit}
+                <SurveyDimensionDialog allDimensions={allDimensions} dialogRef={dialogRef} setEditing={setEditing} id={id} handleDimensionSubmit={handleDimensionSubmit}
                 />) : null}
             <div>
                 {error && <p className="error">{error}</p>}
