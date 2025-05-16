@@ -9,7 +9,7 @@ const AssessmentOne = ({ handleInstructionsRead }) => {
         <div className="global-container mt-5" style={{ minHeight: '72vh' }}>
             <div className="create-project-container">
                 <h2>Instructions</h2>
-                <p>The RIAT it should be conducted by the responsible of the innovation project in 3 different phases of the innovation project:</p>
+                <p>The RIAT should be conducted by the responsible of the innovation project in 3 different phases of the innovation project:</p>
                 <ul>
                     <li><b>Phase 1</b> - At the beginning of the project planning while defining the scope and engaging the project team </li>
                     <li><b>Phase 2</b> - During project development (with at least 25% of project activities executed, before testing and it is recommended to repeat every 6 months)</li>
