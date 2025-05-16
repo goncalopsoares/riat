@@ -35,7 +35,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                             </div>
                         )}
                         {dimensionStage === 1 && (
-                            <div>
+                            <div style={{ minHeight: '50vh' }}>
                                 <h1 className="dimension-name">{topLevelDimensions[currentDimension].dimension_name}</h1>
                                 <h2 style={{ color: '#002d46' }}>{topLevelDimensions[currentDimension].dimension_short_description}</h2>
                                 <p className="dimension-description">{topLevelDimensions[currentDimension].dimension_description}</p>
@@ -172,7 +172,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                             </div>
                         )}
                         {dimensionStage === 3 && (
-                            <div className='w-100 text-center' style={{ minHeight: '45vh' }}>
+                            <div className='w-100 text-center' style={{ minHeight: '70vh' }}>
                                 {submittingAssessment === true ? (
                                     <div className='text-center'>
                                         <p className='fs-4'>You have reached the end of the assessment.</p>
