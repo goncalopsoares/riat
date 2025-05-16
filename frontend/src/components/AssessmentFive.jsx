@@ -4,15 +4,12 @@ import SubDimensions from './SubDimensions';
 const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, handleAssessmentSubmit, statementCounter, submittingAssessment, setSubmittingAssessment }) => {
 
     const [naSelected, setNaSelected] = useState({});
-    const [explanation, setExplanation] = useState('');
-    const [example, setExample] = useState('');
+    const [explanation, setExplanation] = useState({});
+    const [example, setExample] = useState({});
 
     const subDimensionsInfo = allDimensions.filter(dimension =>
         allDimensions[currentDimension].sub_dimensions.some(subId => subId === dimension.id_dimensions)
     );
-
-    console.log(allDimensions)
-
 
     return (
         <>
@@ -117,7 +114,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                                                     />
                                                                     {naSelected[statement.id_statements] ? <b>Prefer not to answer</b> : 'Prefer not to answer'}
                                                                 </label>
-                                                                {naSelected[statement.id_statements] || typeof (selectedValues[statement.id_statements]) === 'string' ? (
+                                                                {naSelected[statement.id_statements] || typeof selectedValues[statement.id_statements] === 'string' ? (
                                                                     <>
                                                                         <p>Explain why you chose this option</p>
                                                                         <textarea
@@ -125,17 +122,24 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                                                             name={`${statement.id_statements}_explanation`}
                                                                             placeholder="200 char. max"
                                                                             maxLength={200}
-                                                                            value={explanation || selectedValues[`${statement.id_statements}`] || ''}
+                                                                            value={explanation[statement.id_statements] || selectedValues[statement.id_statements] || ''}
                                                                             onChange={(e) => {
                                                                                 const newValue = e.target.value;
-                                                                                setExplanation(newValue);
+                                                                                setExplanation(prev => ({
+                                                                                    ...prev,
+                                                                                    [statement.id_statements]: newValue
+                                                                                }));
                                                                             }}
                                                                             onBlur={() => {
                                                                                 setSelectedValues(prev => ({
                                                                                     ...prev,
-                                                                                    [statement.id_statements]: explanation
+                                                                                    [statement.id_statements]: explanation[statement.id_statements] || ''
                                                                                 }));
-                                                                                setExplanation('');
+                                                                                setExplanation(prev => {
+                                                                                    const newState = { ...prev };
+                                                                                    delete newState[statement.id_statements];
+                                                                                    return newState;
+                                                                                });
                                                                             }}
                                                                         />
                                                                     </>
@@ -147,17 +151,24 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                                             className="textarea"
                                                             placeholder="1000 char. max"
                                                             maxLength={1000}
-                                                            value={example || selectedValues[`${statement.id_statements}`] || ''}
+                                                            value={example[statement.id_statements] || selectedValues[statement.id_statements] || ''}
                                                             onChange={(e) => {
                                                                 const newValue = e.target.value;
-                                                                setExample(newValue);
+                                                                setExample(prev => ({
+                                                                    ...prev,
+                                                                    [statement.id_statements]: newValue
+                                                                }));
                                                             }}
                                                             onBlur={() => {
                                                                 setSelectedValues(prev => ({
                                                                     ...prev,
-                                                                    [statement.id_statements]: example
+                                                                    [statement.id_statements]: example[statement.id_statements] || ''
                                                                 }));
-                                                                setExample('');
+                                                                setExample(prev => {
+                                                                    const newState = { ...prev };
+                                                                    delete newState[statement.id_statements];
+                                                                    return newState;
+                                                                });
                                                             }}
                                                         />
                                                     )}
