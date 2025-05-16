@@ -245,7 +245,7 @@ const Projects = () => {
                                                 <td className='ps-5'>{project.project_acronym}</td>
                                                 <td className='ps-5'>
                                                     {project.project_phase}
-                                                    {(!lastSubmission || (lastSubmission && lastSubmission.submission_state === 2)) && (
+                                                    {((!lastSubmission && project.project_phase < 3) || (lastSubmission && lastSubmission.submission_state === 2 && project.project_phase < 3))  && (
                                                         <a
                                                             className='text-underline ms-3'
                                                             style={{ cursor: 'pointer' }}
