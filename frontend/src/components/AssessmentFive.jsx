@@ -37,7 +37,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                         {dimensionStage === 1 && (
                             <div>
                                 <h1 className="dimension-name">{topLevelDimensions[currentDimension].dimension_name}</h1>
-                                <h2 style={{color: '#002d46'}}>{topLevelDimensions[currentDimension].dimension_short_description}</h2>
+                                <h2 style={{ color: '#002d46' }}>{topLevelDimensions[currentDimension].dimension_short_description}</h2>
                                 <p className="dimension-description">{topLevelDimensions[currentDimension].dimension_description}</p>
                             </div>
                         )}
@@ -60,7 +60,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                                 ) : (
                                                     <h4 className="statement-name">{statement.statement_name}</h4>
                                                 )}
-                                                <p className="statement-description" style={{color: '#002d46'}}><em>{statement.statement_description}</em></p>
+                                                <p className="statement-description" style={{ color: '#002d46' }}><em>{statement.statement_description}</em></p>
                                                 <>
                                                     {statement.scale.scale_levels > 0 ? (
                                                         <>
@@ -177,6 +177,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                     <div className='text-center'>
                                         <p className='fs-4'>You have reached the end of the assessment.</p>
                                         <p> Click on the 'Submit Assessment' button below to generate your report.</p>
+                                        <p>This document will include a unique access code displayed at the top of the report page. Make sure to save this code so you can retrieve the report later if needed.</p>
                                         <p>Click 'Cancel' to go back and rethink any questions.</p>
                                         <div className='d-flex flex-direction-row justify-content-center align-items-center gap-5 mt-5'>
                                             <a onClick={() => {

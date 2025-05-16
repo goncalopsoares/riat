@@ -5,6 +5,7 @@ import api from '../api';
 import Chart from "react-apexcharts";
 import DownloadPDFButton from "../components/PdfReport";
 import ReportAnswers from "../components/ReportAnswers";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 const Report = () => {
 
@@ -219,6 +220,9 @@ const Report = () => {
     return (
         <div className="global-container" style={user.user_role === 1 ? { marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto' } : null}>
             <div className="create-project-container">
+                <p className="mb-0">
+                    <HelpOutlineIcon /> This code allows you to access this report at any time via 'Reports' section. Be sure to save it in a safe place.
+                </p>
                 <p>Report code <b>{reportCode}</b></p>
                 <div className="d-flex flex-row justify-content-between w-100 mt-5">
                     <h1>Report</h1>
