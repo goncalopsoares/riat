@@ -9,7 +9,7 @@ const Home = () => {
         <div className="w-100 h-screen flex flex-col items-center justify-center" style={{ backgroundColor: '#f0f0f0' }}>
             <div className="banner-section text-center" style={{ padding: '8rem 9.5rem 4rem 9.5rem' }}>
                 <h1 className='main-title'>How responsible is your innovation?</h1>
-                <p className='sub-title'>Take this self-assessment to find out how the path to full responsibility.</p>
+                <p className='sub-title'>Take this self-assessment to find out the path to full responsibility.</p>
                 <div className='w-100 text-center' style={{ marginBottom: '6rem' }}>
                     <button onClick={() => navigate('/assessment/')}
                         className='forms-button w-25'>
