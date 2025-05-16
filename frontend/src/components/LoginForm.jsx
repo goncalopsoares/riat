@@ -63,7 +63,11 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
 
         setUser(responseTwo.data.user);
 
-        navigate("/");
+        if (responseTwo.data.user.user_role === 2) {
+          navigate("/");
+        } else {
+          navigate("/surveytools");
+        }
       } else {
         navigate("/login");
       }
@@ -125,7 +129,7 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
         {/* Left Section */}
         <div className="left-section">
           <div className="centered-content">
-             <img
+            <img
               src="/login_register.svg"
               alt="Responsible Innovation Graphic"
               style={{
