@@ -61,7 +61,7 @@ const SurveyTools = () => {
     }
 
     return (
-        <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto' }}>
+        <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto', minHeight: 'calc(100vh - 20vh)' }}>
             <div className='d-flex justify-content-between align-items-center mb-4 ms-4'>
                 <h1>Active Assessments</h1>
                 <button

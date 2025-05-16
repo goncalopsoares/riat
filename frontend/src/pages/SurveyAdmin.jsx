@@ -309,7 +309,7 @@ const SurveyAdmin = () => {
 
 
     return (
-        <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto' }}>
+        <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto', minHeight: 'calc(100vh - 20vh)' }}>
             <div>
                 {loading ? (
                     <p>Loading...</p>

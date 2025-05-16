@@ -1,10 +1,10 @@
 const ProjectsAdminTable = ({ currentProjects, paginate, totalPages, currentPage, setCurrentPage, projectsPerPage, setProjectsPerPage, handleProjectClick }) => {
 
     return (
-        <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto' }}>
+        <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto', minHeight: 'calc(100vh - 20vh)' }}>
             <h1 className="mb-4 ms-4">Existing Projects</h1>
             <div className="mx-4">
-                <table className='table table-responsive text-left align-middle shadow-sm border border-2' style={{ maxWidth: '100%', borderRadius: '0.5rem', borderCollapse: 'separate' }}>
+                <table className='table table-responsive text-left align-middle shadow-sm border-2' style={{ maxWidth: '100%', borderRadius: '0.5rem', borderCollapse: 'separate' }}>
                     <thead className='align-top' style={{ fontWeight: 'regular' }}>
                         <tr style={{ height: '6rem' }}>
                             <th className='table-headers-text pt-4 ps-4'>ID</th>
