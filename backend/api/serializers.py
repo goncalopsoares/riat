@@ -720,6 +720,7 @@ class ReportSerializer(serializers.ModelSerializer):
                         'id': project.id_projects,
                         'name': project.project_name,
                         'organization': project.project_organization,
+                        'phase': project.project_phase,
                     }
 
         # Get dimensions, statements, answers, and scales

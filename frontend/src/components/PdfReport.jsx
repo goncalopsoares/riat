@@ -128,24 +128,24 @@ const styles = StyleSheet.create({
     },
     responsibilityLevelTextBad: {
         fontSize: 14,
-        color: '#E0CA3C',
+        color: '#4daed2',
         display: 'inline-block',
         marginLeft: 5,
     },
     responsibilityLevelTextMedium: {
         fontSize: 14,
-        color: '#53CAA1',
+        color: '#008bbe',
         display: 'inline-block',
         marginLeft: 5,
     },
     responsibilityLevelTextGood: {
         fontSize: 14,
-        color: '#226F54',
+        color: '#006185',
         display: 'inline-block',
         marginLeft: 5,
     },
     infoText: {
-        fontSize: 9,
+        fontSize: 10,
         fontWeight: 'bold',
     },
     paragraph: {
@@ -179,6 +179,8 @@ const ReportDocument = ({
     token,
     creationTime,
     projectName,
+    projectOrganization,
+    projectPhase,
     chartImage,
     dimensionsData,
     score,
@@ -190,10 +192,14 @@ const ReportDocument = ({
         <Page size="A4" style={styles.page}>
             <Text style={styles.detailsText}>{token}</Text>
             <View style={styles.firstSection}>
-                <Text style={styles.title}>Responsible Innovation Report</Text>
+                <View>
+                    <Text style={styles.title}>Responsible Innovation Report</Text>
+                    <Text>Phase {projectPhase}</Text>
+                </View>
                 <View style={styles.firstSectionDetails} >
                     <Text style={styles.detailsText}>Report created on: <Text style={styles.boldText}>{creationTime}</Text></Text>
                     <Text style={styles.detailsText}>Regarding the project: <Text style={styles.boldText}>{projectName}</Text></Text>
+                    <Text style={styles.detailsText}>Organization: <Text style={styles.boldText}>{projectOrganization}</Text></Text>
                 </View>
             </View>
 
@@ -203,13 +209,13 @@ const ReportDocument = ({
             </View>
 
             <View style={styles.section}>
-                <Text style={styles.subtitle}>Score Summary</Text>
+                <Text style={styles.subtitle}>Overall Score</Text>
                 <View style={styles.scoreFirstSection}>
-                    <Text style={styles.responsibilityLevelTextLabel}>Overall Responsibility Level  — &nbsp;
+                    <Text style={styles.responsibilityLevelTextLabel}>Responsibility Level  — &nbsp;
                         <Text style={
-                            recommendationLevel.search("1") >= 0 ? styles.responsibilityLevelTextBad :
-                                recommendationLevel.search("2") >= 0 ? styles.responsibilityLevelTextMedium :
-                                    recommendationLevel.search("3") >= 0 ? styles.responsibilityLevelTextGood : styles.responsibilityLevelTextLabel}>
+                            recommendationLevel.search("Low") ? styles.responsibilityLevelTextBad :
+                                recommendationLevel.search("Medium") ? styles.responsibilityLevelTextMedium :
+                                    recommendationLevel.search("High") ? styles.responsibilityLevelTextGood : styles.responsibilityLevelTextLabel}>
                             {recommendationLevel}
                         </Text>
                     </Text>
@@ -219,11 +225,11 @@ const ReportDocument = ({
                 </View>
                 <View style={{ marginBottom: 15 }}>
                     <Text style={styles.infoText}>
-                        The overall responsibility level is calculated based on the average score from the dimensions of the framework.
+                        The responsibility level is derived from the scores across all dimensions in the framework.
                     </Text>
                 </View>
                 <View style={{ marginTop: 10 }}>
-                    <Text style={styles.dimesionDescription}>{recommendation}</Text>
+                    <Text>{recommendation}</Text>
                 </View>
             </View>
 
@@ -232,7 +238,7 @@ const ReportDocument = ({
                 {dimensionsData.map((dimension, dimIndex) => (
                     <View key={dimension.id} style={{ marginBottom: 15 }}>
                         <Text style={styles.dimensionTitle}>{dimIndex + 1}. {dimension.name}</Text>
-                        {dimension.short_description !== dimension.description &&(
+                        {dimension.short_description !== dimension.description && (
                             <Text style={styles.dimesionDescription}>{dimension.short_description}</Text>
                         )}
                         <Text style={styles.dimesionDescription}>{dimension.description}</Text>

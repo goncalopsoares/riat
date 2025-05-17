@@ -19,6 +19,7 @@ const Report = () => {
     const [projectOrganization, setProjectOrganization] = useState("");
     const [loadedGeneralData, setLoadedGeneralData] = useState(false);
     const [reportCode, setReportCode] = useState('');
+    const [projectPhase, setProjectPhase] = useState('');
     // chart data
     const [chartCategories, setChartCategories] = useState([]);
     const [chartData, setChartData] = useState([]);
@@ -59,9 +60,12 @@ const Report = () => {
             setCreationTime(formattedCreationTime);
 
             const projectName = reportData.details.project.name;
-            const prokectOrganization = reportData.details.project.organization;
+            const projectOrganization = reportData.details.project.organization;
+            const projectPhase = reportData.details.project.phase;
+
             setProjectName(projectName);
-            setProjectOrganization(prokectOrganization);
+            setProjectOrganization(projectOrganization);
+            setProjectPhase(projectPhase);
 
             setLoadedGeneralData(true);
         }
@@ -131,6 +135,17 @@ const Report = () => {
                     fontWeight: 'bold',
                     colors: ['#002d46']
                 }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: (val) => `${val}%`,
+            background: {
+                enabled: true,
+                borderRadius: 2,
+            },
+            style: {
+                fontSize: '12px',
             }
         },
         plotOptions: {
@@ -225,7 +240,10 @@ const Report = () => {
                 </p>
                 <p>Report code <b>{reportCode}</b></p>
                 <div className="d-flex flex-row justify-content-between w-100 mt-5">
-                    <h1>Report</h1>
+                    <div>
+                        <h1>Report</h1>
+                        <p className="fs-5">Phase {projectPhase}</p>
+                    </div>
                     <div className="text-end">
                         <p>Report created on <b>{creationTime}</b></p>
                         <p>Regarding the project <b>{projectName}</b></p>
@@ -233,7 +251,7 @@ const Report = () => {
                     </div>
                 </div>
                 <div className="text-center mb-4 w-100 justify-content-center margin-auto chart-container">
-                    <h4 className="m-0">Responsible Innovation Dimensions</h4>
+                    <h4 className="m-0"><b>Responsible Innovation Dimensions</b></h4>
                     <div className="mixed-chart" style={{ display: "flex", justifyContent: "center" }}>
                         <Chart
                             options={options}
@@ -243,31 +261,36 @@ const Report = () => {
                         />
                     </div>
                 </div>
-                <ReportAnswers
-                    dimensionsData={dimensionsData}
-                    showAnswers={showAnswers}
-                    setShowAnswers={setShowAnswers}
-                />
-                <div>
-                    <h3 className="mt-5 fs-4">Score: <span className="fs-3"><b>{score}</b></span> <span className="text-body-tertiary fs-5">/ {maxScore}</span></h3>
-                    <div className="d-flex flex-row align-items-center mb-2">
-                        <h3>Overall Responsibility Level  —
-                            {recommendationLevel && (
-                                <span className="ms-2" style={{
-                                    color: recommendationLevel.search("1") >= 0 ? "#E0CA3C" :
-                                        recommendationLevel.search("2") >= 0 ? "#53CAA1" :
-                                            recommendationLevel.search("3") >= 0 ? "#226F54" : "000"
-                                }}>
-                                    {recommendationLevel}
-                                </span>
-                            )}
-                        </h3>
+                <div className="mt-3">
+                    <h3><b>Overall Score</b></h3>
+                    <div className="d-flex flex-direction-row justify-content-between mt-4">
+                        <div className="d-flex flex-row align-items-center mb-2">
+                            <h3>Responsibility Level  —
+                                {recommendationLevel && (
+                                    <span className="ms-2" style={{
+                                        color: recommendationLevel.search("Low") >= 0 ? "#4daed2" :
+                                            recommendationLevel.search("Medium") >= 0 ? "#008bbe" :
+                                                recommendationLevel.search("High") >= 0 ? "#006185" : "000"
+                                    }}>
+                                        {recommendationLevel}
+                                    </span>
+                                )}
+                            </h3>
+                        </div>
+                        <div>
+                            <h3 className="">Score: <span className="fs-3"><b>{score}</b></span> <span className="text-body-tertiary fs-4">/ {maxScore}</span></h3>
+                        </div>
                     </div>
 
-                    <p className="my-4"><b>The overall responsibility level is calculated based on the average score from the dimensions of the framework. The levels are based on the average score.</b></p>
+                    <p className="mb-4 fs-5">The responsibility level is derived from the scores across all dimensions in the framework.</p>
 
-                    <h4 className="mt-5 mb-4">General Recommendations</h4>
-                    <p>{recommendation}</p>
+                    <h4 className="mt-3  mb-4">General Recommendations</h4>
+                    <p className="fs-5">{recommendation}</p>
+                    <ReportAnswers
+                        dimensionsData={dimensionsData}
+                        showAnswers={showAnswers}
+                        setShowAnswers={setShowAnswers}
+                    />
                 </div>
                 {
                     loadedGeneralData && loadedChartData && loadedDimensionsData && loadedScoreData && (
@@ -276,6 +299,7 @@ const Report = () => {
                             creationTime={creationTime}
                             projectName={projectName}
                             projectOrganization={projectOrganization}
+                            projectPhase={projectPhase}
                             series={series}
                             options={options}
                             dimensionsData={dimensionsData}

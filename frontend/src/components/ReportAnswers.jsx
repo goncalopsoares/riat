@@ -3,7 +3,7 @@ const reportAnswers = ({ dimensionsData, showAnswers, setShowAnswers }) => {
     return (
         <div className="mt-5">
             <div className="d-flex flex-row justify-content-between align-items-center mb-2">
-                <h3>Answers</h3>
+                <h3><b>Answers</b></h3>
                 {
                     showAnswers ? (
                         <button onClick={() => setShowAnswers(false)} className="forms-button">Hide</button>
@@ -14,7 +14,7 @@ const reportAnswers = ({ dimensionsData, showAnswers, setShowAnswers }) => {
             </div>
             <div>
                 {dimensionsData && dimensionsData.length > 0 && !showAnswers && (
-                    <div className="answers-container">
+                    <div className="answers-container mt-3">
                         <div className="d-flex flex-row justify-content-between align-items-center mb-2">
                             <h4>1. {dimensionsData[0].name}</h4>
                             <div className="d-flex flex-row align-items-center">
@@ -85,7 +85,7 @@ const reportAnswers = ({ dimensionsData, showAnswers, setShowAnswers }) => {
                                 {dimension.short_description !== dimension.description && (
                                     <p style={{ color: '#002d46' }}><b>{dimension.short_description}</b></p>
                                 )}
-                                <p>{dimension.description}</p>  
+                                <p>{dimension.description}</p>
                                 {dimension.statements.map((statement, statementIndex) => (
 
                                     <div key={statement.id} className="my-5">
