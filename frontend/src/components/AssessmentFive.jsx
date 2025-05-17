@@ -67,11 +67,13 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                                 ) : (
                                                     <h4 className="statement-name">{statement.statement_name}</h4>
                                                 )}
-                                                <p
-                                                    className="statement-description"
-                                                    style={{ color: '#002d46', fontStyle: 'italic' }}
-                                                    dangerouslySetInnerHTML={{ __html: sanitizeSimple(statement.statement_description) }}
-                                                />
+                                                {statement.statement_description &&
+                                                    <p
+                                                        className="statement-description"
+                                                        style={{ color: '#002d46', fontStyle: 'italic' }}
+                                                        dangerouslySetInnerHTML={{ __html: sanitizeSimple(statement.statement_description) }}
+                                                    />
+                                                }
                                                 <>
                                                     {statement.scale.scale_levels > 0 ? (
                                                         <>
