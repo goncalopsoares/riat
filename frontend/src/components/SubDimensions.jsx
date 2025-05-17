@@ -118,8 +118,8 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                                     ) : (
                                         <textarea
                                             className="textarea"
-                                            placeholder="1000 char. max"
-                                            maxLength={1000}
+                                            placeholder="3000 char. max"
+                                            maxLength={3000}
                                             value={example || selectedValues[`${statement.id_statements}`] || ''}
                                             onChange={(e) => {
                                                 const newValue = e.target.value;
