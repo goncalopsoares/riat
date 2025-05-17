@@ -106,7 +106,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                                                         className="checkbox-input me-3 mt-5"
                                                                         type="checkbox"
                                                                         name={`${statement.id_statements}_na`}
-                                                                        checked={naSelected[statement.id_statements] || false}
+                                                                        checked={naSelected[statement.id_statements] || (selectedValues[statement.id_statements] !== '' && typeof selectedValues[statement.id_statements] === 'string') || false}
                                                                         onChange={(e) => {
                                                                             const isChecked = e.target.checked;
                                                                             setNaSelected(prev => ({
@@ -119,10 +119,10 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                                                                     [statement.id_statements]: ''
                                                                                 }));
                                                                             } else {
-                                                                                setSelectedValues(prev => ({
-                                                                                    ...prev,
-                                                                                    [statement.id_statements]: ''
-                                                                                }));
+                                                                                setSelectedValues(prev => {
+                                                                                    delete prev[statement.id_statements];
+                                                                                    return prev
+                                                                                })
                                                                             }
                                                                         }}
                                                                     />
@@ -139,15 +139,18 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                                                             value={explanation || selectedValues[`${statement.id_statements}`] || ''}
                                                                             onChange={(e) => {
                                                                                 const newValue = e.target.value;
-                                                                                setExplanation(newValue);
-                                                                            }}
-                                                                            onBlur={() => {
                                                                                 setSelectedValues(prev => ({
                                                                                     ...prev,
-                                                                                    [statement.id_statements]: explanation
+                                                                                    [statement.id_statements]: newValue
                                                                                 }));
-                                                                                setExplanation('');
                                                                             }}
+                                                                        // onBlur={() => {
+                                                                        //     setSelectedValues(prev => ({
+                                                                        //         ...prev,
+                                                                        //         [statement.id_statements]: explanation
+                                                                        //     }));
+                                                                        //     setExplanation('');
+                                                                        // }}
                                                                         />
                                                                     </>
                                                                 ) : null}
@@ -161,15 +164,18 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                                             value={example || selectedValues[`${statement.id_statements}`] || ''}
                                                             onChange={(e) => {
                                                                 const newValue = e.target.value;
-                                                                setExample(newValue);
-                                                            }}
-                                                            onBlur={() => {
                                                                 setSelectedValues(prev => ({
                                                                     ...prev,
-                                                                    [statement.id_statements]: example
+                                                                    [statement.id_statements]: newValue
                                                                 }));
-                                                                setExample('');
                                                             }}
+                                                        /* onBlur={() => {
+                                                            setSelectedValues(prev => ({
+                                                                ...prev,
+                                                                [statement.id_statements]: example
+                                                            }));
+                                                            setExample('');
+                                                        }} */
                                                         />
                                                     )}
                                                 </>
@@ -216,12 +222,15 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                     null // No back button on the first dimension
                                 ) : (
                                     <button onClick={() => {
+                                        if (loading) return;
+
                                         if (dimensionStage === 1) {
                                             handleDimensionChange(currentDimension - 1);
                                             setDimensionStage(2);
                                         } else if (dimensionStage === 2) {
                                             setDimensionStage(dimensionStage - 1);
                                         }
+                                        disabled = { loading }
                                     }} className="forms-button">Back</button>
                                 )}
                                 {currentDimension === dimensionsNumber - 1 && dimensionStage === 2 ? (

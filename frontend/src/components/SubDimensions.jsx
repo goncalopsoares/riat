@@ -65,27 +65,29 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                                                         className="checkbox-input me-3 mt-5"
                                                         type="checkbox"
                                                         name={`${statement.id_statements}_na`}
-                                                        checked={naSelected[statement.id_statements] || false}
+                                                        checked={naSelected[statement.id_statements] || (selectedValues[statement.id_statements] !== '' && typeof selectedValues[statement.id_statements] === 'string') || false}
                                                         onChange={(e) => {
                                                             const isChecked = e.target.checked;
-                                                            setNaSelected((prev) => ({
+                                                            setNaSelected(prev => ({
                                                                 ...prev,
-                                                                [statement.id_statements]: isChecked,
+                                                                [statement.id_statements]: isChecked
                                                             }));
-                                                            setSelectedValues((prev) => ({
-                                                                ...prev,
-                                                                [statement.id_statements]: "",
-                                                            }));
+                                                            if (isChecked) {
+                                                                setSelectedValues(prev => ({
+                                                                    ...prev,
+                                                                    [statement.id_statements]: ''
+                                                                }));
+                                                            } else {
+                                                                setSelectedValues(prev => {
+                                                                    delete prev[statement.id_statements];
+                                                                    return prev
+                                                                })
+                                                            }
                                                         }}
                                                     />
-                                                    {naSelected[statement.id_statements] ? (
-                                                        <b>Prefer not to answer</b>
-                                                    ) : (
-                                                        "Prefer not to answer"
-                                                    )}
+                                                    {naSelected[statement.id_statements] ? <b>Prefer not to answer</b> : 'Prefer not to answer'}
                                                 </label>
-                                                {naSelected[statement.id_statements] ||
-                                                    typeof selectedValues[statement.id_statements] === "string" ? (
+                                                {naSelected[statement.id_statements] || typeof (selectedValues[statement.id_statements]) === 'string' ? (
                                                     <>
                                                         <p>Explain why you chose this option</p>
                                                         <textarea
@@ -93,18 +95,21 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                                                             name={`${statement.id_statements}_explanation`}
                                                             placeholder="200 char. max"
                                                             maxLength={200}
-                                                            value={explanation || selectedValues[`${statement.id_statements}`] || ""}
+                                                            value={explanation || selectedValues[`${statement.id_statements}`] || ''}
                                                             onChange={(e) => {
                                                                 const newValue = e.target.value;
-                                                                setExplanation(newValue);
-                                                            }}
-                                                            onBlur={() => {
-                                                                setSelectedValues((prev) => ({
+                                                                setSelectedValues(prev => ({
                                                                     ...prev,
-                                                                    [statement.id_statements]: explanation,
+                                                                    [statement.id_statements]: newValue
                                                                 }));
-                                                                setExplanation("");
                                                             }}
+                                                        // onBlur={() => {
+                                                        //     setSelectedValues(prev => ({
+                                                        //         ...prev,
+                                                        //         [statement.id_statements]: explanation
+                                                        //     }));
+                                                        //     setExplanation('');
+                                                        // }}
                                                         />
                                                     </>
                                                 ) : null}
@@ -115,18 +120,21 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                                             className="textarea"
                                             placeholder="1000 char. max"
                                             maxLength={1000}
-                                            value={example || selectedValues[`${statement.id_statements}`] || ""}
+                                            value={example || selectedValues[`${statement.id_statements}`] || ''}
                                             onChange={(e) => {
                                                 const newValue = e.target.value;
-                                                setExample(newValue);
-                                            }}
-                                            onBlur={() => {
-                                                setSelectedValues((prev) => ({
+                                                setSelectedValues(prev => ({
                                                     ...prev,
-                                                    [statement.id_statements]: example,
+                                                    [statement.id_statements]: newValue
                                                 }));
-                                                setExample("");
                                             }}
+                                        /* onBlur={() => {
+                                            setSelectedValues(prev => ({
+                                                ...prev,
+                                                [statement.id_statements]: example
+                                            }));
+                                            setExample('');
+                                        }} */
                                         />
                                     )}
                                 </div>

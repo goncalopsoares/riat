@@ -19,6 +19,8 @@ const Assessment = () => {
 
     const navigate = useNavigate();
 
+
+
     //GET SUBMISSION ID FROM URL
     const { id } = useParams();
 
@@ -34,6 +36,7 @@ const Assessment = () => {
     const [dimensionStage, setDimensionStage] = useState(1);
     const [isAssessmentReady, setIsAssessmentReady] = useState(false);
     const [selectedValues, setSelectedValues] = useState([]);
+    const [answersLoaded, setAnswersLoaded] = useState(false);
     const [existingAnswers, setExistingAnswers] = useState([]);
     const [statementCounter, setStatementCounter] = useState(0);
     const [submittingAssessment, setSubmittingAssessment] = useState(false);
@@ -44,7 +47,7 @@ const Assessment = () => {
         console.log('selectedValues:', selectedValues);
         console.log('existingAnswers:', existingAnswers);
     }
-    , [selectedValues, existingAnswers]);
+        , [selectedValues, existingAnswers]);
 
     //GET SUBMISSION DATA
 
@@ -131,7 +134,7 @@ const Assessment = () => {
             return;
         }
 
-         if (projectOwnerName === '') {
+        if (projectOwnerName === '') {
             setError("Name of the responsible for the project cannot be empty");
             setLoading(false);
             return;
@@ -434,13 +437,18 @@ const Assessment = () => {
         }
     };
 
+    // Reset answersLoaded every time ID changes
+    useEffect(() => {
+        setAnswersLoaded(false);
+    }, [id]);
+
     // STEP 5 - GET EXISTING ANSWERS
     useEffect(() => {
         if (id !== undefined) {
+            setLoading(true);
             const getExistingAnswers = async () => {
                 try {
                     const response = await api.get(`/api/answer/${id}/`);
-                    console.log('Existing answers function:', response.data);
                     const existingAnswers = response.data.reduce((acc, answer) => {
                         acc[answer.statements_id_statements] = {
                             value: answer.value,
@@ -450,6 +458,7 @@ const Assessment = () => {
                         return acc;
                     }, {});
                     setExistingAnswers(existingAnswers);
+                    setAnswersLoaded(true);  // Indica que terminou de carregar
                 } catch (error) {
                     console.error('Error fetching existing answers:', error);
                 } finally {
@@ -460,36 +469,34 @@ const Assessment = () => {
         }
     }, [id, currentDimension, submittingAssessment]);
 
-
     // STEP 5 - SET CURRENT DIMENSION BASED ON LAST ANSWERED STATEMENT
-    useEffect(() => {
-        if (existingAnswers.length === 0 || allDimensions.length === 0 || topLevelDimensions.length === 0 || firstRender.current === false) return;
-
-        const lastAnsweredStatementId = Object.keys(existingAnswers)
-            .map(key => ({
-                id: Number(key),
-                creationTime: existingAnswers[key].answer_creation_time
-            }))
-            .sort((a, b) => new Date(b.creationTime) - new Date(a.creationTime))[0]?.id;
-
-        const dimensionWithLastAnswer = topLevelDimensions.find(dimension =>
-            dimension.statements.some(statement => statement.id_statements === lastAnsweredStatementId)
-        );
-
-        if (dimensionWithLastAnswer) {
-            const dimensionIndex = topLevelDimensions.indexOf(dimensionWithLastAnswer);
-            setCurrentDimension(dimensionIndex);
-        }
-
-        firstRender.current = false; // Ensure this effect runs only once after existingAnswers is set
-
-    }, [existingAnswers, allDimensions]);
+    /*  useEffect(() => {
+         if (existingAnswers.length === 0 || allDimensions.length === 0 || topLevelDimensions.length === 0 || firstRender.current === false) return;
+ 
+         const lastAnsweredStatementId = Object.keys(existingAnswers)
+             .map(key => ({
+                 id: Number(key),
+                 creationTime: existingAnswers[key].answer_creation_time
+             }))
+             .sort((a, b) => new Date(b.creationTime) - new Date(a.creationTime))[0]?.id;
+ 
+         const dimensionWithLastAnswer = topLevelDimensions.find(dimension =>
+             dimension.statements.some(statement => statement.id_statements === lastAnsweredStatementId)
+         );
+ 
+         if (dimensionWithLastAnswer) {
+             const dimensionIndex = topLevelDimensions.indexOf(dimensionWithLastAnswer);
+             setCurrentDimension(dimensionIndex);
+         }
+ 
+         firstRender.current = false; // Ensure this effect runs only once after existingAnswers is set
+ 
+     }, [existingAnswers, allDimensions]); */
 
 
     // STEP 5 - SET SELECTED VALUES BASED ON EXISTING ANSWERS
     useEffect(() => {
-
-        if (existingAnswers.length === 0) return;
+        if (!answersLoaded || loading) return;
 
         if (dimensionStage === 2) {
             const currentSubDimensions = allDimensions.filter(dimension =>
@@ -506,19 +513,17 @@ const Assessment = () => {
                     statement.id_statements.toString() === key
                 ))
                 .reduce((obj, key) => {
-                    obj[key] = existingAnswers[key].value; // Extract only the value
+                    obj[key] = existingAnswers[key].value;
                     return obj;
                 }, {});
 
-            if (Object.keys(filteredAnswers).length !== 0 && loading === false) {
+            if (Object.keys(filteredAnswers).length !== 0) {
                 setSelectedValues(filteredAnswers);
             }
 
             console.log('Filtered answers:', filteredAnswers);
-
         }
-    }, [currentDimension, dimensionStage, loading]);
-
+    }, [answersLoaded, currentDimension, dimensionStage, loading]);
 
     // STEP 5 - SUBMIT ASSESSMENT
 
