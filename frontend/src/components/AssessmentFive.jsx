@@ -11,6 +11,13 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
         allDimensions[currentDimension].sub_dimensions.some(subId => subId === dimension.id_dimensions)
     );
 
+    const sanitizeSimple = (html) => {
+        const allowedTags = ['strong', 'em'];
+        return html.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, (tag, tagName) =>
+            allowedTags.includes(tagName.toLowerCase()) ? tag : ''
+        );
+    }
+
     return (
         <>
             {allDimensions.length > 0 && topLevelDimensions.length > 0 && loading === false && (
@@ -57,7 +64,11 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                                 ) : (
                                                     <h4 className="statement-name">{statement.statement_name}</h4>
                                                 )}
-                                                <p className="statement-description" style={{ color: '#002d46' }}><em>{statement.statement_description}</em></p>
+                                                <p
+                                                    className="statement-description"
+                                                    style={{ color: '#002d46', fontStyle: 'italic' }}
+                                                    dangerouslySetInnerHTML={{ __html: sanitizeSimple(statement.statement_description) }}
+                                                />
                                                 <>
                                                     {statement.scale.scale_levels > 0 ? (
                                                         <>
@@ -159,10 +170,11 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                                         />
                                                     )}
                                                 </>
-                                            </div>
+                                            </div >
                                             {subDimensionsInfo && subDimensionsInfo.length > 0 && (
-                                                <SubDimensions subDimensionsInfo={subDimensionsInfo} selectedValues={selectedValues} setSelectedValues={setSelectedValues} naSelected={naSelected} setNaSelected={setNaSelected} explanation={explanation} setExplanation={setExplanation} example={example} setExample={setExample} currentDimension={currentDimension} />
-                                            )}
+                                                <SubDimensions subDimensionsInfo={subDimensionsInfo} selectedValues={selectedValues} setSelectedValues={setSelectedValues} naSelected={naSelected} setNaSelected={setNaSelected} explanation={explanation} setExplanation={setExplanation} example={example} setExample={setExample} currentDimension={currentDimension} sanitizeSimple={sanitizeSimple} />
+                                            )
+                                            }
                                         </>
                                     );
                                 })}

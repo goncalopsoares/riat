@@ -15,6 +15,8 @@
     word-wrap: break-word;
     line-height: 2rem;
     margin: 1rem 0;
+    text-align: justify;
+    text-justify: inter-word;
 }
 
 .dimension-name-small {
@@ -34,6 +36,13 @@
     word-wrap: break-word;
     line-height: 1.5rem;
     margin: 0.5rem 0 3rem 0;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.sub-dimension-description {
+    text-align: justify;
+    text-justify: inter-word;
 }
 
 /*statements*/
@@ -110,7 +119,8 @@
 
 /* report */
 
-.chart-container, .answers-container {
+.chart-container,
+.answers-container {
     padding: 1.5rem;
     margin: 2rem auto;
     background-color: #F8F9FA;
@@ -126,12 +136,12 @@
     background-color: #0091be;
     border-radius: 50%;
     display: inline-block;
-  }
+}
 
-  .dot-invis {
+.dot-invis {
     height: 0.75rem;
     width: 0.75rem;
     background-color: #F8F9FA;
     border-radius: 50%;
     display: inline-block;
-  }
+}

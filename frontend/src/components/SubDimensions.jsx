@@ -1,4 +1,4 @@
-const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, naSelected, setNaSelected, explanation, setExplanation, example, setExample, currentDimension }) => {
+const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, naSelected, setNaSelected, explanation, setExplanation, example, setExample, currentDimension, sanitizeSimple }) => {
 
     let statementCounter = 0;
     let currentSubDimension = 0;
@@ -26,9 +26,11 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                                                 {" "}</span>)}
                                         {statement.statement_name}
                                     </h4>
-                                    <p className="statement-description">
-                                        <em>{statement.statement_description}</em>
-                                    </p>
+                                    <p
+                                        className="statement-description"
+                                        style={{ color: '#002d46', fontStyle: 'italic' }}
+                                        dangerouslySetInnerHTML={{ __html: sanitizeSimple(statement.statement_description) }}
+                                    />
 
                                     {statement.scale.scale_levels > 0 ? (
                                         <>
