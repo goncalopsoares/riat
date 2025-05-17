@@ -41,86 +41,90 @@ function App() {
   return (
     <UserProvider>
       <BrowserRouter>
-        <Navbar />
-        <ToolBarAdmin />
-        <Routes>
-          <Route path='/'
-            element={
-              <Home />
-            }
-          />
-          <Route path='/projects'
-            element={<ProtectedRoute>
-              <ProjectProvider>
-                <Projects />
-              </ProjectProvider>
-            </ProtectedRoute>}
-          />
-          <Route path='/assessment/' element={
-            <ProtectedRoute>
-              <ProjectProvider>
-                <Assessment />
-              </ProjectProvider>
-            </ProtectedRoute>
-          } />
-          <Route path='/assessment/:id'
-            element={<ProtectedRoute>
-              <ProjectProvider>
-                <Assessment />
-              </ProjectProvider>
-            </ProtectedRoute>}
-          />
-          <Route path='/report/:token'
-            element={<ProtectedRoute>
-              <ProjectProvider>
-                <Report />
-              </ProjectProvider>
-            </ProtectedRoute>}
-          />
-          <Route path='/reports/'
-            element={<ProtectedRoute>
-              <ProjectProvider>
-                <Reports />
-              </ProjectProvider>
-            </ProtectedRoute>}
-          />
-          <Route path='/surveytools'
-            element={<ProtectedRoute>
-              <SurveyTools />
-            </ProtectedRoute>}
-          />
-          <Route path='/projectsadmin'
-            element={<ProtectedRoute>
-              <ProjectProvider>
-                <ProjectsAdmin />
-              </ProjectProvider>
-            </ProtectedRoute>}
-          />
-          <Route path='/projectsadmin/:id'
-            element={<ProtectedRoute>
-              <ProjectProvider>
-                <ProjectsAdminDetail />
-              </ProjectProvider>
-            </ProtectedRoute>}
-          />
-          <Route path='/surveyadmin/:id'
-            element={<ProtectedRoute>
-              <SurveyAdmin />
-            </ProtectedRoute>}
-          />
-          <Route path='/scaletools'
-            element={<ProtectedRoute>
-              <ScaleTools />
-            </ProtectedRoute>}
-          />
-          <Route path='/login' element={<Login />} />
-          <Route path='/logout' element={<Logout />} />
-          <Route path='/register' element={<RegisterAndLogout />} />
-          <Route path='/forgotpassword' element={<ForgotPassword />} />
-          <Route path='/resetpassword/:token' element={<ResetPassword />} />
-          <Route path='*' element={<NotFound />} />
-        </Routes>
-        <Footer />
+        <div id="root">
+          <Navbar />
+          <ToolBarAdmin />
+          <div className="main-content">
+            <Routes>
+              <Route path='/'
+                element={
+                  <Home />
+                }
+              />
+              <Route path='/projects'
+                element={<ProtectedRoute>
+                  <ProjectProvider>
+                    <Projects />
+                  </ProjectProvider>
+                </ProtectedRoute>}
+              />
+              <Route path='/assessment/' element={
+                <ProtectedRoute>
+                  <ProjectProvider>
+                    <Assessment />
+                  </ProjectProvider>
+                </ProtectedRoute>
+              } />
+              <Route path='/assessment/:id'
+                element={<ProtectedRoute>
+                  <ProjectProvider>
+                    <Assessment />
+                  </ProjectProvider>
+                </ProtectedRoute>}
+              />
+              <Route path='/report/:token'
+                element={<ProtectedRoute>
+                  <ProjectProvider>
+                    <Report />
+                  </ProjectProvider>
+                </ProtectedRoute>}
+              />
+              <Route path='/reports/'
+                element={<ProtectedRoute>
+                  <ProjectProvider>
+                    <Reports />
+                  </ProjectProvider>
+                </ProtectedRoute>}
+              />
+              <Route path='/surveytools'
+                element={<ProtectedRoute>
+                  <SurveyTools />
+                </ProtectedRoute>}
+              />
+              <Route path='/projectsadmin'
+                element={<ProtectedRoute>
+                  <ProjectProvider>
+                    <ProjectsAdmin />
+                  </ProjectProvider>
+                </ProtectedRoute>}
+              />
+              <Route path='/projectsadmin/:id'
+                element={<ProtectedRoute>
+                  <ProjectProvider>
+                    <ProjectsAdminDetail />
+                  </ProjectProvider>
+                </ProtectedRoute>}
+              />
+              <Route path='/surveyadmin/:id'
+                element={<ProtectedRoute>
+                  <SurveyAdmin />
+                </ProtectedRoute>}
+              />
+              <Route path='/scaletools'
+                element={<ProtectedRoute>
+                  <ScaleTools />
+                </ProtectedRoute>}
+              />
+              <Route path='/login' element={<Login />} />
+              <Route path='/logout' element={<Logout />} />
+              <Route path='/register' element={<RegisterAndLogout />} />
+              <Route path='/forgotpassword' element={<ForgotPassword />} />
+              <Route path='/resetpassword/:token' element={<ResetPassword />} />
+              <Route path='*' element={<NotFound />} />
+            </Routes>
+          </div>
+          <Footer />
+        </div>
       </BrowserRouter>
     </UserProvider>
   );

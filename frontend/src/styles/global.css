@@ -1,6 +1,22 @@
 /* Import fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap');
 
+html, body, #root {
+  height: 100%;
+  min-height: 100vh;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1 0 auto;
+  /* Garante que ocupa o espaço disponível */
+}
+
 /* Apply global padding to the body */
 body {
     margin: 0;
