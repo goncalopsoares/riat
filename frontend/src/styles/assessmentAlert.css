@@ -1,0 +1,60 @@
+/* CSS */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    transition: opacity 0.2s ease;
+    padding-top: 5rem; /* Move modal content down from the top */
+}
+
+.modal-content {
+    background: #fff;
+    padding: 1.5rem 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    max-width: 90%;
+    width: 360px;
+    position: relative;
+    text-align: center;
+    transform: translateY(-1rem);
+    animation: slideIn 0.3s forwards;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.modal-content p {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.4;
+}
+
+.modal-content em {
+    font-style: normal;
+    color: #0056b3;
+    font-weight: 600;
+}
+
+.close-btn {
+    font-size: 1.2rem;
+    color: #000;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #444;
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateY(0);
+    }
+}

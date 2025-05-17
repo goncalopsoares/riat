@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import SubDimensions from './SubDimensions';
+import AssessmentAlert from '../components/AssessmentAlert';
 
 const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, handleAssessmentSubmit, statementCounter, submittingAssessment, setSubmittingAssessment }) => {
 
     const [naSelected, setNaSelected] = useState({});
     const [explanation, setExplanation] = useState('');
     const [example, setExample] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
 
     const subDimensionsInfo = allDimensions.filter(dimension =>
         allDimensions[currentDimension].sub_dimensions.some(subId => subId === dimension.id_dimensions)
@@ -22,6 +24,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
         <>
             {allDimensions.length > 0 && topLevelDimensions.length > 0 && loading === false && (
                 <div className="global-container">
+                    <AssessmentAlert show={showAlert} setShow={setShowAlert} />
                     <div className="create-project-container">
                         {dimensionStage === 3 ? (
                             <div className="progress-bar-container">
@@ -239,8 +242,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                             };
                                             handleSubmit();
                                         } else {
-                                            console.log('totalStatements', totalStatements);
-                                            alert("Please provide an answer to every statement and write an explanation for 'Prefer not to answer' options.");
+                                            setShowAlert(true)
                                         }
                                     }} className="forms-button">Next</button>
                                 ) : (
@@ -264,7 +266,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                                 handleDimensionChange(currentDimension + 1);
                                                 setDimensionStage(1);
                                             } else {
-                                                alert("Please provide an answer to every statement and write an explanation for 'Prefer not to answer' options.");
+                                                setShowAlert(true)
                                             }
                                         }
                                     }} className="forms-button">Next</button>

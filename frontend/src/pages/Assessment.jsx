@@ -84,7 +84,7 @@ const Assessment = () => {
         const isChecked = document.getElementById("instructions").checked;
         setInstructionsRead(isChecked);
         if (isChecked) {
-            setStep(2);
+            setStep(3);
             setError('');
         } else {
             setError("You must read the instructions and mark the checkbox to proceed.");

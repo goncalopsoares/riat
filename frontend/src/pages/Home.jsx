@@ -5,7 +5,7 @@ const Home = () => {
 
     const navigate = useNavigate();
 
-        return (
+    return (
         <div className="w-100 h-screen flex flex-col items-center justify-center" style={{ backgroundColor: '#f0f0f0' }}>
             <div className="banner-section text-center" style={{ padding: '8rem 9.5rem 4rem 9.5rem' }}>
                 <h1 className='main-title'>How responsible is your innovation?</h1>
@@ -24,7 +24,7 @@ const Home = () => {
             <div className='text-start mb-5' style={{ padding: '0 9.5rem 0 9.5rem' }}>
                 <h2 className='fs-1 mb-3'><b>What kinds of change is this process aiming to promote?</b></h2>
                 <p className='fs-4'>This is an interactive process by which innovators assume a responsible approach towards innovation that creates change and positive impacts on society and the environment.</p>
-                <p className='fs-4'>It does not intend to provoke judgments, but help reflect on impact and practices in a continuous improvement mode.</p>
+                <p className='fs-4'>It does not intend to provoke judgments, but help reflect on impact and practices in a continuous improvement mode reaching 3 levels of responsibility: low, medium and high.</p>
             </div>
             <div className='w-100 text-center'>
                 <img
