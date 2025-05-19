@@ -370,62 +370,46 @@ const Assessment = () => {
 
         setLoading(true);
 
-        const requests = Object.entries(selectedValues).map(([key, value]) =>
-            api.get(`/api/answer/${id}/${key}/`)
+        const requests = Object.entries(selectedValues).map(async ([key, value]) => {
+            try {
+                const response = await api.get(`/api/answer/${id}/${key}/`);
+                const existingAnswer = response.data; // assume que tem um campo "value"
 
+                const existingValue = existingAnswer.value;
 
-                .then(async () => {
+                const existingType = typeof existingValue;
+                const newType = typeof value;
 
-
-
-                    if (isNaN(value)) {
-
-
-                        await api.delete(`/api/answer/${id}/${key}/`);
-
-                        return api.post(`/api/answer/${id}/`, {
-                            submissions_id_submissions: id,
-                            statements_id_statements: key,
-                            value: value,
-                        });
-
-
-
-                    } else {
-
-
-                        return api.patch(`/api/answer/${id}/${key}/`, {
-                            submissions_id_submissions: id,
-                            statements_id_statements: key,
-                            value: value,
-                        }).then((response) => {
-
-                            return response;
-                        });
-
-
-                    }
-                })
-
-                .catch((error) => {
-
-
-
-                    if (error.response && error.response.status === 404) {
-                        return api.post(`/api/answer/${id}/`, {
-                            submissions_id_submissions: id,
-                            statements_id_statements: key,
-                            value: value,
-                        }).then((response) => {
-
-                        });
-
-                    } else {
-                        console.error(`Error fetching the answer for statement ${key}:`, error);
-                        throw error;
-                    }
-                })
-        );
+                if (existingType !== newType) {
+                    // Tipos diferentes: DELETE + POST
+                    await api.delete(`/api/answer/${id}/${key}/`);
+                    return api.post(`/api/answer/${id}/`, {
+                        submissions_id_submissions: id,
+                        statements_id_statements: key,
+                        value: value,
+                    });
+                } else {
+                    // Mesmo tipo: PATCH
+                    return api.patch(`/api/answer/${id}/${key}/`, {
+                        submissions_id_submissions: id,
+                        statements_id_statements: key,
+                        value: value,
+                    });
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    // Não existe ainda: criar
+                    return api.post(`/api/answer/${id}/`, {
+                        submissions_id_submissions: id,
+                        statements_id_statements: key,
+                        value: value,
+                    });
+                } else {
+                    console.error(`Erro ao processar resposta ${key}:`, error);
+                    throw error;
+                }
+            }
+        });
 
         try {
             await Promise.all(requests);

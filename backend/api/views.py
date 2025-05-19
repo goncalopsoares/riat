@@ -521,7 +521,23 @@ class AnswerViewSet(viewsets.ModelViewSet):
     def retrieve_by_composite(self, request, submissions_id_submissions, statements_id_statements, *args, **kwargs):
         instance = self.get_object_by_composite_key(submissions_id_submissions, statements_id_statements)
         serializer = self.get_serializer(instance)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = serializer.data
+
+        # Try to get the value from AnswersInteger, AnswersBoolean, or AnswersText
+        value = None
+        try:
+            value = AnswersInteger.objects.get(answers_base_id_answers_base=instance).value
+        except AnswersInteger.DoesNotExist:
+            try:
+                value = AnswersBoolean.objects.get(answers_base_id_answers_base=instance).value
+            except AnswersBoolean.DoesNotExist:
+                try:
+                    value = AnswersText.objects.get(answers_base_id_answers_base=instance).value
+                except AnswersText.DoesNotExist:
+                    value = None
+
+        data['value'] = value
+        return Response(data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['put', 'patch'], url_path=r'(?P<submissions_id_submissions>\d+)/(?P<statements_id_statements>\d+)', url_name='update_by_composite')
     

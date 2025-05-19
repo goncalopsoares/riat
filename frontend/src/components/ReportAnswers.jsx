@@ -32,7 +32,7 @@ const reportAnswers = ({ dimensionsData, showAnswers, setShowAnswers }) => {
                                         <p><em>{statement.description}</em></p>
                                     </div>
                                     {statement.answers.map(answer => (
-                                        statement.scale_labels && statement.scale_labels !== 'n/a' && statement.scale_labels.search(answer.value) > 0 ? (
+                                        statement.scale_labels && statement.scale_labels !== 'n/a' && statement.scale_labels.search(answer.value) >= 0 ? (
                                             <div key={answer.id} className="text-sm text-gray-600">
                                                 {statement.scale_labels.split(",").map((label, index) => (
                                                     label === answer.value ? (
@@ -92,21 +92,23 @@ const reportAnswers = ({ dimensionsData, showAnswers, setShowAnswers }) => {
                                         <b>{dimensionIndex + 1}.{statementIndex + 1}. {statement.name}</b>
                                         <p><em>{statement.description}</em></p>
                                         {statement.answers.map(answer => (
-                                            statement.scale_labels && statement.scale_labels !== 'n/a' && statement.scale_labels.search(answer.value) > 0 ? (
-                                                <div key={answer.id} className="text-sm text-gray-600">
-                                                    {statement.scale_labels.split(",").map((label, index) => (
-                                                        label === answer.value ? (
-                                                            <div key={index} className="d-inline-flex flex-column align-items-center">
-                                                                <div className="dot me-3"></div>
-                                                                <span className="scale-labels me-3 mb-1"><b style={{ color: '#0091be' }}>{label}</b></span>
-                                                            </div>
-                                                        ) : (
-                                                            <div key={index} className="d-inline-flex flex-column align-items-center">
-                                                                <div className="dot-invis"></div>
-                                                                <span className="scale-labels me-3 mb-1">{label}</span>
-                                                            </div>
-                                                        )
-                                                    ))}
+                                            statement.scale_labels && statement.scale_labels !== 'n/a' && statement.scale_labels.search(answer.value) >= 0 ? ( 
+                                                < div key={answer.id} className="text-sm text-gray-600" >
+                                                    {
+                                                        statement.scale_labels.split(",").map((label, index) => (
+                                                            label === answer.value ? (
+                                                                <div key={index} className="d-inline-flex flex-column align-items-center">
+                                                                    <div className="dot me-3"></div>
+                                                                    <span className="scale-labels me-3 mb-1"><b style={{ color: '#0091be' }}>{label}</b></span>
+                                                                </div>
+                                                            ) : (
+                                                                <div key={index} className="d-inline-flex flex-column align-items-center">
+                                                                    <div className="dot-invis"></div>
+                                                                    <span className="scale-labels me-3 mb-1">{label}</span>
+                                                                </div>
+                                                            )
+                                                        ))
+                                                    }
                                                 </div>
                                             ) : statement.scale_labels && statement.scale_labels !== 'n/a' ? (
                                                 <div key={answer.id} className="text-sm text-gray-600">
