@@ -15,7 +15,7 @@ const AssessmentOne = ({ handleInstructionsRead }) => {
                     <li><b>Phase 2</b> - During project development (with at least 25% of project activities executed, before testing and it is recommended to repeat every 6 months)</li>
                     <li><b>Phase 3</b> - At the end of the project, before launching the project results and go-to-market</li>
                 </ul>
-                <p>This self-assessment provides a set of statements by each of the Responsible Innovation dimensions to be scored in a seven-degree scale. Please use "Prefer not to answer" as last option. The overall assessment score level and final report wiil provide you the information of the dimensions to be improved and recommendations to be followed before future reassessments.</p>
+                <p>This self-assessment provides a set of statements by each of the Responsible Innovation dimensions to be scored in a seven-degree scale. Please use "Prefer not to answer" as last option. The overall assessment score level and final report will provide you the information of the dimensions to be improved and recommendations to be followed before future reassessments.</p>
                 {error && <p className="error-message"><ErrorIcon className="me-3" />{error}</p>}
                 <form className="form-container w-100 d-flex flex-column">
                     <label>

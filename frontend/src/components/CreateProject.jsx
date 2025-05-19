@@ -75,12 +75,13 @@ const CreateProject = () => {
 
         <div className="mb-3 w-100">
           <label className="form-label">Extended project name</label>
-          <input
+          <textarea
             className="form-input"
-            type="text"
             placeholder="Insert the name of the project"
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
+            rows={1}
+            style={{ wordBreak: "break-word", whiteSpace: "pre-wrap", resize: "vertical" }}
           />
         </div>
 
