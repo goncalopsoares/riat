@@ -36,12 +36,6 @@
     line-height: 1.4;
 }
 
-.modal-content em {
-    font-style: normal;
-    color: #0056b3;
-    font-weight: 600;
-}
-
 .close-btn {
     font-size: 1.2rem;
     color: #000;
