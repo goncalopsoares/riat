@@ -92,6 +92,7 @@ const CreateProject = () => {
             placeholder="Insert the acronym of the project"
             value={projectAcronym}
             onChange={(e) => setProjectAcronym(e.target.value)}
+            minLength={2}
           />
         </div>
 
@@ -103,6 +104,7 @@ const CreateProject = () => {
             placeholder="Insert the name of the organization"
             value={projectOrrganization}
             onChange={(e) => setProjectOrganization(e.target.value)}
+            minLength={2}
           />
         </div>
 
@@ -114,6 +116,7 @@ const CreateProject = () => {
             placeholder="Insert the name of the person responsible for the project"
             value={projectOwnerName}
             onChange={(e) => setProjectOwnerName(e.target.value)}
+            minLength={2}
           />
         </div>
 

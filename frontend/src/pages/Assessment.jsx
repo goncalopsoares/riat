@@ -20,7 +20,6 @@ const Assessment = () => {
     const navigate = useNavigate();
 
 
-
     //GET SUBMISSION ID FROM URL
     const { id } = useParams();
 
@@ -128,14 +127,20 @@ const Assessment = () => {
             return;
         }
 
-        if (projectOrganization === '') {
-            setError("Organization cannot be empty");
+        const invalidOrgs = [
+            'test', 'n/a', 'org', 'no name', 'none', 'null', 'undefined', 'empresa', 'company', 'organization', 'organização', 'instituição', 'institution', 'sem nome', 'sem organização', 'no organization', 'no company'
+        ];
+        if (
+            projectOrganization.trim().length < 2 ||
+            invalidOrgs.includes(projectOrganization.trim().toLowerCase())
+        ) {
+            setError("Organization must be at least 2 characters long and cannot be a generic or placeholder name (e.g., 'Test', 'N/A', 'Org', 'No name', etc.)");
             setLoading(false);
             return;
         }
 
-        if (projectOwnerName === '') {
-            setError("Name of the responsible for the project cannot be empty");
+        if (projectOwnerName.trim().length < 2) {
+            setError("Please introduce a valid name for the person responsible for the project");
             setLoading(false);
             return;
         }
@@ -170,8 +175,8 @@ const Assessment = () => {
             return;
         }
 
-        if (userFunction === '') {
-            setError("Function in the organization cannot be empty");
+        if (userFunction.trim().length < 2) {
+            setError("Please introduce a valid answer for the Function in the organization field");
             setLoading(false);
             return;
         }
