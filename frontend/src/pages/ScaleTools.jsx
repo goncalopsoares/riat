@@ -24,13 +24,6 @@ const ScaleTools = () => {
     const [numberInputs, setNumberInputs] = useState([]);
     const [labelsArray, setLabelsArray] = useState([]);
 
-    useEffect(() => {
-        console.log(labelsArray);
-    }, [labelsArray]);
-
-    useEffect(() => {
-        console.log('scaleLabels', scaleLabels);
-    }, [scaleLabels]);
 
     useEffect(() => {
         const getAllScales = async () => {
@@ -57,7 +50,7 @@ const ScaleTools = () => {
             setScaleNameEdit(response.data[0].scale_name);
             setScaleLevelsEdit(response.data[0].scale_levels);
             setScaleLabelsEdit(response.data[0].scale_labels);
-            console.log(response.data[0]);
+            
         } catch (error) {
             alert(error);
             console.error(error);

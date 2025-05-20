@@ -193,7 +193,6 @@ const Report = () => {
     }, [chartData]);
 
     // SCORE AND RECOMMENDATIONS
-    console.log(reportData);
 
     useEffect(() => {
         if (reportData) {

@@ -32,7 +32,7 @@ const Projects = () => {
             try {
                 const response = await api.get(`/api/project/get/${id_user}/`);
                 setAllProjects(response.data);
-                console.log(response.data);
+                
 
             } catch (error) {
 
@@ -57,7 +57,7 @@ const Projects = () => {
             setLoading(true);
             try {
                 const response = await api.get(`/api/survey/get/`);
-                console.log(response.data);
+                
                 setAllSurveys(response.data);
 
             } catch (error) {
@@ -180,7 +180,7 @@ const Projects = () => {
                             {allProjects.map(project => {
 
                                 const lastSubmission = project.submissions[project.submissions.length - 1];
-                                console.log(lastSubmission);
+                                
                                 const lastCompletedSubmission = project.submissions.filter(submission => submission.submission_state === 2).slice(-1)[0];
                                 const idUserProject = project.metadata[0].id_users_has_projects;
                                 const submissionsNumber = project.submissions.filter(submission => submission.submission_state === 2).length;

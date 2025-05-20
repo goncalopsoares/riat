@@ -53,14 +53,13 @@ const ProjectsAdmin = () => {
             } catch (error) {
                 console.error("Error fetching projects:", error);
             } finally {
-                console.log("Fetch attempt completed.");
+                
             }
         };
 
         getProjects();
     }, []);
 
-    console.log(projects)
 
     return (
         currentProjects.length > 0 && selectedProjectId === null ? (

@@ -16,9 +16,7 @@ const LoginForm = ({ routeOne, routeTwo, method }) => {
   const navigate = useNavigate();
 
   const name = method === "login" ? "Login" : "Register";
-
-  console.log(method);
-
+  
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();

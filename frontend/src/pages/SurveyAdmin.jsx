@@ -112,7 +112,7 @@ const SurveyAdmin = () => {
 
                 setAllDimensions(dimensionsWithStatements);
                 setDimensionsNumber(dimensionsWithStatements.length);
-                console.log(dimensionsWithStatements);
+                
             } catch (error) {
                 alert(error);
                 console.error(error);
@@ -149,10 +149,10 @@ const SurveyAdmin = () => {
 
     const handleSurveySubmit = async (e) => {
         e.preventDefault();
-        console.log("Survey ID:", id);
+        
         const formData = new FormData(e.target);
         const surveyDescription = formData.get('survey_description');
-        console.log("Survey Description:", surveyDescription);
+        
 
         try {
             await api.put(`/api/survey/update/${id}/`, {
@@ -213,7 +213,7 @@ const SurveyAdmin = () => {
                     dimension_order: dimensionOrder,
                     parent_dimension: parentDimension ? Number(parentDimension) : null,
                 };
-                console.log(payload);
+                
 
                 const response = await api.post(`/api/dimension/create/${id}/`, {
                     dimension_name: dimensionName,
@@ -223,7 +223,7 @@ const SurveyAdmin = () => {
                     parent_dimension_id: parentDimension ? Number(parentDimension) : null,
                 });
 
-                console.log(response)
+               
 
                 setSuccess("Dimension created successfully");
                 setTimeout(() => setSuccess(''), 2000);

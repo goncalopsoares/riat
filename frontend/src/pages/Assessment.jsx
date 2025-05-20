@@ -42,12 +42,6 @@ const Assessment = () => {
 
     const firstRender = useRef(true);
 
-    useEffect(() => {
-        console.log('selectedValues:', selectedValues);
-        console.log('existingAnswers:', existingAnswers);
-    }
-        , [selectedValues, existingAnswers]);
-
     //GET SUBMISSION DATA
 
     useEffect(() => {
@@ -510,7 +504,7 @@ const Assessment = () => {
                 setSelectedValues(filteredAnswers);
             }
 
-            console.log('Filtered answers:', filteredAnswers);
+            
         }
     }, [answersLoaded, currentDimension, dimensionStage, loading]);
 

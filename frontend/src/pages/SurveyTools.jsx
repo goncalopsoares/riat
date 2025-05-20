@@ -23,7 +23,7 @@ const SurveyTools = () => {
             try {
                 const response = await api.get('/api/survey/get/');
                 setAllSurveys(response.data);
-                console.log(response.data);
+                
             } catch (error) {
                 alert(error);
                 console.error(error);

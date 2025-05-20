@@ -1,5 +1,5 @@
 const reportAnswers = ({ dimensionsData, showAnswers, setShowAnswers, sanitizeSimple }) => {
-    console.log(dimensionsData)
+    
     return (
         <div className="mt-5">
             <div className="d-flex flex-row justify-content-between align-items-center mb-2">

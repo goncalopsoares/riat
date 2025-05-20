@@ -1,7 +1,5 @@
 const ProjectsAdminDetail = ({ selectedProject, handleBackClick }) => {
 
-    console.log("Selected Project:", selectedProject);
-
     return (
         <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto' }}>
             <div className="d-flex flex-direction-row justify-content-between align-items-center mb-4 mx-4">
