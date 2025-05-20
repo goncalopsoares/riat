@@ -175,6 +175,33 @@ const styles = StyleSheet.create({
     },
 });
 
+const renderStrongText = (html, styles) => {
+    const parts = html.split(/(<strong>|<\/strong>)/gi);
+    let isBold = false;
+
+    return (
+        <Text style={styles.statementDescription}>
+            {parts.map((part, index) => {
+                if (part.toLowerCase() === '<strong>') {
+                    isBold = true;
+                    return null;
+                }
+                if (part.toLowerCase() === '</strong>') {
+                    isBold = false;
+                    return null;
+                }
+
+                return (
+                    <Text key={index} style={isBold ? styles.boldText : {}}>
+                        {part}
+                    </Text>
+                );
+            })}
+        </Text>
+    );
+};
+
+
 const ReportDocument = ({
     token,
     creationTime,
@@ -187,6 +214,7 @@ const ReportDocument = ({
     maxScore,
     recommendationLevel,
     recommendation,
+    sanitizeSimple
 }) => (
     <Document>
         <Page size="A4" style={styles.page}>
@@ -248,9 +276,7 @@ const ReportDocument = ({
                                 <Text style={styles.statementTitle}>
                                     {dimIndex + 1}.{stmtIndex + 1}. {statement.name}
                                 </Text>
-                                <Text style={styles.statementDescription}>
-                                    {statement.description}
-                                </Text>
+                                {renderStrongText(statement.description, styles)}
 
                                 {statement.answers.map((answer, answerIndex) => {
                                     const scaleLabels = statement.scale_labels?.split(',') || [];

@@ -35,7 +35,12 @@ const Report = () => {
     const [recommendation, setRecommendation] = useState("");
     const [loadedScoreData, setLoadedScoreData] = useState(false);
 
-
+    const sanitizeSimple = (html) => {
+        const allowedTags = ['strong', 'em'];
+        return html.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, (tag, tagName) =>
+            allowedTags.includes(tagName.toLowerCase()) ? tag : ''
+        );
+    }
 
     const { token } = useParams();
 
@@ -290,6 +295,7 @@ const Report = () => {
                         dimensionsData={dimensionsData}
                         showAnswers={showAnswers}
                         setShowAnswers={setShowAnswers}
+                        sanitizeSimple={sanitizeSimple}
                     />
                 </div>
                 {
@@ -307,6 +313,7 @@ const Report = () => {
                             maxScore={maxScore}
                             recommendationLevel={recommendationLevel}
                             recommendation={recommendation}
+                            sanitizeSimple={sanitizeSimple}
                         />
                     )
                 }

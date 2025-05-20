@@ -1,4 +1,4 @@
-const reportAnswers = ({ dimensionsData, showAnswers, setShowAnswers }) => {
+const reportAnswers = ({ dimensionsData, showAnswers, setShowAnswers, sanitizeSimple }) => {
     console.log(dimensionsData)
     return (
         <div className="mt-5">
@@ -29,7 +29,11 @@ const reportAnswers = ({ dimensionsData, showAnswers, setShowAnswers }) => {
                                 <div key={statement.id}>
                                     <div key={statement.id} className="mt-5 mb-2">
                                         <b>1.{index + 1}. {statement.name}</b>
-                                        <p><em>{statement.description}</em></p>
+                                        <p
+                                            className="statement-description"
+                                            style={{ color: '#002d46', fontStyle: 'italic' }}
+                                            dangerouslySetInnerHTML={{ __html: sanitizeSimple(statement.description) }}
+                                        />
                                     </div>
                                     {statement.answers.map(answer => (
                                         statement.scale_labels && statement.scale_labels !== 'n/a' && statement.scale_labels.search(answer.value) >= 0 ? (
@@ -90,9 +94,13 @@ const reportAnswers = ({ dimensionsData, showAnswers, setShowAnswers }) => {
 
                                     <div key={statement.id} className="my-5">
                                         <b>{dimensionIndex + 1}.{statementIndex + 1}. {statement.name}</b>
-                                        <p><em>{statement.description}</em></p>
+                                        <p
+                                                        className="statement-description"
+                                                        style={{ color: '#002d46', fontStyle: 'italic' }}
+                                                        dangerouslySetInnerHTML={{ __html: sanitizeSimple(statement.description) }}
+                                                    />
                                         {statement.answers.map(answer => (
-                                            statement.scale_labels && statement.scale_labels !== 'n/a' && statement.scale_labels.search(answer.value) >= 0 ? ( 
+                                            statement.scale_labels && statement.scale_labels !== 'n/a' && statement.scale_labels.search(answer.value) >= 0 ? (
                                                 < div key={answer.id} className="text-sm text-gray-600" >
                                                     {
                                                         statement.scale_labels.split(",").map((label, index) => (
