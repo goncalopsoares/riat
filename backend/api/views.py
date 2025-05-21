@@ -195,6 +195,53 @@ class UpdateProjectPhaseView(UpdateAPIView):
         project.save()
         return Response({"message": "Project phase updated"}, status=status.HTTP_200_OK)
     
+    
+class AddUserToProjectView(APIView):
+        permission_classes = [IsAuthenticated]
+
+        def post(self, request, *args, **kwargs):
+            project_unique_code = request.data.get('project_unique_code')
+            user_id = request.data.get('user_id')
+            user_role = request.data.get('user_has_projects_role')
+            user_function = request.data.get('user_has_projects_function')
+
+            if not all([project_unique_code, user_id, user_role, user_function]):
+                return Response(
+                    {"error": "project_unique_code, users_id_users, user_has_projects_role, and users_has_projects_function are required."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            try:
+                project = Projects.objects.get(project_unique_code=project_unique_code)
+            except Projects.DoesNotExist:
+                return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
+
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+            if UsersHasProjects.objects.filter(users_id_users=user, projects_id_projects=project).exists():
+                return Response({"error": "User already assigned to this project."}, status=status.HTTP_400_BAD_REQUEST)
+
+            user_project = UsersHasProjects.objects.create(
+                users_id_users=user,
+                projects_id_projects=project,
+                users_has_projects_role=user_role,
+                users_has_projects_function=user_function,
+                users_has_projects_state = 1
+            )
+            
+            return Response(
+                {
+                    "id_users_has_projects": user_project.id_users_has_projects,
+                    "users_id_users": user_project.users_id_users.id,
+                    "projects_id_projects": user_project.projects_id_projects.id_projects,
+                    "user_has_projects_role": user_project.user_has_projects_role,
+                    "users_has_projects_function": user_project.users_has_projects_function
+                },
+                status=status.HTTP_201_CREATED
+            )
 
 # SURVEYS
 

@@ -48,6 +48,7 @@ class UsersHasProjects(models.Model):
     projects_id_projects = models.ForeignKey('Projects', models.DO_NOTHING, db_column='projects_id_projects')
     users_has_projects_role = models.CharField(max_length=45)
     users_has_projects_function = models.CharField(max_length=45)
+    users_has_projects_state = models.IntegerField()
 
     class Meta:
         managed = False

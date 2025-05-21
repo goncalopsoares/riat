@@ -20,8 +20,9 @@ const Projects = () => {
     //existing project
     const [showRequestAccess, setShowRequestAccess] = useState(false);
     const [existingProjectCode, setExistingProjectCode] = useState('');
-
-
+    const [newUserRole, setNewUserRole] = useState('');
+    const [newUserFunction, setNewUserFunction] = useState('');
+    const [accessRequested, setAccessRequested] = useState(false);
 
     const navigate = useNavigate();
 
@@ -29,6 +30,39 @@ const Projects = () => {
     const id_user = user.user.id;
 
     const { setProjectId, setStep, setProjectPhase } = useProject();
+
+    const handleRequestAccess = async () => {
+
+        setLoading(true);
+
+        try {
+
+            console.log(existingProjectCode, newUserFunction, newUserRole, id_user);
+
+            const response = await api.post(`/api/project/adduser/${id_user}/${existingProjectCode}/`,
+                {
+                    project_unique_code: existingProjectCode,
+                    user_has_projects_role: newUserRole,
+                    user_has_projects_function: newUserFunction,
+                    user_id: id_user,
+                }
+
+            );
+
+            console.log(response.data)
+
+        } catch (error) {
+
+            alert(error);
+            console.error(error);
+
+        } finally {
+
+            setLoading(false);
+            setAccessRequested(true);
+        }
+
+    }
 
     //GET USER'S PROJECTS
 
@@ -179,10 +213,11 @@ const Projects = () => {
                                         <th className='table-headers-text pt-4'>Select Assessment</th>
                                     ) : (
                                         <>
-                                            <th className='table-headers-text pt-4 ps-5'>Acronym</th>
-                                            <th className='table-headers-text pt-4 ps-5'>Current Phase</th>
-                                            <th className='table-headers-text pt-4 ps-5'>Submissions</th>
-                                            <th className='table-headers-text pt-4 ps-5'>Last Score Obtained</th>
+                                            <th className='table-headers-text pt-4'>Acronym</th>
+                                            <th className='table-headers-text pt-4'>Code</th>
+                                            <th className='table-headers-text pt-4'>Current Phase</th>
+                                            <th className='table-headers-text pt-4'>Submissions</th>
+                                            <th className='table-headers-text pt-4'>Last Score Obtained</th>
                                             <th className='table-headers-text pt-4 ps-5'>Action</th>
                                         </>
                                     )}
@@ -200,7 +235,7 @@ const Projects = () => {
 
                                     return (
                                         <tr key={project.id_projects} style={{ height: '6rem' }}>
-                                            <td className='ps-5'>{project.project_name}</td>
+                                            <td className='ps-5' style={{ width: '35vw' }}>{project.project_name}</td>
                                             {surveySelector ? (
                                                 <td>
                                                     {surveySelector === project.id_projects ? (
@@ -255,8 +290,9 @@ const Projects = () => {
                                                 </td>
                                             ) : (
                                                 <>
-                                                    <td className='ps-5'>{project.project_acronym}</td>
-                                                    <td className='ps-5'>
+                                                    <td>{project.project_acronym}</td>
+                                                    <td><em>{project.project_unique_code}</em></td>
+                                                    <td>
                                                         {project.project_phase}
                                                         {((!lastSubmission && project.project_phase < 3) || (lastSubmission && lastSubmission.submission_state === 2 && project.project_phase < 3)) && (
                                                             <a
@@ -268,8 +304,8 @@ const Projects = () => {
                                                             </a>
                                                         )}
                                                     </td>
-                                                    <td className='ps-5'>{submissionsNumber}</td>
-                                                    <td className='ps-5'>
+                                                    <td>{submissionsNumber}</td>
+                                                    <td>
                                                         {lastCompletedSubmission ? (
                                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center' }} className="d-grid gap-0 row-gap-3">
                                                                 <div className="score-bar-container">
@@ -313,7 +349,7 @@ const Projects = () => {
                 </div>
             </div>
             {showRequestAccess &&
-                <RequestAccessProject showRequestAccess={showRequestAccess} setShowRequestAccess={setShowRequestAccess} existingProjectCode={existingProjectCode} setExistingProjectCode={setExistingProjectCode} />
+                <RequestAccessProject showRequestAccess={showRequestAccess} setShowRequestAccess={setShowRequestAccess} existingProjectCode={existingProjectCode} setExistingProjectCode={setExistingProjectCode} newUserRole={newUserRole} setNewUserRole={setNewUserRole} newUserFunction={newUserFunction} setNewUserFunction={setNewUserFunction} handleRequestAccess={handleRequestAccess} />
             }
         </>
     );

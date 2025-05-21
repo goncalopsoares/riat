@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, AdminAllProjectsView, UserOwnProjectsView, SubmissionViewSet, AnswerViewSet, ReportViewSet, PasswordResetRequestView, PasswordResetView, GetSingleScaleView, UpdateScaleView
+from api.views import AddUserToProjectView, RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, AdminAllProjectsView, UserOwnProjectsView, SubmissionViewSet, AnswerViewSet, ReportViewSet, PasswordResetRequestView, PasswordResetView, GetSingleScaleView, UpdateScaleView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView  
 
 urlpatterns = [
@@ -36,6 +36,7 @@ urlpatterns = [
     path('api/project/get/<int:users_id_users>/', UserOwnProjectsView.as_view(), name='user_own_projects'),
     path('api/project/create/', CreateProjectView.as_view(), name='create_project'),
     path('api/project/update/<int:id_projects>/', UpdateProjectPhaseView.as_view(), name="update-project-phase"),
+    path('api/project/adduser/<int:id_users>/<str:project_code>/', AddUserToProjectView.as_view(), name="add-user-to-existing-project"),
     #SUBMISSIONS
     path('api/submission/', SubmissionViewSet.as_view({'get': 'list', 'post': 'create'}), name='submission-list'),
     path('api/submission/<int:id_submissions>/', 

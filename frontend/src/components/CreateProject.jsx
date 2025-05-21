@@ -144,8 +144,8 @@ const CreateProject = () => {
                 className="radio-input"
                 type="radio"
                 name="role"
-                value="Other"
-                checked={userRole === "Other"}
+                value="Team Member"
+                checked={userRole === "Team Member"}
                 onChange={(e) => setUserRole(e.target.value)}
               />
               Team Member
