@@ -237,9 +237,10 @@ class AddUserToProjectView(APIView):
                     "id_users_has_projects": user_project.id_users_has_projects,
                     "users_id_users": user_project.users_id_users.id,
                     "projects_id_projects": user_project.projects_id_projects.id_projects,
-                    "user_has_projects_role": user_project.user_has_projects_role,
+                    "user_has_projects_role": user_project.users_has_projects_role,
                     "users_has_projects_function": user_project.users_has_projects_function
                 },
+                
                 status=status.HTTP_201_CREATED
             )
 

@@ -58,8 +58,12 @@ const Projects = () => {
 
         } finally {
 
+            setNewUserFunction('');
+            setNewUserRole('');
+            setExistingProjectCode('');
             setLoading(false);
             setAccessRequested(true);
+            
         }
 
     }
@@ -349,7 +353,7 @@ const Projects = () => {
                 </div>
             </div>
             {showRequestAccess &&
-                <RequestAccessProject showRequestAccess={showRequestAccess} setShowRequestAccess={setShowRequestAccess} existingProjectCode={existingProjectCode} setExistingProjectCode={setExistingProjectCode} newUserRole={newUserRole} setNewUserRole={setNewUserRole} newUserFunction={newUserFunction} setNewUserFunction={setNewUserFunction} handleRequestAccess={handleRequestAccess} />
+                <RequestAccessProject showRequestAccess={showRequestAccess} setShowRequestAccess={setShowRequestAccess} accessRequested={accessRequested} setAccessRequested={setAccessRequested} existingProjectCode={existingProjectCode} setExistingProjectCode={setExistingProjectCode} newUserRole={newUserRole} setNewUserRole={setNewUserRole} newUserFunction={newUserFunction} setNewUserFunction={setNewUserFunction} handleRequestAccess={handleRequestAccess} />
             }
         </>
     );
