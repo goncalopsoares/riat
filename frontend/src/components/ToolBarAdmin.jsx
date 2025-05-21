@@ -40,7 +40,16 @@ const ToolBarAdmin = () => {
                                 aria-current={currentPage === 'projects' ? 'page' : undefined}
                             >
                                 Users & Projects
-
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="/adminrequests"
+                                className={`nav-link ${currentPage === 'adminrequests' ? 'selected-toolbar' : 'link-body-emphasis'
+                                    }`}
+                                aria-current={currentPage === 'requests' ? 'page' : undefined}
+                            >
+                                Requests
                             </a>
                         </li>
                         <li>

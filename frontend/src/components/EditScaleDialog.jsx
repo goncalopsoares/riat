@@ -36,6 +36,7 @@ const EditScaleDialog = ({ dialogRef, setScaleId, scaleName, setScaleName, scale
                     placeholder='Insert the number of levels of the scale'
                     value={scaleLevels}
                     onChange={(e) => { setScaleLevels(e.target.value); setNumberInputs(e.target.value); }}
+                    maxLength={1}
                 >
                 </input>
                 <p className='my-3'><b>Scale Labels</b></p>

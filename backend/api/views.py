@@ -243,6 +243,87 @@ class AddUserToProjectView(APIView):
                 
                 status=status.HTTP_201_CREATED
             )
+            
+class PendingRequestsView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+    serializer_class = ProjectSerializer
+
+    def get(self, request, *args, **kwargs):
+        # Get all UsersHasProjects with state=1 (pending requests)
+        pending_links = UsersHasProjects.objects.filter(users_has_projects_state=1)
+        project_ids = pending_links.values_list('projects_id_projects', flat=True).distinct()
+        projects = Projects.objects.filter(id_projects__in=project_ids)
+
+        result = []
+        for project in projects:
+            # Find the pending request row for this project
+            request_link = pending_links.filter(projects_id_projects=project.id_projects).first()
+            request_user_info = None
+            request_id_users_has_projects = None
+            if request_link:
+                request_user = request_link.users_id_users
+                request_user_info = {
+                    "id": request_user.id,
+                    "name": getattr(request_user, "user_name", ""),
+                    "email": getattr(request_user, "user_email", ""),
+                    "role": request_link.users_has_projects_role,
+                    "function": request_link.users_has_projects_function,
+                }
+                request_id_users_has_projects = request_link.id_users_has_projects
+
+            # Find the first entry for this project (the owner)
+            owner_link = UsersHasProjects.objects.filter(
+                projects_id_projects=project.id_projects
+            ).order_by('id_users_has_projects').first()
+            owner_info = None
+            if owner_link:
+                owner = owner_link.users_id_users
+                owner_info = {
+                    "id": owner.id,
+                    "name": getattr(owner, "user_name", ""),
+                    "email": getattr(owner, "user_email", ""),
+                    "role": owner_link.users_has_projects_role,
+                    "function": owner_link.users_has_projects_function,
+                }
+
+            result.append({
+                "id_projects": project.id_projects,
+                "project_name": project.project_name,
+                "request_user": request_user_info,
+                "id_users_has_projects": request_id_users_has_projects,
+                "owner": owner_info
+            })
+            
+        return Response(result, status=status.HTTP_200_OK)
+
+class AcceptOrRefusePendingRequestView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def post(self, request, id_users_has_projects, *args, **kwargs):
+        if not id_users_has_projects:
+            return Response({"error": "id_users_has_projects is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user_project = UsersHasProjects.objects.get(id_users_has_projects=id_users_has_projects, users_has_projects_state=1)
+        except UsersHasProjects.DoesNotExist:
+            return Response({"error": "Pending request not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        user_project.users_has_projects_state = 0
+        user_project.save()
+        return Response({"message": "Request accepted."}, status=status.HTTP_200_OK)
+
+    def delete(self, request, id_users_has_projects, *args, **kwargs):
+        if not id_users_has_projects:
+            return Response({"error": "id_users_has_projects is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user_project = UsersHasProjects.objects.get(id_users_has_projects=id_users_has_projects, users_has_projects_state=1)
+        except UsersHasProjects.DoesNotExist:
+            return Response({"error": "Pending request not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        user_project.delete()
+        return Response({"message": "Request refused and deleted."}, status=status.HTTP_204_NO_CONTENT)
+
 
 # SURVEYS
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
+import './styles/global.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -21,7 +22,7 @@ import SurveyAdmin from './pages/SurveyAdmin';
 import Projects from './pages/Projects';
 import Assessment from './pages/Assessment';
 import Report from './pages/Report';
-import './styles/global.css';
+import RequestsAdmin from './pages/RequestsAdmin';
 import Footer from './components/Footer';
 import Reports from './pages/Reports';
 
@@ -102,6 +103,13 @@ function App() {
                 element={<ProtectedRoute>
                   <ProjectProvider>
                     <ProjectsAdminDetail />
+                  </ProjectProvider>
+                </ProtectedRoute>}
+              />
+               <Route path='/adminrequests'
+                element={<ProtectedRoute>
+                  <ProjectProvider>
+                    <RequestsAdmin />
                   </ProjectProvider>
                 </ProtectedRoute>}
               />

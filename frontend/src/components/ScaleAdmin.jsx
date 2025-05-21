@@ -20,6 +20,7 @@ const ScaleAdmin = ({ scaleName, setScaleName, scaleLevels, scaleLabels, setScal
                     placeholder='Insert the number of levels of the scale'
                     value={scaleLevels}
                     onChange={(e) => { setScaleLevels(e.target.value); setNumberInputs(e.target.value); }}
+                    maxLength={1}
                 >
                 </input>
             </div>
