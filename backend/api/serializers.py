@@ -111,6 +111,7 @@ class UserHasProjectsSerializer(serializers.ModelSerializer):
             'id_users_has_projects',
             'users_has_projects_role',
             'users_has_projects_function',
+            'users_has_projects_state',
         ]
         extra_kwargs = {
             'users_id_users': {'read_only': True},

@@ -27,7 +27,11 @@ const Projects = () => {
     const navigate = useNavigate();
 
     const user = useUser();
+
     const id_user = user.user.id;
+    const user_email = user.user.user_email;
+
+    console.log(user_email)
 
     const { setProjectId, setStep, setProjectPhase } = useProject();
 
@@ -63,7 +67,7 @@ const Projects = () => {
             setExistingProjectCode('');
             setLoading(false);
             setAccessRequested(true);
-            
+
         }
 
     }
@@ -75,7 +79,17 @@ const Projects = () => {
             setLoading(true);
             try {
                 const response = await api.get(`/api/project/get/${id_user}/`);
-                setAllProjects(response.data);
+
+                setAllProjects(
+                    response.data.filter(project => {
+                        // Find the metadata entry for the current user
+                        const userMeta = project.metadata.find(meta => meta.user_email === user_email);
+                        console.log(userMeta)
+                        // Only include if user's state is 0
+                        return userMeta && userMeta.users_has_projects_state === 0;
+                    })
+                );
+
                 console.log(response.data)
 
 
