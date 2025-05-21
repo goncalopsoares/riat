@@ -1,12 +1,13 @@
 from rest_framework import serializers
 from api.models import AnswersBase, AnswersBoolean, AnswersInteger, AnswersText, CustomUser, Dimensions, Projects, Scales, Statements, Surveys, Users, UsersHasProjects, Reports, ReportsOverallScore, OverallRecommendations, OverallScoreLevels, Submissions, ReportsScore
 from django.utils.timezone import now
-import re
 from django.db.models import Q
 from datetime import timedelta
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.utils.crypto import get_random_string
+import re
+import time
 
 # USERS_AUTH
 
@@ -89,6 +90,20 @@ class PasswordResetSerializer(serializers.Serializer):
 
 # PROJECTS
 
+#generate random project
+def base36_encode(number):
+    chars = '0123456789abcdefghijklmnopqrstuvwxyz'
+    result = ''
+    while number:
+        number, i = divmod(number, 36)
+        result = chars[i] + result
+    return result or '0'
+
+def generate_unique_code(length=6):
+    random_part = get_random_string(length)
+    time_part = base36_encode(int(time.time()))[-4:]  # use current timestamp
+    return f"{random_part}{time_part}"
+
 class UserHasProjectsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersHasProjects
@@ -121,6 +136,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             'project_trl',
             'project_mrl',
             'project_srl',
+            'project_unique_code',
             'metadata',
             'metadata_data',
         ]
@@ -171,6 +187,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         if not exists:
             defaults.update({
                 'project_creation_time': now(),
+                'project_unique_code': generate_unique_code(),
             })
 
         project, created = Projects.objects.update_or_create(

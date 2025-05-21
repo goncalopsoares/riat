@@ -32,7 +32,7 @@ const ProjectsAdminDetail = ({ selectedProject, handleBackClick }) => {
                     <p>TRL <b>{selectedProject.project_trl}</b></p>
                 </div>
                 <div>
-                    <table className='table table-responsive text-left align-middle shadow-sm border border-2' style={{ maxWidth: '100%', borderRadius: '0.5rem', borderCollapse: 'separate' }}>
+                    <table className='table table-responsive text-left align-middle shadow-sm border-2' style={{ maxWidth: '100%', borderRadius: '0.5rem', borderCollapse: 'separate' }}>
                         <thead className='align-top' style={{ fontWeight: 'regular' }}>
                             <tr style={{ height: '6rem' }}>
                                 <th className='table-headers-text pt-4 ps-4'>Submissions</th>

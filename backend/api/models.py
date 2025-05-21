@@ -17,6 +17,7 @@ class Projects(models.Model):
     project_mrl = models.IntegerField()
     project_srl = models.IntegerField()
     project_creation_time = models.DateTimeField()
+    project_unique_code = models.CharField(max_length=10, unique=True)
 
     class Meta:
         managed = False
