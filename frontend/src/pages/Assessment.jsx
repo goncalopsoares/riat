@@ -109,18 +109,20 @@ const Assessment = () => {
         setLoading(true)
         e.preventDefault();
 
-        if (projectName === '') {
-            setError("Project Name cannot be empty");
+        //project name
+        if (!projectName.trim()) {
+            setError("Project name cannot be empty");
             setLoading(false);
             return;
         }
 
-        if (projectAcronym === '') {
-            setError("Project acronym cannot be empty");
+        if (projectName.length > 300) {
+            setError("Project name cannot exceed 300 characters");
             setLoading(false);
             return;
         }
 
+        //organization
         const invalidOrgs = [
             'test', 'n/a', 'org', 'no name', 'none', 'null', 'undefined', 'empresa', 'company', 'organization', 'organização', 'instituição', 'institution', 'sem nome', 'sem organização', 'no organization', 'no company'
         ];
@@ -133,12 +135,26 @@ const Assessment = () => {
             return;
         }
 
+        if (projectOrganization.length > 100) {
+            setError("Organization name cannot exceed 100 characters");
+            setLoading(false);
+            return;
+        }
+
+        // owner name
         if (projectOwnerName.trim().length < 2) {
             setError("Please introduce a valid name for the person responsible for the project");
             setLoading(false);
             return;
         }
 
+        if (projectOwnerName.length > 100) {
+            setError("The name of the person responsible for the project cannot exceed 100 characters");
+            setLoading(false);
+            return;
+        }
+
+        //trl, mrl, srl
         if (projectTrl === '') {
             setError("Project TRL value must be selected");
             setLoading(false);
@@ -157,20 +173,29 @@ const Assessment = () => {
             return;
         }
 
+        //role
         if (userRole === '') {
             setError("Role in the project cannot be empty");
             setLoading(false);
             return;
         }
 
+        //value chain
         if (projectValueChain === '') {
             setError("Value Chain must be selected");
             setLoading(false);
             return;
         }
 
+        //function in the organization
         if (userFunction.trim().length < 2) {
             setError("Please introduce a valid answer for the Function in the organization field");
+            setLoading(false);
+            return;
+        }
+
+        if (userFunction.trim().length > 45) {
+            setError("Function in the organization field cannot exceed 100 characters");
             setLoading(false);
             return;
         }
@@ -504,7 +529,7 @@ const Assessment = () => {
                 setSelectedValues(filteredAnswers);
             }
 
-            
+
         }
     }, [answersLoaded, currentDimension, dimensionStage, loading]);
 

@@ -74,19 +74,20 @@ const CreateProject = () => {
         </h4>
 
         <div className="mb-3 w-100">
-          <label className="form-label">Extended project name</label>
+          <label className="form-label">Extended project name <em>(300 characters max)</em></label>
           <textarea
             className="form-input"
             placeholder="Insert the name of the project"
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
             rows={1}
+            maxLength={300}
             style={{ wordBreak: "break-word", whiteSpace: "pre-wrap", resize: "vertical" }}
           />
         </div>
 
         <div className="mb-3 w-100">
-          <label className="form-label">Project acroynm</label>
+          <label className="form-label">Project acroynm <em>(25 characters max)</em></label>
           <input
             className="form-input"
             type="text"
@@ -94,11 +95,12 @@ const CreateProject = () => {
             value={projectAcronym}
             onChange={(e) => setProjectAcronym(e.target.value)}
             minLength={2}
+            maxLength={25}
           />
         </div>
 
         <div className="mb-3 w-100">
-          <label className="form-label">Organization</label>
+          <label className="form-label">Organization <em>(100 characters max)</em></label>
           <input
             className="form-input"
             type="text"
@@ -106,11 +108,12 @@ const CreateProject = () => {
             value={projectOrrganization}
             onChange={(e) => setProjectOrganization(e.target.value)}
             minLength={2}
+            maxLength={100}
           />
         </div>
 
         <div className="mb-3 w-100">
-          <label className="form-label">Person responsible for the project</label>
+          <label className="form-label">Person responsible for the project <em>(100 characters max)</em></label>
           <input
             className="form-input"
             type="text"
@@ -118,6 +121,7 @@ const CreateProject = () => {
             value={projectOwnerName}
             onChange={(e) => setProjectOwnerName(e.target.value)}
             minLength={2}
+            maxLength={100}
           />
         </div>
 
@@ -150,13 +154,14 @@ const CreateProject = () => {
         </div>
 
         <div className="mb-3 w-100">
-          <label className="form-label">Function in the organization</label>
+          <label className="form-label">Function in the organization <em>(45 characters max)</em></label>
           <input
             className="form-input"
             type="text"
             placeholder="Function (in the organization) of the responsible for the Assessment"
             value={userFunction}
             onChange={(e) => setUserFunction(e.target.value)}
+            maxLength={45}
           />
         </div>
 
