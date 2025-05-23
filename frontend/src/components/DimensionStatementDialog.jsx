@@ -15,7 +15,7 @@ const DimensionStatementDialog = ({ dialogRef, setAddStatement, id, handleStatem
                 className="dialog-form w-100"
                 onSubmit={(e) => {
                     e.preventDefault();
-                    handleStatementSubmit(e, id); // id é o id da dimensão ou outro identificador relevante para criação
+                    handleStatementSubmit(e, id);
                     setAddStatement(false);
                 }}
             >

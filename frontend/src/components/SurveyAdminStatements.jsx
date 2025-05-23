@@ -4,16 +4,16 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
 
     return (
         <div className="mt-4">
-            <ul>
+            <ul className="p-0 mx-3" style={{listStyleType: 'none'}}>
                 {statements.map(statement => (
-                    <li key={statement.id_statements} className="my-5">
+                    <li key={statement.id_statements} className="my-5 bg-body-secondary p-4 rounded-1">
                         {editingStatementName === statement.id_statements ? (
                             <form
                                 onSubmit={(e) => {
                                     handleStatementSubmit(
                                         e,
                                         statement.id_statements,
-                                        {
+                                        {   
                                             statement_description: statement.statement_description,
                                             scales_id_scales: statement.scale.id_scales,
                                         },
@@ -31,14 +31,21 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                                 <button type="submit" className="btn btn-primary">Save</button>
                             </form>
                         ) : (
-                            <h3
-                                onDoubleClick={() => {
-                                    setEditingStatementName(statement.id_statements);
-                                    setUpdateStatementName(true);
-                                }}
-                            >
-                                {statement.statement_name}
-                            </h3>
+                            <div className="tooltip-wrapper w-100">
+                                <h3
+                                    title="Double click to edit"
+                                    onDoubleClick={() => {
+                                        setEditingStatementName(statement.id_statements);
+                                        setUpdateStatementName(true);
+                                    }}
+                                    style={{
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    {statement.statement_name}
+                                </h3>
+                                <span className="tooltip-text" style={{ bottom: '100%' }}>Double click to edit</span>
+                            </div>
                         )}
 
                         {editingStatementDescription === statement.id_statements ? (
@@ -61,26 +68,41 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                                 <button type="submit">Save</button>
                             </form>
                         ) : (
-                            <p
-                                onDoubleClick={() => {
-                                    setEditingStatementDescription(statement.id_statements);
-                                    setUpdateStatementDescription(true);
-                                }}
-                            >
-                                {statement.statement_description}
-                            </p>
+                            <div className="tooltip-wrapper w-100">
+                                <p
+                                    onDoubleClick={() => {
+                                        setEditingStatementDescription(statement.id_statements);
+                                        setUpdateStatementDescription(true);
+                                    }}
+                                    className="fs-5"
+                                    style={{
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    {statement.statement_description}
+                                </p>
+                                <span className="tooltip-text" style={{ bottom: '100%' }}>Double click to edit</span>
+                            </div>
                         )}
-
+                        <div className="d-flex flex-direction-row">
+                            <p className="mb-1"><b>Currently used scale for this statement</b></p>
+                            <p className="mb-0 ms-3">{statement.scale.scale_name}</p>
+                        </div>
                         <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', marginBottom: '10px' }}>
-                            {statement.scale.scale_labels.split(',').map((label, index) => (
-                                <p key={index}>{label.trim()}</p>
+                            {statement.scale.scale_labels.split(',').map((label, index, arr) => (
+                                <p key={index}>
+                                    {label.trim()}
+                                    {index !== arr.length - 1 && ' | '}
+                                </p>
                             ))}
                         </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', marginBottom: '10px' }}>
-                            <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', marginBottom: '10px' }}>
+                        <div className="d-flex flex-direction-row align-items-center mb-1" style={{ gap: '5px' }}>
+                            <p className="mb-0 me-3"><b>Select another scale</b></p>
+                            <div>
                                 <select
                                     name="scales_id_scales"
+                                    className="form-control"
                                     defaultValue={statement.scale.id_scales}
                                     onChange={(e) => {
                                         const newScale = Number(e.target.value);
@@ -103,7 +125,6 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                                         </option>
                                     ))}
                                 </select>
-                                <a href="/scaletools">Edit scale</a>
                             </div>
 
                         </div>

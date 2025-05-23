@@ -1,5 +1,7 @@
 import SurveyAdminStatements from "./SurveyAdminStatements";
 import DimensionStatementDialog from './DimensionStatementDialog';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editingDimensionShortDescription, setEditingDimensionShortDescription, setUpdateDimensionShortDescription, editingDimensionDescription, setEditingDimensionDescription, handleDimensionSubmit, setUpdateDimensionDescription, editingDimensionName, setEditingDimensionName, allScales, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName, handleStatementSubmit, addStatement, setAddStatement, dialogRef, currentDimensionForStatement, setCurrentDimensionForStatement }) => {
 
@@ -39,7 +41,7 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                 </form>
                             ) : (
                                 <h2
-                                    className="h2 py-4"
+                                    className="h2 my-3"
                                     onClick={() =>
                                         setIsShowing(
                                             isShowing === dimension.id_dimensions ? false : dimension.id_dimensions
@@ -51,7 +53,7 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                         color: isShowing === dimension.id_dimensions ? '#008bbe' : undefined
                                     }}
                                 >
-                                    {dimension.dimension_name}
+                                    <div className="tooltip-wrapper">{dimension.dimension_name}<span className="tooltip-text" style={{ bottom: '100%' }}>Double click to edit</span></div> {isShowing === dimension.id_dimensions ? <ArrowDropUpIcon style={{ fontSize: '3rem' }} /> : <ArrowDropDownIcon style={{ fontSize: '3rem' }} />}
                                 </h2>
                             )}
 
@@ -85,16 +87,19 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                             </button>
                                         </form>
                                     ) : (
-                                        <p
-                                            className="mb-2 fs-4"
-                                            onDoubleClick={() => {
-                                                setEditingDimensionShortDescription(true);
-                                                setUpdateDimensionShortDescription(true);
-                                            }}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            {dimension.dimension_short_description}
-                                        </p>
+                                        <div className="tooltip-wrapper w-100">
+                                            <p
+                                                className="mb-2 fs-4"
+                                                onDoubleClick={() => {
+                                                    setEditingDimensionShortDescription(true);
+                                                    setUpdateDimensionShortDescription(true);
+                                                }}
+                                                style={{ cursor: 'pointer' }}
+                                            >
+                                                {dimension.dimension_short_description}
+                                            </p>
+                                            <span className="tooltip-text" style={{ bottom: '100%' }}>Double click to edit</span>
+                                        </div>
                                     )}
 
                                     {editingDimensionDescription ? (
@@ -125,15 +130,19 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                             </button>
                                         </form>
                                     ) : (
-                                        <p
-                                            onDoubleClick={() => {
-                                                setEditingDimensionDescription(true);
-                                                setUpdateDimensionDescription(true);
-                                            }}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            {dimension.dimension_description}
-                                        </p>
+                                        <div className="tooltip-wrapper w-100">
+                                            <p
+                                                onDoubleClick={() => {
+                                                    setEditingDimensionDescription(true);
+                                                    setUpdateDimensionDescription(true);
+                                                }}
+                                                style={{ cursor: 'pointer' }}
+                                                className="mb-0"
+                                            >
+                                                {dimension.dimension_description}
+                                            </p>
+                                            <span className="tooltip-text" style={{ bottom: '100%' }}>Double click to edit</span>
+                                        </div>
                                     )}
 
 
@@ -152,9 +161,9 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                             setUpdateStatementName={setUpdateStatementName}
                                         />
                                     )}
-                                    <div className="d-flex gap-2 my-4">
+                                    <div className="d-flex gap-2 my-4 ms-3">
                                         <button
-                                            className="btn btn-primary btn-sm"
+                                            className="btn btn-primary btn-sm fs-5"
                                             onClick={() => {
                                                 setAddStatement(true);
                                                 setCurrentDimensionForStatement(dimension.id_dimensions);
