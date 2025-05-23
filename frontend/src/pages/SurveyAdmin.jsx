@@ -309,20 +309,22 @@ const SurveyAdmin = () => {
                     <SurveyAdminInfo surveyName={surveyName} surveyDescription={surveyDescription} setSurveyDescription={setSurveyDescription} surveyCreatedBy={surveyCreatedBy} surveyCreationTime={surveyCreationTime} surveyModifiedBy={surveyModifiedBy} surveyLastModifiedByDate={surveyLastModifiedByDate} editingDescription={editingDescription} setEditingDescription={setEditingDescription} handleSurveySubmit={handleSurveySubmit} />
                 )}
             </div>
-            <div>
+            <div className='ms-3'>
                 {error && <p className="error-message">{error}</p>}
                 {success && <p className="success-message">{success}</p>}
             </div>
-            <h2 className='mt-5'>Dimensions and Statements</h2>
-            <p className="my-3">
-                <HelpOutlineIcon /> Click on a <b>dimension name</b> to show the list of its statements.
-            </p>
-            <p className="my-3">
-                <HelpOutlineIcon /> Double click on the <b>dimension short description</b>, <b>dimension description</b>, <b>statement name</b> or <b>statement description</b> to edit them.
-            </p>
-            <p className="mb-3">
-                <HelpOutlineIcon /> Select another scale from the <b>scales list</b> to change the scale associated to that statement.
-            </p>
+            <div className='ms-3'>
+                <h2 className='mt-3'>Dimensions and Statements</h2>
+                <p className="my-3">
+                    <HelpOutlineIcon /> Click on a <b>dimension name</b> to show the list of its statements.
+                </p>
+                <p className="my-3">
+                    <HelpOutlineIcon /> Double click on the <b>dimension short description</b>, <b>dimension description</b>, <b>statement name</b> or <b>statement description</b> to edit them.
+                </p>
+                <p className="mb-3">
+                    <HelpOutlineIcon /> Select another scale from the <b>scales list</b> to change the scale associated to that statement.
+                </p>
+            </div>
             <div>
                 {loading ? (
                     <p>Loading...</p>
@@ -331,7 +333,7 @@ const SurveyAdmin = () => {
                         setUpdateStatementDescription={setUpdateStatementDescription} setUpdateStatementName={setUpdateStatementName} handleStatementSubmit={handleStatementSubmit} addStatement={addStatement} setAddStatement={setAddStatement} currentDimensionForStatement={currentDimensionForStatement} setCurrentDimensionForStatement={setCurrentDimensionForStatement} dialogRef={dialogRef} />
                 )}
             </div>
-            <div className='mt-3 mb-5'style={{marginLeft: '2.5rem'}}>
+            <div className='mt-3 mb-5' style={{ marginLeft: '2.5rem' }}>
                 <button className="btn btn-primary btn-sm fs-5" onClick={() => { setEditing(true); }}>Add New Dimension</button>
             </div>
             {editing ? (

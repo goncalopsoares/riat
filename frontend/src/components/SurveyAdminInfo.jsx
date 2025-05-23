@@ -1,7 +1,7 @@
 const SurveyAdminInfo = ({ surveyName, surveyDescription, surveyCreatedBy, surveyCreationTime, surveyModifiedBy, surveyLastModifiedByDate, editingDescription, setEditingDescription, handleSurveySubmit }) => {
 
     return (
-        <div>
+        <div className="ms-3">
             <h1>{surveyName}</h1>
             {editingDescription ? (
                 <form onSubmit={(e) => { setEditingDescription(false); handleSurveySubmit(e); }}>
