@@ -233,9 +233,6 @@ const SurveyAdmin = () => {
     // DELETE DIMENSION
 
     const handleDeleteDimension = async (dimensionId) => {
-        if (!window.confirm("Are you sure you want to delete this dimension? This action cannot be undone.")) {
-            return;
-        }
         setLoading(true);
         try {
             await api.delete(`/api/dimension/delete/${dimensionId}/`);
@@ -250,7 +247,7 @@ const SurveyAdmin = () => {
             setLoading(false);
         }
     };
-    
+
 
     //CREATE/UPDATE STATEMENT NAME, DESCRIPTION AND SCALE
 
@@ -351,7 +348,7 @@ const SurveyAdmin = () => {
                     <p>Loading...</p>
                 ) : (
                     <SurveyAdminDimensions allDimensions={allDimensions} editing={editing} setEditing={setEditing} isShowing={isShowing} setIsShowing={setIsShowing} setUpdateDimensionShortDescription={setUpdateDimensionShortDescription} editingDimensionShortDescription={editingDimensionShortDescription} setEditingDimensionShortDescription={setEditingDimensionShortDescription} setUpdateDimensionDescription={setUpdateDimensionDescription} editingDimensionDescription={editingDimensionDescription} setEditingDimensionDescription={setEditingDimensionDescription} handleDimensionSubmit={handleDimensionSubmit} editingDimensionName={editingDimensionName} setEditingDimensionName={setEditingDimensionName} allScales={allScales} editingStatementDescription={editingStatementDescription} setEditingStatementDescription={setEditingStatementDescription} editingStatementName={editingStatementName} setEditingStatementName={setEditingStatementName}
-                        setUpdateStatementDescription={setUpdateStatementDescription} setUpdateStatementName={setUpdateStatementName} handleStatementSubmit={handleStatementSubmit} addStatement={addStatement} setAddStatement={setAddStatement} currentDimensionForStatement={currentDimensionForStatement} setCurrentDimensionForStatement={setCurrentDimensionForStatement} dialogRef={dialogRef} />
+                        setUpdateStatementDescription={setUpdateStatementDescription} setUpdateStatementName={setUpdateStatementName} handleStatementSubmit={handleStatementSubmit} addStatement={addStatement} setAddStatement={setAddStatement} currentDimensionForStatement={currentDimensionForStatement} setCurrentDimensionForStatement={setCurrentDimensionForStatement} dialogRef={dialogRef} handleDeleteDimension={handleDeleteDimension} />
                 )}
             </div>
             <div className='mt-3 mb-5' style={{ marginLeft: '2.5rem' }}>

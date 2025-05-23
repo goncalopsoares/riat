@@ -1,9 +1,14 @@
+import { useState } from "react";
 import SurveyAdminStatements from "./SurveyAdminStatements";
 import DimensionStatementDialog from './DimensionStatementDialog';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import DeleteDimensionDialog from '../components/DeleteDimensionDialog';
 
-const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editingDimensionShortDescription, setEditingDimensionShortDescription, setUpdateDimensionShortDescription, editingDimensionDescription, setEditingDimensionDescription, handleDimensionSubmit, setUpdateDimensionDescription, editingDimensionName, setEditingDimensionName, allScales, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName, handleStatementSubmit, addStatement, setAddStatement, dialogRef, currentDimensionForStatement, setCurrentDimensionForStatement }) => {
+
+const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editingDimensionShortDescription, setEditingDimensionShortDescription, setUpdateDimensionShortDescription, editingDimensionDescription, setEditingDimensionDescription, handleDimensionSubmit, setUpdateDimensionDescription, editingDimensionName, setEditingDimensionName, allScales, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName, handleStatementSubmit, addStatement, setAddStatement, dialogRef, currentDimensionForStatement, setCurrentDimensionForStatement, handleDeleteDimension }) => {
+
+    const [deletingDimension, setDeletingDimension] = useState(false);
 
     return (
         <>
@@ -56,7 +61,9 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                     >
                                         <div className="tooltip-wrapper">{dimension.dimension_name}<span className="tooltip-text" style={{ bottom: '100%' }}>Double click to edit</span></div> {isShowing === dimension.id_dimensions ? <ArrowDropUpIcon style={{ fontSize: '3rem' }} /> : <ArrowDropDownIcon style={{ fontSize: '3rem' }} />}
                                     </h2>
-                                    <button className="btn btn-sm btn-danger" style={{height:'2.5rem'}}>Delete</button>
+                                    {isShowing === dimension.id_dimensions && (
+                                        <button onClick={() => setDeletingDimension(true)} className="btn btn-sm btn-danger" style={{ height: '2.5rem' }}>Delete</button>)
+                                    }
                                 </div>
                             )}
 
@@ -147,9 +154,6 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                             <span className="tooltip-text" style={{ bottom: '100%' }}>Double click to edit</span>
                                         </div>
                                     )}
-
-
-
                                     {isShowing === dimension.id_dimensions && (
                                         <SurveyAdminStatements
                                             statements={dimension.statements}
@@ -175,6 +179,9 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                             Add New Statement
                                         </button>
                                     </div>
+                                    {deletingDimension ? (
+                                        <DeleteDimensionDialog setDeletingDimension={setDeletingDimension} id={dimension.id_dimensions} handleDeleteDimension={handleDeleteDimension} dialogRef={dialogRef} dimensionName={dimension.dimension_name} />) : null
+                                    }
                                 </div>
                             )}
                         </li>
