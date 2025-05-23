@@ -318,6 +318,24 @@ const SurveyAdmin = () => {
         }
     };
 
+    // DELETE STATEMENT
+
+    const handleDeleteStatement = async (statementId) => {
+        setLoading(true);
+        try {
+            await api.delete(`/api/statement/delete/${statementId}/`);
+            setSuccess("Statement deleted successfully");
+            setTimeout(() => setSuccess(''), 2000);
+            setError('');
+        } catch (error) {
+            alert(error);
+            console.error(error);
+            setError("An error occurred while deleting the dimension.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto', minHeight: 'calc(100vh - 20vh)' }}>
             <div>
@@ -348,10 +366,10 @@ const SurveyAdmin = () => {
                     <p>Loading...</p>
                 ) : (
                     <SurveyAdminDimensions allDimensions={allDimensions} editing={editing} setEditing={setEditing} isShowing={isShowing} setIsShowing={setIsShowing} setUpdateDimensionShortDescription={setUpdateDimensionShortDescription} editingDimensionShortDescription={editingDimensionShortDescription} setEditingDimensionShortDescription={setEditingDimensionShortDescription} setUpdateDimensionDescription={setUpdateDimensionDescription} editingDimensionDescription={editingDimensionDescription} setEditingDimensionDescription={setEditingDimensionDescription} handleDimensionSubmit={handleDimensionSubmit} editingDimensionName={editingDimensionName} setEditingDimensionName={setEditingDimensionName} allScales={allScales} editingStatementDescription={editingStatementDescription} setEditingStatementDescription={setEditingStatementDescription} editingStatementName={editingStatementName} setEditingStatementName={setEditingStatementName}
-                        setUpdateStatementDescription={setUpdateStatementDescription} setUpdateStatementName={setUpdateStatementName} handleStatementSubmit={handleStatementSubmit} addStatement={addStatement} setAddStatement={setAddStatement} currentDimensionForStatement={currentDimensionForStatement} setCurrentDimensionForStatement={setCurrentDimensionForStatement} dialogRef={dialogRef} handleDeleteDimension={handleDeleteDimension} />
+                        setUpdateStatementDescription={setUpdateStatementDescription} setUpdateStatementName={setUpdateStatementName} handleStatementSubmit={handleStatementSubmit} addStatement={addStatement} setAddStatement={setAddStatement} currentDimensionForStatement={currentDimensionForStatement} setCurrentDimensionForStatement={setCurrentDimensionForStatement} dialogRef={dialogRef} handleDeleteDimension={handleDeleteDimension} handleDeleteStatement={handleDeleteStatement}/>
                 )}
             </div>
-            <div className='mt-3 mb-5' style={{ marginLeft: '2.5rem' }}>
+            <div className='mt-3 mb-5' style={{ marginLeft: '1rem' }}>
                 <button className="btn btn-primary btn-sm fs-5" onClick={() => { setEditing(true); }}>Add New Dimension</button>
             </div>
             {editing ? (

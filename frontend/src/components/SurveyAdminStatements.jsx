@@ -1,10 +1,13 @@
-const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName }) => {
+import { useState } from "react";
+import DeleteStatementDialog from "./DeleteStatementDialog";
 
-    console.log(statements)
+const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName, handleDeleteStatement, dialogRef }) => {
+
+    const [deletingStatement, setDeletingStatement] = useState(false);
 
     return (
         <div className="mt-4">
-            <ul className="p-0 mx-3" style={{listStyleType: 'none'}}>
+            <ul className="p-0 mx-3" style={{ listStyleType: 'none' }}>
                 {statements.map(statement => (
                     <li key={statement.id_statements} className="my-5 bg-body-secondary p-4 rounded-1">
                         {editingStatementName === statement.id_statements ? (
@@ -13,7 +16,7 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                                     handleStatementSubmit(
                                         e,
                                         statement.id_statements,
-                                        {   
+                                        {
                                             statement_description: statement.statement_description,
                                             scales_id_scales: statement.scale.id_scales,
                                         },
@@ -126,8 +129,11 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                                     ))}
                                 </select>
                             </div>
-
                         </div>
+                        <button onClick={() => setDeletingStatement(true)} className="btn btn-sm btn-danger mt-3" style={{ height: '2.5rem' }}>Delete</button>
+                        {deletingStatement ? (
+                            <DeleteStatementDialog setDeletingStatement={setDeletingStatement} id={statement.id_statements} handleDeleteStatement={handleDeleteStatement} dialogRef={dialogRef} />) : null
+                        }
                     </li>
                 ))}
             </ul>

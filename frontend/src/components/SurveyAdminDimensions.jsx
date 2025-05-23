@@ -6,7 +6,7 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import DeleteDimensionDialog from '../components/DeleteDimensionDialog';
 
 
-const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editingDimensionShortDescription, setEditingDimensionShortDescription, setUpdateDimensionShortDescription, editingDimensionDescription, setEditingDimensionDescription, handleDimensionSubmit, setUpdateDimensionDescription, editingDimensionName, setEditingDimensionName, allScales, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName, handleStatementSubmit, addStatement, setAddStatement, dialogRef, currentDimensionForStatement, setCurrentDimensionForStatement, handleDeleteDimension }) => {
+const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editingDimensionShortDescription, setEditingDimensionShortDescription, setUpdateDimensionShortDescription, editingDimensionDescription, setEditingDimensionDescription, handleDimensionSubmit, setUpdateDimensionDescription, editingDimensionName, setEditingDimensionName, allScales, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName, handleStatementSubmit, addStatement, setAddStatement, dialogRef, currentDimensionForStatement, setCurrentDimensionForStatement, handleDeleteDimension, handleDeleteStatement }) => {
 
     const [deletingDimension, setDeletingDimension] = useState(false);
 
@@ -166,6 +166,8 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                             setUpdateStatementDescription={setUpdateStatementDescription}
                                             handleStatementSubmit={handleStatementSubmit}
                                             setUpdateStatementName={setUpdateStatementName}
+                                            handleDeleteStatement={handleDeleteStatement}
+                                            dialogRef={dialogRef}
                                         />
                                     )}
                                     <div className="d-flex gap-2 my-4 ms-3">

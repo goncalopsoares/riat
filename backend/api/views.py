@@ -483,6 +483,18 @@ class UpdateStatementView(UpdateAPIView):
         return Response({"message": "Dimension updated successfully"}, status=status.HTTP_200_OK)
 
 
+class DeleteStatementView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+    serializer_class = StatementSerializer
+    queryset = Statements.objects.all()
+    lookup_field = 'id_statements'
+
+    def delete(self, request, *args, **kwargs):
+        statement = self.get_object()
+        statement.delete()
+        return Response({"message": "Statement deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    
+    
 # SCALES
 
 class GetScaleView(generics.ListAPIView):

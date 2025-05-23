@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import AddUserToProjectView, RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, AdminAllProjectsView, UserOwnProjectsView, SubmissionViewSet, AnswerViewSet, ReportViewSet, PasswordResetRequestView, PasswordResetView, GetSingleScaleView, UpdateScaleView, PendingRequestsView, AcceptOrRefusePendingRequestView, DeleteDimensionView
+from api.views import AddUserToProjectView, RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, AdminAllProjectsView, UserOwnProjectsView, SubmissionViewSet, AnswerViewSet, ReportViewSet, PasswordResetRequestView, PasswordResetView, GetSingleScaleView, UpdateScaleView, PendingRequestsView, AcceptOrRefusePendingRequestView, DeleteDimensionView, DeleteStatementView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView  
 
 urlpatterns = [
@@ -27,6 +27,7 @@ urlpatterns = [
     path('api/statement/get/<int:dimensions_id_dimensions>/', GetStatementView.as_view(), name='view_statement'),
     path('api/statement/create/<int:dimensions_id_dimensions>/', CreateStatementView.as_view(), name='create_statement'),
     path('api/statement/update/<int:id_statements>/', UpdateStatementView.as_view(), name='update_statement'),
+    path('api/statement/delete/<int:id_statements>/', DeleteStatementView.as_view(), name='delete_statement'),
     #SCALES
     path('api/scale/get/', GetScaleView.as_view(), name='view_scale'),
     path('api/scale/get/<int:id_scales>/', GetSingleScaleView.as_view(), name='view_scale'),
