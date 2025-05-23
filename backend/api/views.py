@@ -403,6 +403,17 @@ class CreateDimensionView(generics.CreateAPIView):
         dimension = serializer.save()  # No need to pass surveys_id_surveys manually
 
         return Response(DimensionSerializer(dimension).data, status=status.HTTP_201_CREATED)
+    
+class DeleteDimensionView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+    serializer_class = DimensionSerializer
+    queryset = Dimensions.objects.all()
+    lookup_field = 'id_dimensions'
+
+    def delete(self, request, *args, **kwargs):
+        dimension = self.get_object()
+        dimension.delete()
+        return Response({"message": "Dimension deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 class UpdateDimensionView(UpdateAPIView):
     

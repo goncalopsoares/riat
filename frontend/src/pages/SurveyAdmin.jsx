@@ -160,7 +160,7 @@ const SurveyAdmin = () => {
             });
 
             setSuccess("Assessment updated successfully");
-            setTimeout(() => setSuccess(''), 4000);
+            setTimeout(() => setSuccess(''), 2000);
             setError('');
         } catch (error) {
             alert(error);
@@ -230,6 +230,27 @@ const SurveyAdmin = () => {
         }
     };
 
+    // DELETE DIMENSION
+
+    const handleDeleteDimension = async (dimensionId) => {
+        if (!window.confirm("Are you sure you want to delete this dimension? This action cannot be undone.")) {
+            return;
+        }
+        setLoading(true);
+        try {
+            await api.delete(`/api/dimension/delete/${dimensionId}/`);
+            setSuccess("Dimension deleted successfully");
+            setTimeout(() => setSuccess(''), 2000);
+            setError('');
+        } catch (error) {
+            alert(error);
+            console.error(error);
+            setError("An error occurred while deleting the dimension.");
+        } finally {
+            setLoading(false);
+        }
+    };
+    
 
     //CREATE/UPDATE STATEMENT NAME, DESCRIPTION AND SCALE
 

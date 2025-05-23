@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import AddUserToProjectView, RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, AdminAllProjectsView, UserOwnProjectsView, SubmissionViewSet, AnswerViewSet, ReportViewSet, PasswordResetRequestView, PasswordResetView, GetSingleScaleView, UpdateScaleView, PendingRequestsView, AcceptOrRefusePendingRequestView
+from api.views import AddUserToProjectView, RegisterView, LoginView, GetSurveyView, GetSurveyDetailView, CreateSurveyView, UpdateSurveyView, GetScaleView, CreateScaleView, GetStatementView, CreateStatementView, CreateProjectView, UpdateProjectPhaseView, GetDimensionView, CreateDimensionView, UpdateDimensionView, UpdateStatementView, AdminAllProjectsView, UserOwnProjectsView, SubmissionViewSet, AnswerViewSet, ReportViewSet, PasswordResetRequestView, PasswordResetView, GetSingleScaleView, UpdateScaleView, PendingRequestsView, AcceptOrRefusePendingRequestView, DeleteDimensionView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView  
 
 urlpatterns = [
@@ -22,6 +22,7 @@ urlpatterns = [
     path('api/dimension/get/<int:surveys_id_surveys>/', GetDimensionView.as_view(), name='view_dimension'),
     path('api/dimension/create/<int:surveys_id_surveys>/', CreateDimensionView.as_view(), name='create_dimension'),
     path('api/dimension/update/<int:id_dimensions>/', UpdateDimensionView.as_view(), name='update_dimension'),
+    path('api/dimension/delete/<int:id_dimensions>/', DeleteDimensionView.as_view(), name='delete_dimension'),
     #STATEMENTS
     path('api/statement/get/<int:dimensions_id_dimensions>/', GetStatementView.as_view(), name='view_statement'),
     path('api/statement/create/<int:dimensions_id_dimensions>/', CreateStatementView.as_view(), name='create_statement'),

@@ -10,6 +10,7 @@ const DimensionStatementDialog = ({ dialogRef, setAddStatement, id, handleStatem
 
     return (
         <dialog className="dialog modal modal-content w-50" style={{ height: '25rem' }} ref={dialogRef}>
+            <h2 className='mb-4'>Add New Statement</h2>
             <form
                 method="dialog"
                 className="dialog-form w-100"

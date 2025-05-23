@@ -40,21 +40,24 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                     </button>
                                 </form>
                             ) : (
-                                <h2
-                                    className="h2 my-3"
-                                    onClick={() =>
-                                        setIsShowing(
-                                            isShowing === dimension.id_dimensions ? false : dimension.id_dimensions
-                                        )
-                                    }
-                                    onDoubleClick={() => setEditingDimensionName(dimension.id_dimensions)}
-                                    style={{
-                                        cursor: 'pointer',
-                                        color: isShowing === dimension.id_dimensions ? '#008bbe' : undefined
-                                    }}
-                                >
-                                    <div className="tooltip-wrapper">{dimension.dimension_name}<span className="tooltip-text" style={{ bottom: '100%' }}>Double click to edit</span></div> {isShowing === dimension.id_dimensions ? <ArrowDropUpIcon style={{ fontSize: '3rem' }} /> : <ArrowDropDownIcon style={{ fontSize: '3rem' }} />}
-                                </h2>
+                                <div className="d-flex flex-direction-row justify-content-between align-items-center">
+                                    <h2
+                                        className="h2 my-3"
+                                        onClick={() =>
+                                            setIsShowing(
+                                                isShowing === dimension.id_dimensions ? false : dimension.id_dimensions
+                                            )
+                                        }
+                                        onDoubleClick={() => setEditingDimensionName(dimension.id_dimensions)}
+                                        style={{
+                                            cursor: 'pointer',
+                                            color: isShowing === dimension.id_dimensions ? '#008bbe' : undefined
+                                        }}
+                                    >
+                                        <div className="tooltip-wrapper">{dimension.dimension_name}<span className="tooltip-text" style={{ bottom: '100%' }}>Double click to edit</span></div> {isShowing === dimension.id_dimensions ? <ArrowDropUpIcon style={{ fontSize: '3rem' }} /> : <ArrowDropDownIcon style={{ fontSize: '3rem' }} />}
+                                    </h2>
+                                    <button className="btn btn-sm btn-danger" style={{height:'2.5rem'}}>Delete</button>
+                                </div>
                             )}
 
                             {isShowing === dimension.id_dimensions && (
