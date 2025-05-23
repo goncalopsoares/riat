@@ -39,14 +39,17 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                 </form>
                             ) : (
                                 <h2
-                                    className="h2 my-4"
+                                    className="h2 py-4"
                                     onClick={() =>
                                         setIsShowing(
                                             isShowing === dimension.id_dimensions ? false : dimension.id_dimensions
                                         )
                                     }
                                     onDoubleClick={() => setEditingDimensionName(dimension.id_dimensions)}
-                                    style={{ cursor: 'pointer' }}
+                                    style={{
+                                        cursor: 'pointer',
+                                        color: isShowing === dimension.id_dimensions ? '#008bbe' : undefined
+                                    }}
                                 >
                                     {dimension.dimension_name}
                                 </h2>
@@ -117,7 +120,7 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                                 className="form-control mb-2"
                                                 rows={4}
                                             />
-                                            <button type="submit" className="btn btn-sm btn-success">
+                                            <button type="submit" className="btn btn-sm btn-primary">
                                                 Save
                                             </button>
                                         </form>
@@ -173,6 +176,7 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                     setAddStatement={setAddStatement}
                     id={currentDimensionForStatement}
                     handleStatementSubmit={handleStatementSubmit}
+                    allScales={allScales}
                 />
             )}
         </>

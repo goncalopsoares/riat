@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const DimensionStatementDialog = ({ dialogRef, setAddStatement, id, handleStatementSubmit }) => {
+const DimensionStatementDialog = ({ dialogRef, setAddStatement, id, handleStatementSubmit, allScales }) => {
 
     useEffect(() => {
         if (dialogRef.current) {
@@ -10,20 +10,41 @@ const DimensionStatementDialog = ({ dialogRef, setAddStatement, id, handleStatem
 
     return (
         <dialog className="dialog" ref={dialogRef}>
-            <button onClick={() => { setAddStatement(false); }}>Close</button>
-            <form method="dialog" className="dialog-form" onSubmit={(e) => {
-                e.preventDefault();
-                handleStatementSubmit(e, id);
-                setAddStatement(false);
-            }}>
-                <h2>Add New Statement</h2>
-                <label htmlFor="statement_name">Statement Name</label>
-                <textarea id="statement_name" name="statement_name" required></textarea>
-
-                <label htmlFor="statement_description">Statement Description</label>
-                <textarea id="statement_description" name="statement_description" required></textarea>
-
-                <button type="submit">Submit</button>
+            <form
+                method="dialog"
+                className="dialog-form"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleStatementSubmit(e, id); // id é o id da dimensão ou outro identificador relevante para criação
+                    setAddStatement(false);
+                }}
+            >
+                <input
+                    name="statement_name"
+                    type="text"
+                    placeholder="Statement Name"
+                    required
+                    className="form-control mb-2"
+                />
+                <textarea
+                    name="statement_description"
+                    placeholder="Statement Description"
+                    className="form-control mb-2"
+                />
+                <select
+                    name="scales_id_scales"
+                    defaultValue=""
+                    required
+                    className="form-control mb-2"
+                >
+                    <option value="" disabled>Select scale</option>
+                    {allScales.map(scale => (
+                        <option key={scale.id_scales} value={scale.id_scales}>
+                            {scale.scale_name}
+                        </option>
+                    ))}
+                </select>
+                <button type="submit" className="btn btn-primary">Create Statement</button>
             </form>
         </dialog>
     );

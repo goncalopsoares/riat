@@ -209,15 +209,6 @@ const SurveyAdmin = () => {
 
             } else {
 
-                const payload = {
-                    dimension_name: dimensionName,
-                    dimension_short_description: dimensionShortDescription,
-                    dimension_description: dimensionDescription,
-                    dimension_order: dimensionOrder,
-                    parent_dimension: parentDimension ? Number(parentDimension) : null,
-                };
-
-
                 const response = await api.post(`/api/dimension/create/${id}/`, {
                     dimension_name: dimensionName,
                     dimension_short_description: dimensionShortDescription,
@@ -225,8 +216,6 @@ const SurveyAdmin = () => {
                     dimension_order: dimensionOrder,
                     parent_dimension_id: parentDimension ? Number(parentDimension) : null,
                 });
-
-
 
                 setSuccess("Dimension created successfully");
                 setTimeout(() => setSuccess(''), 2000);
@@ -244,72 +233,72 @@ const SurveyAdmin = () => {
 
     //CREATE/UPDATE STATEMENT NAME, DESCRIPTION AND SCALE
 
-    const handleStatementSubmit = async (e, id, existingName, existingDescription, selectedScale) => {
-        e.preventDefault();
+    const handleStatementSubmit = async (e, id, existingData = {}, updateType = null) => {
+        if (e?.preventDefault) e.preventDefault();
 
-        const formData = selectedScale === undefined ? new FormData(e.target) : null;
+        let statementName = existingData.statement_name || '';
+        let statementDescription = existingData.statement_description || '';
+        let statementScale = existingData.scales_id_scales || 1;
 
-        let statementName = existingName;
-        let statementDescription = existingDescription;
-        let statementScale = selectedScale;
 
-        if (updateStatementDescription) {
-            statementDescription = formData.get('statement_description');
-        } else if (updateStatementName) {
-            statementName = formData.get('statement_name');
-        } else if (!existingName && !existingDescription) {
-            // Creating a new statement
-            statementName = formData.get('statement_name');
-            statementDescription = formData.get('statement_description');
-            statementScale = 1;
+        if (e && e.target && (updateType === 'name' || updateType === 'description')) {
+            const formData = new FormData(e.target);
+
+            if (updateType === 'name') {
+                statementName = formData.get('statement_name') || statementName;
+            } else if (updateType === 'description') {
+                statementDescription = formData.get('statement_description') || statementDescription;
+            }
+        }
+
+
+        if (updateType === 'scale') {
+            statementScale = existingData.scales_id_scales;
         }
 
         try {
-            if (existingName && existingDescription && selectedScale !== undefined) {
-                // Updating scale
+            if (Object.keys(existingData).length > 0) {
                 await api.put(`/api/statement/update/${id}/`, {
                     statement_name: statementName,
                     statement_description: statementDescription,
                     scales_id_scales: statementScale,
                 });
 
-                setSuccess("Scale updated successfully");
+                if (updateType === 'scale') {
+                    setSuccess("Scale updated successfully");
+                } else {
+                    setSuccess("Statement updated successfully");
+                }
 
-            } else if (existingName && !existingDescription) {
-                // Updating name or description only
-                await api.put(`/api/statement/update/${id}/`, {
-                    statement_name: statementName,
-                    statement_description: statementDescription,
-                });
-
-                setSuccess("Statement updated successfully");
+                // Reset estados de edição se aplicável
+                setEditing(false);
+                setEditingStatementName(false);
+                setEditingStatementDescription(false);
+                setUpdateStatementName(false);
+                setUpdateStatementDescription(false);
+                setError('');
+                setTimeout(() => setSuccess(''), 2000);
 
             } else {
-                // Creating new statement
+
+                const formData = new FormData(e.target);
+
                 await api.post(`/api/statement/create/${id}/`, {
-                    statement_name: statementName,
-                    statement_description: statementDescription,
-                    scales_id_scales: statementScale,
+                    statement_name: formData.get('statement_name'),
+                    statement_description: formData.get('statement_name'),
+                    scales_id_scales: Number(formData.get('scales_id_scales')),
                     dimensions_id_dimensions: id,
                 });
 
                 setSuccess("Statement created successfully");
+                setTimeout(() => setSuccess(''), 2000);
             }
-
-            setEditing(false);
-            setEditingStatementName(false);
-            setEditingStatementDescription(false);
-            setUpdateStatementName(false);
-            setUpdateStatementDescription(false);
-            setError('');
-            setTimeout(() => setSuccess(''), 2000);
 
         } catch (error) {
             console.error(error);
             setError("An error occurred while saving the statement.");
         }
     };
-
 
     return (
         <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto', minHeight: 'calc(100vh - 20vh)' }}>

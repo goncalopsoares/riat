@@ -1,14 +1,24 @@
 const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName }) => {
 
+    console.log(statements)
+
     return (
-        <div>
+        <div className="mt-4">
             <ul>
                 {statements.map(statement => (
-                    <li key={statement.id_statements}>
+                    <li key={statement.id_statements} className="my-5">
                         {editingStatementName === statement.id_statements ? (
                             <form
                                 onSubmit={(e) => {
-                                    handleStatementSubmit(e, statement.id_statements, statement.statement_description);
+                                    handleStatementSubmit(
+                                        e,
+                                        statement.id_statements,
+                                        {
+                                            statement_description: statement.statement_description,
+                                            scales_id_scales: statement.scale.id_scales,
+                                        },
+                                        'name'
+                                    );
                                 }}
                             >
                                 <input
@@ -16,8 +26,9 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                                     type="text"
                                     defaultValue={statement.statement_name}
                                     autoFocus
+                                    className="form-control mb-2"
                                 />
-                                <button type="submit">Save</button>
+                                <button type="submit" className="btn btn-primary">Save</button>
                             </form>
                         ) : (
                             <h3
@@ -33,7 +44,13 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                         {editingStatementDescription === statement.id_statements ? (
                             <form
                                 onSubmit={(e) => {
-                                    handleStatementSubmit(e, statement.id_statements, statement.statement_name);
+                                    handleStatementSubmit(e,
+                                        statement.id_statements,
+                                        {
+                                            statement_name: statement.statement_name,
+                                            scales_id_scales: statement.scales_id_scales,
+                                        },
+                                        'description');
                                 }}
                             >
                                 <textarea
@@ -61,33 +78,39 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', marginBottom: '10px' }}>
-                            <select
-                                name="statement_scale"
-                                defaultValue={statement.scale.id_scales}
-                                onChange={(e) => {
-                                    const newScale = e.target.value;
-                                    handleStatementSubmit(
-                                        e,
-                                        statement.id_statements,
-                                        statement.statement_name,
-                                        statement.statement_description,
-                                        newScale
-                                    );
-                                }}
-                            >
-                                <option value="" disabled>Select scale</option>
-                                {allScales.map(scale => (
-                                    <option key={scale.id_scales} value={scale.id_scales}>
-                                        {scale.scale_name}
-                                    </option>
-                                ))}
-                            </select>
-                            <a href="/scaletools">Edit scale</a>
+                            <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', marginBottom: '10px' }}>
+                                <select
+                                    name="scales_id_scales"
+                                    defaultValue={statement.scale.id_scales}
+                                    onChange={(e) => {
+                                        const newScale = Number(e.target.value);
+                                        handleStatementSubmit(
+                                            null,
+                                            statement.id_statements,
+                                            {
+                                                statement_name: statement.statement_name,
+                                                statement_description: statement.statement_description,
+                                                scales_id_scales: newScale,
+                                            },
+                                            'scale'
+                                        );
+                                    }}
+                                >
+                                    <option value="" disabled>Select scale</option>
+                                    {allScales.map(scale => (
+                                        <option key={scale.id_scales} value={scale.id_scales}>
+                                            {scale.scale_name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <a href="/scaletools">Edit scale</a>
+                            </div>
+
                         </div>
                     </li>
                 ))}
             </ul>
-        </div>
+        </div >
     );
 }
 
