@@ -9,33 +9,33 @@ const DimensionStatementDialog = ({ dialogRef, setAddStatement, id, handleStatem
     }, []);
 
     return (
-        <dialog className="dialog" ref={dialogRef}>
+        <dialog className="dialog modal modal-content w-50" style={{ height: '25rem' }} ref={dialogRef}>
             <form
                 method="dialog"
-                className="dialog-form"
+                className="dialog-form w-100"
                 onSubmit={(e) => {
                     e.preventDefault();
                     handleStatementSubmit(e, id); // id é o id da dimensão ou outro identificador relevante para criação
                     setAddStatement(false);
                 }}
             >
-                <input
+                <textarea
                     name="statement_name"
                     type="text"
                     placeholder="Statement Name"
                     required
-                    className="form-control mb-2"
+                    className="form-control my-3"
                 />
                 <textarea
                     name="statement_description"
                     placeholder="Statement Description"
-                    className="form-control mb-2"
+                    className="form-control my-3"
                 />
                 <select
                     name="scales_id_scales"
                     defaultValue=""
                     required
-                    className="form-control mb-2"
+                    className="form-control my-3"
                 >
                     <option value="" disabled>Select scale</option>
                     {allScales.map(scale => (
@@ -44,7 +44,10 @@ const DimensionStatementDialog = ({ dialogRef, setAddStatement, id, handleStatem
                         </option>
                     ))}
                 </select>
-                <button type="submit" className="btn btn-primary">Create Statement</button>
+                <button type="submit" className="btn btn-primary mt-3">Create Statement</button>
+                <div className='mt-3'>
+                    <a className="close-btn" onClick={() => setAddStatement(false)}>Close</a>
+                </div>
             </form>
         </dialog>
     );

@@ -6,7 +6,7 @@ const RequestAccessProject = ({ showRequestAccess, setShowRequestAccess, accessR
 
     return (
 
-        <div id="assessment-alert" className="modal">
+        <div id="request-access-project" className="modal">
             <div className="modal-content" style={{ width: '32rem', textAlign: 'start' }}>
                 {!accessRequested && (
                     <>
