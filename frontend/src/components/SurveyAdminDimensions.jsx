@@ -16,8 +16,11 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                         handleDimensionSubmit(
                                             e,
                                             dimension.id_dimensions,
-                                            dimension.dimension_short_description,
-                                            dimension.dimension_description
+                                            {
+                                                dimension_description: dimension.dimension_description,
+                                                dimension_short_description: dimension.dimension_short_description,
+                                            },
+                                            'name'
                                         );
                                         setEditingDimensionName(false);
                                     }}
@@ -130,7 +133,7 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                         </p>
                                     )}
 
-                                   
+
 
                                     {isShowing === dimension.id_dimensions && (
                                         <SurveyAdminStatements
@@ -146,7 +149,7 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                             setUpdateStatementName={setUpdateStatementName}
                                         />
                                     )}
-                                     <div className="d-flex gap-2 my-4">
+                                    <div className="d-flex gap-2 my-4">
                                         <button
                                             className="btn btn-primary btn-sm"
                                             onClick={() => {

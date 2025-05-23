@@ -112,7 +112,7 @@ const SurveyAdmin = () => {
 
                 setAllDimensions(dimensionsWithStatements);
                 setDimensionsNumber(dimensionsWithStatements.length);
-                
+
             } catch (error) {
                 alert(error);
                 console.error(error);
@@ -149,10 +149,10 @@ const SurveyAdmin = () => {
 
     const handleSurveySubmit = async (e) => {
         e.preventDefault();
-        
+
         const formData = new FormData(e.target);
         const surveyDescription = formData.get('survey_description');
-        
+
 
         try {
             await api.put(`/api/survey/update/${id}/`, {
@@ -185,6 +185,8 @@ const SurveyAdmin = () => {
             dimensionDescription = formData.get('dimension_description');
         } else if (updateType === 'short_description') {
             dimensionShortDescription = formData.get('dimension_short_description');
+        } else if (updateType === 'name') {
+            dimensionName = formData.get('dimension_name');
         } else {
             dimensionName = formData.get('dimension_name');
             dimensionShortDescription = formData.get('dimension_short_description');
@@ -203,7 +205,8 @@ const SurveyAdmin = () => {
                 setSuccess("Dimension updated successfully");
                 setEditingDimensionDescription(false);
                 setEditingDimensionShortDescription(false);
-                setTimeout(() => setSuccess(''), 4000);
+                setTimeout(() => setSuccess(''), 2000);
+
             } else {
 
                 const payload = {
@@ -213,7 +216,7 @@ const SurveyAdmin = () => {
                     dimension_order: dimensionOrder,
                     parent_dimension: parentDimension ? Number(parentDimension) : null,
                 };
-                
+
 
                 const response = await api.post(`/api/dimension/create/${id}/`, {
                     dimension_name: dimensionName,
@@ -223,7 +226,7 @@ const SurveyAdmin = () => {
                     parent_dimension_id: parentDimension ? Number(parentDimension) : null,
                 });
 
-               
+
 
                 setSuccess("Dimension created successfully");
                 setTimeout(() => setSuccess(''), 2000);
