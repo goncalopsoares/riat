@@ -20,7 +20,7 @@ const AssessmentOne = ({ handleInstructionsRead }) => {
                 <form className="form-container w-100 d-flex flex-column">
                     <label>
                         <input type="checkbox" id="instructions" name="instructions" />
-                        <span className="ms-2">Yes, I read the instructions throughly and I am ready to start the assessment</span>
+                        <span className="ms-2">Yes, I read the instructions throughly, I accept the <a href="/privacy_policy_riat.pdf" target="_blank" rel="noopener noreferrer">Privacy Policy</a> terms and I am ready to start the assessment</span>
                     </label>
                     <div className="button-container mt-5 text-end">
                         <button onClick={handleInstructionsRead} disabled={loading} className='forms-button'>
