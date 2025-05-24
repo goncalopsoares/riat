@@ -7,6 +7,8 @@ const SelectPhase = () => {
 
     const [initialPhase] = useState(projectPhase);
 
+    console.log(initialPhase);
+
     return (
         <div className="global-container">
             <div className="create-project-container">
@@ -27,7 +29,7 @@ const SelectPhase = () => {
                             id="option1"
                             value="1"
                             checked={projectPhase === "1"}
-                            disabled={parseInt(initialPhase, 10) > 1}
+                            disabled={parseInt(initialPhase, 10) >= 1}
 
                             onChange={(e) => setProjectPhase(e.target.value)}
                         />
@@ -46,7 +48,7 @@ const SelectPhase = () => {
                             id="option2"
                             value="2"
                             checked={projectPhase === "2"}
-                            disabled={parseInt(initialPhase, 10) > 2}
+                            disabled={parseInt(initialPhase, 10) >= 2}
                             onChange={(e) => setProjectPhase(e.target.value)}
                         />
                         <p className="mb-0 ms-3"><b>Phase 2</b> - During project development (with at least 25% of project activities executed, before testing and it is recommended to repeat RIAT every 6 months)</p>
