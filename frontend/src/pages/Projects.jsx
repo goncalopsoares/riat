@@ -236,7 +236,7 @@ const Projects = () => {
                                             <th className='table-headers-text pt-4'>Current Phase</th>
                                             <th className='table-headers-text pt-4'>Submissions</th>
                                             <th className='table-headers-text pt-4'>Last Score Obtained</th>
-                                            <th className='table-headers-text pt-4 ps-5'>Action</th>
+                                            <th className='table-headers-text pt-4 ps-5'>Actions</th>
                                         </>
                                     )}
 
@@ -245,11 +245,12 @@ const Projects = () => {
                             <tbody>
                                 {allProjects.map(project => {
 
-                                    const lastSubmission = project.submissions[project.submissions.length - 1];
+                                    const lastPendingSubmission = project.submissions.filter(submission => submission.submission_state === 1).slice(-1)[0];
 
                                     const lastCompletedSubmission = project.submissions.filter(submission => submission.submission_state === 2).slice(-1)[0];
-                                    const idUserProject = project.metadata[0].id_users_has_projects;
-                                    const submissionsNumber = project.submissions.filter(submission => submission.submission_state === 2).length;
+                                    const userMeta = project.metadata.find(meta => meta.user_email === user_email);
+                                    const idUserProject = userMeta ? userMeta.id_users_has_projects : null;
+                                    const submissionsNumber = project.submissions[0] ? project.submissions[0].total_submissions : 0;
 
                                     return (
                                         <tr key={project.id_projects} style={{ height: '6rem' }}>
@@ -312,7 +313,7 @@ const Projects = () => {
                                                     <td><em>{project.project_unique_code}</em></td>
                                                     <td>
                                                         {project.project_phase}
-                                                        {((!lastSubmission && project.project_phase < 3) || (lastSubmission && lastSubmission.submission_state === 2 && project.project_phase < 3)) && (
+                                                        {(!lastPendingSubmission && project.project_phase < 3) && (
                                                             <a
                                                                 className='text-underline ms-3'
                                                                 style={{ cursor: 'pointer' }}
@@ -338,26 +339,37 @@ const Projects = () => {
                                                             </div>
                                                         ) : 'No completed assessments'}
                                                     </td>
-                                                    <td className='ps-5'>
+                                                    <td className={`ps-5 ${lastCompletedSubmission ? 'd-flex flex-column' : ''}`}>
                                                         <button
                                                             onClick={(e) => navigateToAssessement(
                                                                 e,
                                                                 project.id_projects,
-                                                                lastSubmission && lastSubmission.submission_state === 1
-                                                                    ? lastSubmission.id_submissions
+                                                                lastPendingSubmission
+                                                                    ? lastPendingSubmission.id_submissions
                                                                     : null
                                                             )}
                                                             className='new-assessment-button'
                                                         >
-                                                            {lastSubmission && lastSubmission.submission_state === 1 ? (
+                                                            {lastPendingSubmission ? (
                                                                 <p className='m-0 text-decoration-underline'>Resume Latest Assessment</p>
                                                             ) : (
                                                                 <p className='m-0 text-decoration-underline'>New Assessment</p>
                                                             )}
                                                         </button>
+                                                        {lastCompletedSubmission && (
+                                                            <a
+                                                                href={`/report/${lastCompletedSubmission.report_token}`}
+                                                                className='new-assessment-button'
+                                                            >
+                                                                See last report
+                                                            </a>
+                                                        )
+                                                        }
+
                                                     </td>
                                                 </>
-                                            )}
+                                            )
+                                            }
                                         </tr>
                                     );
                                 })}
@@ -365,7 +377,7 @@ const Projects = () => {
                         </table>
                     )}
                 </div>
-            </div>
+            </div >
             {showRequestAccess &&
                 <RequestAccessProject showRequestAccess={showRequestAccess} setShowRequestAccess={setShowRequestAccess} accessRequested={accessRequested} setAccessRequested={setAccessRequested} existingProjectCode={existingProjectCode} setExistingProjectCode={setExistingProjectCode} newUserRole={newUserRole} setNewUserRole={setNewUserRole} newUserFunction={newUserFunction} setNewUserFunction={setNewUserFunction} handleRequestAccess={handleRequestAccess} />
             }

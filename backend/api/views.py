@@ -128,7 +128,7 @@ class UserOwnProjectsView(generics.GenericAPIView):
     serializer_class = ProjectSerializer
 
     def get(self, request, users_id_users, *args, **kwargs):
-        # Impede que um utilizador veja projetos de outros
+        
         if request.user.id != users_id_users and not request.user.is_staff:
             return Response({"detail": "Não autorizado."}, status=status.HTTP_403_FORBIDDEN)
         
@@ -149,15 +149,40 @@ class UserOwnProjectsView(generics.GenericAPIView):
                 continue
 
             submissions = user_project.submissions_set.all()
-            for submission in submissions:
+            total_valid_submissions = submissions.filter(submission_state=2).count()
+
+            # Get the latest submission with state=1
+            last_submission_pending = submissions.filter(submission_state=1).order_by('-id_submissions').first()
+            if last_submission_pending:
                 submission_data = {
-                    "id_submissions": submission.id_submissions,
-                    "submission_state": submission.submission_state,
+                    "id_submissions": last_submission_pending.id_submissions,
+                    "submission_state": last_submission_pending.submission_state,
                     "reports_overall_score_value": None,
                     "reports_overall_score_max_value": None,
-                    "report_token": None
+                    "report_token": None,
+                    "total_submissions": total_valid_submissions
                 }
-                report = Reports.objects.filter(submissions_id_submissions=submission.id_submissions).first()
+                report = Reports.objects.filter(submissions_id_submissions=last_submission_pending.id_submissions).first()
+                if report:
+                    submission_data["report_token"] = report.report_token
+                    overall_score = report.reports_overall_score_id_reports_overall_score
+                    if overall_score:
+                        submission_data["reports_overall_score_value"] = overall_score.reports_overall_score_value
+                        submission_data["reports_overall_score_max_value"] = overall_score.reports_overall_score_max_value
+                project_data['submissions'].append(submission_data)
+
+            # Get the latest submission with state=2
+            last_submission_completed = submissions.filter(submission_state=2).order_by('-id_submissions').first()
+            if last_submission_completed:
+                submission_data = {
+                    "id_submissions": last_submission_completed.id_submissions,
+                    "submission_state": last_submission_completed.submission_state,
+                    "reports_overall_score_value": None,
+                    "reports_overall_score_max_value": None,
+                    "report_token": None,
+                    "total_submissions": total_valid_submissions
+                }
+                report = Reports.objects.filter(submissions_id_submissions=last_submission_completed.id_submissions).first()
                 if report:
                     submission_data["report_token"] = report.report_token
                     overall_score = report.reports_overall_score_id_reports_overall_score
