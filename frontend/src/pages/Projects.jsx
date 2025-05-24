@@ -339,23 +339,25 @@ const Projects = () => {
                                                             </div>
                                                         ) : 'No completed assessments'}
                                                     </td>
-                                                    <td className={`ps-5 ${lastCompletedSubmission ? 'd-flex flex-column' : ''}`}>
-                                                        <button
-                                                            onClick={(e) => navigateToAssessement(
-                                                                e,
-                                                                project.id_projects,
-                                                                lastPendingSubmission
-                                                                    ? lastPendingSubmission.id_submissions
-                                                                    : null
-                                                            )}
-                                                            className='new-assessment-button'
-                                                        >
-                                                            {lastPendingSubmission ? (
-                                                                <p className='m-0 text-decoration-underline'>Resume Latest Assessment</p>
-                                                            ) : (
-                                                                <p className='m-0 text-decoration-underline'>New Assessment</p>
-                                                            )}
-                                                        </button>
+                                                    <td className={`ps-5 ${(lastCompletedSubmission && submissionsNumber < 3)  ? 'd-flex flex-column' : ''}`}>
+                                                        {submissionsNumber < 3 && (
+                                                            <button
+                                                                onClick={(e) => navigateToAssessement(
+                                                                    e,
+                                                                    project.id_projects,
+                                                                    lastPendingSubmission
+                                                                        ? lastPendingSubmission.id_submissions
+                                                                        : null
+                                                                )}
+                                                                className='new-assessment-button'
+                                                            >
+                                                                {lastPendingSubmission ? (
+                                                                    <p className='m-0 text-decoration-underline'>Resume Latest Assessment</p>
+                                                                ) : (
+                                                                    <p className='m-0 text-decoration-underline'>New Assessment</p>
+                                                                )}
+                                                            </button>
+                                                        )}
                                                         {lastCompletedSubmission && (
                                                             <a
                                                                 href={`/report/${lastCompletedSubmission.report_token}`}
