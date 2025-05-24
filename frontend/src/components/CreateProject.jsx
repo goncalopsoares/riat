@@ -222,7 +222,7 @@ const CreateProject = () => {
           <label className="form-label">
             Indicate the current TRL of your project
           </label>
-          <div className="d-flex flex-direction-row gap-5">
+          <div className="d-flex flex-row gap-5">
             {[...Array(9)].map((_, i) => (
               <div className="tooltip-wrapper" key={`trl-${i + 1}`}>
                 <label className="radio-label">
@@ -246,7 +246,7 @@ const CreateProject = () => {
           <label className="form-label">
             Indicate the current MRL of your project
           </label>
-          <div className="d-flex flex-direction-row gap-5">
+          <div className="d-flex flex-row gap-5">
             {[...Array(9)].map((_, i) => (
               <div className="tooltip-wrapper" key={`mrl-${i + 1}`}>
                 <label className="radio-label">
@@ -270,7 +270,7 @@ const CreateProject = () => {
           <label className="form-label">
             Indicate the current SRL of your project
           </label>
-          <div className="d-flex flex-direction-row gap-5">
+          <div className="d-flex flex-row gap-5">
             {[...Array(9)].map((_, i) => (
               <div className="tooltip-wrapper" key={`srl-${i + 1}`}>
                 <label className="radio-label">

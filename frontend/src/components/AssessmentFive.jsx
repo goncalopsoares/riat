@@ -200,7 +200,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                                         <p> Click on the <b>'Submit Assessment'</b> button below to generate your report.</p>
                                         <p>This document will include a <b>unique access code</b> displayed at the top of the report page. Make sure to <b>save</b> this code so you can retrieve the report later if needed.</p>
                                         <p>Click <b>'Go back'</b> to return to the assessment and rethink any questions.</p>
-                                        <div className='d-flex flex-direction-row justify-content-center align-items-center gap-5 mt-5'>
+                                        <div className='d-flex flex-row justify-content-center align-items-center gap-5 mt-5'>
                                             <a onClick={() => {
                                                 setDimensionStage(2);
                                             }} style={{ textDecoration: 'underline', cursor: 'pointer', color: '#008bbe' }} className="cancel-button">

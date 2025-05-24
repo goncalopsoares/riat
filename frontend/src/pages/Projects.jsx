@@ -208,9 +208,9 @@ const Projects = () => {
     return (
         <>
             <div className='mt-5 mb-5' style={{ width: '90%', margin: 'auto', minHeight: '66vh' }}>
-                <div className='d-flex justify-content-between align-items-center mb-4'>
+                <div className='d-flex flex-row justify-content-between align-items-center mb-4'>
                     <h1>Active Projects</h1>
-                    <div className='d-flex flex-direction-row gap-5'>
+                    <div className='d-flex flex-row gap-5'>
                         <button onClick={() => navigate('/assessment')} className='login-form-button'>
                             <p className='m-0'>Create new project</p>
                         </button>

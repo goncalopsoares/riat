@@ -15,7 +15,7 @@ const SurveyAdminInfo = ({ surveyName, surveyDescription, surveyCreatedBy, surve
             ) : (
                 <p className="fs-5" onClick={() => setEditingDescription(true)}>{surveyDescription}</p>
             )}
-            <div className="d-flex flex-direction-row gap-5">
+            <div className="d-flex flex-row gap-5">
                 <p>Created by <b>{surveyCreatedBy}</b> on <b>{surveyCreationTime}</b></p>
                 <p>Last modified by <b>{surveyModifiedBy}</b> on <b>{surveyLastModifiedByDate}</b></p>
             </div>

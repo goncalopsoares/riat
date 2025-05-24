@@ -12,7 +12,7 @@ const RequestAccessProject = ({ showRequestAccess, setShowRequestAccess, accessR
                     <>
                         <h3 className='mb-4'>Requesting access to an existing project</h3>
                         <p className='form-label text-black fs-6'>Please, insert the code of the project you want to access</p>
-                        <div className='d-flex flex-direction-row justify-content-between gap-4 mb-3'>
+                        <div className='d-flex flex-row justify-content-between gap-4 mb-3'>
                             <div className="w-100">
                                 <label className="form-label"></label>
                                 <input
@@ -27,7 +27,7 @@ const RequestAccessProject = ({ showRequestAccess, setShowRequestAccess, accessR
                         </div>
                         <div className="my-3 w-100">
                             <label className="form-label">Select your role in the project</label>
-                            <div className="d-flex flex-direction-row gap-5">
+                            <div className="d-flex flex-row gap-5">
                                 <label className="radio-label mt-2">
                                     <input
                                         className="radio-input"
@@ -53,7 +53,7 @@ const RequestAccessProject = ({ showRequestAccess, setShowRequestAccess, accessR
                             </div>
                         </div>
                         <p className='form-label text-black mt-3'>Fill in with your function in the organization</p>
-                        <div className='d-flex flex-direction-row justify-content-between gap-4 mb-3'>
+                        <div className='d-flex flex-row justify-content-between gap-4 mb-3'>
                             <div className="w-100">
                                 <label className="form-label"></label>
                                 <input

@@ -267,7 +267,7 @@ const Report = () => {
                 </div>
                 <div className="mt-3">
                     <h3><b>Overall Score</b></h3>
-                    <div className="d-flex flex-direction-row justify-content-between mt-4">
+                    <div className="d-flex flex-row justify-content-between mt-4">
                         <div className="d-flex flex-row align-items-center mb-2">
                             <h3>Responsibility Level  —
                                 {recommendationLevel && (

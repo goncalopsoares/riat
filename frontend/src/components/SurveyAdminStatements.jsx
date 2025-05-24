@@ -87,7 +87,7 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                                 <span className="tooltip-text" style={{ bottom: '100%' }}>Double click to edit</span>
                             </div>
                         )}
-                        <div className="d-flex flex-direction-row">
+                        <div className="d-flex flex-row">
                             <p className="mb-1"><b>Currently used scale for this statement</b></p>
                             <p className="mb-0 ms-3">{statement.scale.scale_name}</p>
                         </div>
@@ -100,7 +100,7 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                             ))}
                         </div>
 
-                        <div className="d-flex flex-direction-row align-items-center mb-1" style={{ gap: '5px' }}>
+                        <div className="d-flex flex-row align-items-center mb-1" style={{ gap: '5px' }}>
                             <p className="mb-0 me-3"><b>Select another scale</b></p>
                             <div>
                                 <select

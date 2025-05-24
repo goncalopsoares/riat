@@ -45,7 +45,7 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                     </button>
                                 </form>
                             ) : (
-                                <div className="d-flex flex-direction-row justify-content-between align-items-center">
+                                <div className="d-flex flex-row justify-content-between align-items-center">
                                     <h2
                                         className="h2 my-3"
                                         onClick={() =>

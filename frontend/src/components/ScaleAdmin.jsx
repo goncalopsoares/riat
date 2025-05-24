@@ -5,7 +5,7 @@ const ScaleAdmin = ({ scaleName, setScaleName, scaleLevels, scaleLabels, setScal
     return (
         <div className='mt-5'>
             <h1 className='mb-3'>Create a new scale</h1>
-            <div className='d-flex flex-direction-row gap-5'>
+            <div className='d-flex flex-row gap-5'>
                 <input
                     className='form-input my-3 w-50'
                     type='text'
