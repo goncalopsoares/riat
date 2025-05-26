@@ -19,6 +19,8 @@ const Assessment = () => {
 
     const navigate = useNavigate();
 
+    console.log('Project ID:', projectName, projectPhase);
+
 
     //GET SUBMISSION ID FROM URL
     const { id } = useParams();
@@ -209,6 +211,7 @@ const Assessment = () => {
                     {
                         users_has_projects_role: userRole,
                         users_has_projects_function: userFunction,
+                        users_has_projects_state: 0,
                     }
                 ]
             });
@@ -618,7 +621,7 @@ const Assessment = () => {
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
             {isAssessmentReady && (
-                <AssessmentFive loading={loading} allDimensions={allDimensions} topLevelDimensions={topLevelDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} submittingAssessment={submittingAssessment} setSubmittingAssessment={setSubmittingAssessment} />
+                <AssessmentFive loading={loading} projectPhase={projectPhase} allDimensions={allDimensions} topLevelDimensions={topLevelDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} submittingAssessment={submittingAssessment} setSubmittingAssessment={setSubmittingAssessment} />
             )}
 
         </>

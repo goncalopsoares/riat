@@ -111,7 +111,7 @@ class UserHasProjectsSerializer(serializers.ModelSerializer):
             'id_users_has_projects',
             'users_has_projects_role',
             'users_has_projects_function',
-            'users_has_projects_state',
+            'users_has_projects_state'
         ]
         extra_kwargs = {
             'users_id_users': {'read_only': True},
@@ -143,6 +143,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'project_creation_time': {'read_only': True},
+            'project_unique_code': {'read_only': True},
         }
 
     def get_metadata(self, obj):

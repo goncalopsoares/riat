@@ -3,7 +3,7 @@ import SubDimensions from './SubDimensions';
 import AssessmentAlert from '../components/AssessmentAlert';
 import SaveIcon from '@mui/icons-material/Save';
 
-const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, handleAssessmentSubmit, statementCounter, submittingAssessment, setSubmittingAssessment }) => {
+const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, handleAssessmentSubmit, statementCounter, submittingAssessment, setSubmittingAssessment }) => {
 
     const [naSelected, setNaSelected] = useState({});
     const [explanation, setExplanation] = useState('');
@@ -27,6 +27,7 @@ const AssessmentFive = ({ loading, allDimensions, topLevelDimensions, dimensions
                 <div className="global-container">
                     <AssessmentAlert show={showAlert} setShow={setShowAlert} />
                     <div className="create-project-container">
+                        <p className='mb-0'><b>Phase {projectPhase}</b> Assessment</p>
                         {dimensionStage === 3 ? (
                             <div className="progress-bar-container">
                                 <div

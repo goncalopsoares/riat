@@ -200,6 +200,7 @@ const Projects = () => {
             });
 
             setSuccess('Started new assessment successfully');
+            setProjectPhase(projectPhase);
 
             const lastSubmission = response.data.id_submissions;
 
