@@ -140,7 +140,7 @@ class UserOwnProjectsView(generics.GenericAPIView):
     def _build_response_from_projects(self, projects_queryset, user_projects):
         projects_data = []
 
-        for project in projects_queryset:
+        """ for project in projects_queryset:
             project_data = ProjectSerializer(project).data
             project_data['submissions'] = []
 
@@ -193,8 +193,40 @@ class UserOwnProjectsView(generics.GenericAPIView):
 
             projects_data.append(project_data)
 
-        return Response(projects_data, status=status.HTTP_200_OK)
+        return Response(projects_data, status=status.HTTP_200_OK) """
+        
+        for project in projects_queryset:
+            project_data = ProjectSerializer(project).data
+            project_data['submissions'] = []
 
+            user_project = user_projects.filter(projects_id_projects=project.id_projects).first()
+            if not user_project:
+                continue
+
+            submissions = user_project.submissions_set.all()
+            for submission in submissions:
+
+                submission_data = {
+                    "id_submissions": submission.id_submissions,
+                    "submission_state": submission.submission_state,
+                    "reports_overall_score_value": None,
+                    "reports_overall_score_max_value": None,
+                    "report_token": None,
+                    "submission_ending_time": submission.submission_ending_time,
+
+                }
+                report = Reports.objects.filter(submissions_id_submissions=submission.id_submissions).first()
+                if report:
+                    submission_data["report_token"] = report.report_token
+                    overall_score = report.reports_overall_score_id_reports_overall_score
+                    if overall_score:
+                        submission_data["reports_overall_score_value"] = overall_score.reports_overall_score_value
+                        submission_data["reports_overall_score_max_value"] = overall_score.reports_overall_score_max_value
+                project_data['submissions'].append(submission_data)
+
+            projects_data.append(project_data)
+
+        return Response(projects_data, status=status.HTTP_200_OK)
 
 class CreateProjectView(generics.CreateAPIView):
     

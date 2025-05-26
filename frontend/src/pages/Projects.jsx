@@ -3,6 +3,7 @@ import { useUser } from '../contexts/UserContext';
 import { useProject } from '../contexts/ProjectContext';
 import { useNavigate } from 'react-router-dom';
 import RequestAccessProject from '../components/RequestAccessProject';
+import SeeReportsDialog from '../components/SeeReportsDialog';
 import '../styles/projects.css';
 import api from '../api';
 
@@ -16,6 +17,7 @@ const Projects = () => {
     const [surveySelector, setSurveySelector] = useState(false);
     const [selectedSurveyId, setSelectedSurveyId] = useState(null);
     const [selectedPhase, setSelectedPhase] = useState(null);
+    const [showingReportsId, setShowingReportsId] = useState(null);
 
     //existing project
     const [showRequestAccess, setShowRequestAccess] = useState(false);
@@ -83,6 +85,8 @@ const Projects = () => {
                         return userMeta && userMeta.users_has_projects_state === 0;
                     })
                 );
+
+                console.log(response.data);
 
 
             } catch (error) {
@@ -191,7 +195,7 @@ const Projects = () => {
         );
 
         const surveyId = survey.id_surveys;
-    
+
         try {
             const response = await api.post(`/api/submission/`, {
                 surveys_id_surveys: surveyId,
@@ -283,7 +287,8 @@ const Projects = () => {
                                     const userMeta = project.metadata.find(meta => meta.user_email === user_email);
                                     const idUserProject = userMeta ? userMeta.id_users_has_projects : null;
                                     const projectPhase = project.project_phase;
-                                    const submissionsNumber = project.submissions[0] ? project.submissions[0].total_submissions : 0;
+                                    const submissionsNumber = project.submissions.length;
+                                    const completedSubmissions = project.submissions.filter(submission => submission.submission_state === 2);
 
                                     return (
                                         <tr key={project.id_projects} style={{ height: '6rem' }}>
@@ -395,10 +400,10 @@ const Projects = () => {
                                                     )}
                                                     {lastCompletedSubmission && (
                                                         <a
-                                                            href={`/report/${lastCompletedSubmission.report_token}`}
+                                                            onClick={() => setShowingReportsId(project.id_projects)}
                                                             className='new-assessment-button'
                                                         >
-                                                            See last report
+                                                            See reports
                                                         </a>
                                                     )
                                                     }
@@ -407,12 +412,26 @@ const Projects = () => {
                                             </>
                                             {/* )
                                             } */}
+                                            {showingReportsId === project.id_projects && (
+                                                <tr>
+                                                    <td colSpan={2}>
+                                                        <SeeReportsDialog
+                                                            setShowingReportsId={setShowingReportsId}
+                                                            showingReportsId={showingReportsId}
+                                                            submissions={completedSubmissions}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            )}
                                         </tr>
                                     );
+
                                 })}
+
                             </tbody>
                         </table>
                     )}
+
                 </div>
             </div >
             {showRequestAccess &&
