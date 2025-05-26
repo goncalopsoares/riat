@@ -11,8 +11,6 @@ const DeleteDimensionDialog = ({ dialogRef, setDeletingDimension, id, handleDele
 
     const [inputValue, setInputValue] = useState('');
 
-    console.log('DeleteDimensionDialog rendered with id:', id, 'and dimensionName:', dimensionName);
-
     return (
         <dialog className="dialog modal modal-content w-50" style={{ height: '40rem' }} ref={dialogRef}>
             <h2 className='mb-4'>Deleting Dimension</h2>
