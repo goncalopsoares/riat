@@ -8,7 +8,7 @@ import DeleteDimensionDialog from '../components/DeleteDimensionDialog';
 
 const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editingDimensionShortDescription, setEditingDimensionShortDescription, setUpdateDimensionShortDescription, editingDimensionDescription, setEditingDimensionDescription, handleDimensionSubmit, setUpdateDimensionDescription, editingDimensionName, setEditingDimensionName, allScales, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName, handleStatementSubmit, addStatement, setAddStatement, dialogRef, currentDimensionForStatement, setCurrentDimensionForStatement, handleDeleteDimension, handleDeleteStatement }) => {
 
-    const [deletingDimension, setDeletingDimension] = useState(false);
+    const [deletingDimensionId, setDeletingDimensionId] = useState(null);
 
     return (
         <>
@@ -62,7 +62,7 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                         <div className="tooltip-wrapper">{dimension.dimension_name}<span className="tooltip-text" style={{ bottom: '100%' }}>Double click to edit</span></div> {isShowing === dimension.id_dimensions ? <ArrowDropUpIcon style={{ fontSize: '3rem' }} /> : <ArrowDropDownIcon style={{ fontSize: '3rem' }} />}
                                     </h2>
                                     {isShowing === dimension.id_dimensions && (
-                                        <button onClick={() => setDeletingDimension(true)} className="btn btn-sm btn-danger" style={{ height: '2.5rem' }}>Delete</button>)
+                                        <button onClick={() => setDeletingDimensionId(dimension.id_dimensions)} className="btn btn-sm btn-danger" style={{ height: '2.5rem' }}>Delete</button>)
                                     }
                                 </div>
                             )}
@@ -181,8 +181,8 @@ const SurveyAdminDimensions = ({ allDimensions, isShowing, setIsShowing, editing
                                             Add New Statement
                                         </button>
                                     </div>
-                                    {deletingDimension ? (
-                                        <DeleteDimensionDialog setDeletingDimension={setDeletingDimension} id={dimension.id_dimensions} handleDeleteDimension={handleDeleteDimension} dialogRef={dialogRef} dimensionName={dimension.dimension_name} />) : null
+                                    {deletingDimensionId == dimension.id_dimensions ? (
+                                        <DeleteDimensionDialog setDeletingDimension={() => setDeletingDimensionId(null)} id={dimension.id_dimensions} handleDeleteDimension={handleDeleteDimension} dialogRef={dialogRef} dimensionName={dimension.dimension_name} />) : null
                                     }
                                 </div>
                             )}
