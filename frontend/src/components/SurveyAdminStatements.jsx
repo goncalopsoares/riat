@@ -3,7 +3,7 @@ import DeleteStatementDialog from "./DeleteStatementDialog";
 
 const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, editingStatementName, setEditingStatementName, editingStatementDescription, setEditingStatementDescription, setUpdateStatementDescription, setUpdateStatementName, handleDeleteStatement, dialogRef }) => {
 
-    const [deletingStatement, setDeletingStatement] = useState(false);
+    const [deletingStatementId, setDeletingStatementId] = useState(null);
 
     return (
         <div className="mt-4">
@@ -130,10 +130,16 @@ const SurveyAdminStatements = ({ statements, allScales, handleStatementSubmit, e
                                 </select>
                             </div>
                         </div>
-                        <button onClick={() => setDeletingStatement(true)} className="btn btn-sm btn-danger mt-3" style={{ height: '2.5rem' }}>Delete</button>
-                        {deletingStatement ? (
-                            <DeleteStatementDialog setDeletingStatement={setDeletingStatement} id={statement.id_statements} handleDeleteStatement={handleDeleteStatement} dialogRef={dialogRef} />) : null
-                        }
+                        <button onClick={() => setDeletingStatementId(statement.id_statements)} className="btn btn-sm btn-danger mt-3" style={{ height: '2.5rem' }}>Delete</button>
+                        {deletingStatementId === statement.id_statements && (
+                            <DeleteStatementDialog
+                                setDeletingStatement={() => setDeletingStatementId(null)}
+                                id={statement.id_statements}
+                                handleDeleteStatement={handleDeleteStatement}
+                                dialogRef={dialogRef}
+                            />
+                        )}
+
                     </li>
                 ))}
             </ul>
