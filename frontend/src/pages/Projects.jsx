@@ -14,7 +14,7 @@ const Projects = () => {
     const [allProjects, setAllProjects] = useState([]);
     const [allSurveys, setAllSurveys] = useState([]);
     const [surveySelector, setSurveySelector] = useState(false);
-    const [selectedSurveyId, setSelectedSurveyId] = useState(1);
+    const [selectedSurveyId, setSelectedSurveyId] = useState(null);
     const [selectedPhase, setSelectedPhase] = useState(null);
 
     //existing project
@@ -31,8 +31,6 @@ const Projects = () => {
     const id_user = user.user.id;
     const user_email = user.user.user_email;
 
-    console.log(user_email)
-
     const { setProjectId, setStep, setProjectPhase } = useProject();
 
     const handleRequestAccess = async () => {
@@ -40,8 +38,6 @@ const Projects = () => {
         setLoading(true);
 
         try {
-
-            console.log(existingProjectCode, newUserFunction, newUserRole, id_user);
 
             const response = await api.post(`/api/project/adduser/${id_user}/${existingProjectCode}/`,
                 {
@@ -52,8 +48,6 @@ const Projects = () => {
                 }
 
             );
-
-            console.log(response.data)
 
         } catch (error) {
 
@@ -84,13 +78,11 @@ const Projects = () => {
                     response.data.filter(project => {
                         // Find the metadata entry for the current user
                         const userMeta = project.metadata.find(meta => meta.user_email === user_email);
-                        console.log(userMeta)
+
                         // Only include if user's state is 0
                         return userMeta && userMeta.users_has_projects_state === 0;
                     })
                 );
-
-                console.log(response.data)
 
 
             } catch (error) {
@@ -155,7 +147,7 @@ const Projects = () => {
 
     //START NEW ASSESSMENT
 
-    const handleStartNewAssessment = async (e, idUserProject) => {
+    /* const handleStartNewAssessment = async (e, idUserProject) => {
 
         e.preventDefault();
 
@@ -164,6 +156,45 @@ const Projects = () => {
         try {
             const response = await api.post(`/api/submission/`, {
                 surveys_id_surveys: selectedSurveyId,
+                users_has_projects_id_users_has_projects: idUserProject,
+                submission_state: 1,
+            });
+
+            setSuccess('Started new assessment successfully');
+
+            const lastSubmission = response.data.id_submissions;
+
+            setTimeout(() => {
+                navigateToAssessement(e, idUserProject, lastSubmission);
+            }, 0);
+
+        } catch (error) {
+            setError('Error starting new assessment');
+            console.error(error);
+
+        } finally {
+            setLoading(false);
+        }
+
+    }; */
+
+    const handleStartNewAssessment = async (e, idUserProject, projectPhase) => {
+
+        e.preventDefault();
+
+        setLoading(true);
+
+        // Find the survey whose name contains the selected phase number
+
+        const survey = allSurveys.find(s =>
+            s.survey_name.match(/\d+/g)?.map(Number).includes(projectPhase)
+        );
+
+        const surveyId = survey.id_surveys;
+    
+        try {
+            const response = await api.post(`/api/submission/`, {
+                surveys_id_surveys: surveyId,
                 users_has_projects_id_users_has_projects: idUserProject,
                 submission_state: 1,
             });
@@ -227,18 +258,18 @@ const Projects = () => {
                             <thead className='align-top' style={{ fontWeight: 'regular' }}>
                                 <tr style={{ height: '6rem' }}>
                                     <th className='table-headers-text pt-4 ps-5'>Project Name</th>
-                                    {surveySelector ? (
+                                    {/* {surveySelector ? (
                                         <th className='table-headers-text pt-4'>Select Assessment</th>
-                                    ) : (
-                                        <>
-                                            <th className='table-headers-text pt-4'>Acronym</th>
-                                            <th className='table-headers-text pt-4'>Code</th>
-                                            <th className='table-headers-text pt-4'>Current Phase</th>
-                                            <th className='table-headers-text pt-4'>Submissions</th>
-                                            <th className='table-headers-text pt-4'>Last Score Obtained</th>
-                                            <th className='table-headers-text pt-4 ps-5'>Actions</th>
-                                        </>
-                                    )}
+                                    ) : ( */}
+                                    <>
+                                        <th className='table-headers-text pt-4'>Acronym</th>
+                                        <th className='table-headers-text pt-4'>Code</th>
+                                        <th className='table-headers-text pt-4'>Current Phase</th>
+                                        <th className='table-headers-text pt-4'>Submissions</th>
+                                        <th className='table-headers-text pt-4'>Last Score Obtained</th>
+                                        <th className='table-headers-text pt-4 ps-5'>Actions</th>
+                                    </>
+                                    {/*  )} */}
 
                                 </tr>
                             </thead>
@@ -250,12 +281,13 @@ const Projects = () => {
                                     const lastCompletedSubmission = project.submissions.filter(submission => submission.submission_state === 2).slice(-1)[0];
                                     const userMeta = project.metadata.find(meta => meta.user_email === user_email);
                                     const idUserProject = userMeta ? userMeta.id_users_has_projects : null;
+                                    const projectPhase = project.project_phase;
                                     const submissionsNumber = project.submissions[0] ? project.submissions[0].total_submissions : 0;
 
                                     return (
                                         <tr key={project.id_projects} style={{ height: '6rem' }}>
                                             <td className='ps-5' style={{ width: '35vw' }}>{project.project_name}</td>
-                                            {surveySelector ? (
+                                            {/*  {surveySelector ? (
                                                 <td>
                                                     {surveySelector === project.id_projects ? (
                                                         <form onSubmit={(e) => handleStartNewAssessment(e, idUserProject)} style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', alignItems: 'center' }} className="d-grid gap-0 row-gap-3">
@@ -307,71 +339,73 @@ const Projects = () => {
                                                         </form>
                                                     ) : null}
                                                 </td>
-                                            ) : (
-                                                <>
-                                                    <td>{project.project_acronym}</td>
-                                                    <td><em>{project.project_unique_code}</em></td>
-                                                    <td>
-                                                        {project.project_phase}
-                                                        {(!lastPendingSubmission && project.project_phase < 3) && (
-                                                            <a
-                                                                className='text-underline ms-3'
-                                                                style={{ cursor: 'pointer' }}
-                                                                onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}
-                                                            >
-                                                                Update
-                                                            </a>
-                                                        )}
-                                                    </td>
-                                                    <td>{submissionsNumber}</td>
-                                                    <td>
-                                                        {lastCompletedSubmission ? (
-                                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center' }} className="d-grid gap-0 row-gap-3">
-                                                                <div className="score-bar-container">
-                                                                    <div
-                                                                        className="score-bar"
-                                                                        style={{
-                                                                            width: `${(lastCompletedSubmission.reports_overall_score_value / lastCompletedSubmission.reports_overall_score_max_value) * 100}%`
-                                                                        }}
-                                                                    ></div>
-                                                                </div>
-                                                                <p className='m-0 align-middle' style={{ textAlign: 'center' }}>{`${lastCompletedSubmission.reports_overall_score_value} / ${lastCompletedSubmission.reports_overall_score_max_value}`}</p>
+                                            ) : ( */}
+                                            <>
+                                                <td>{project.project_acronym}</td>
+                                                <td><em>{project.project_unique_code}</em></td>
+                                                <td>
+                                                    {project.project_phase}
+                                                    {(!lastPendingSubmission && project.project_phase < 3) && (
+                                                        <a
+                                                            className='text-underline ms-3'
+                                                            style={{ cursor: 'pointer' }}
+                                                            onClick={(e) => handlePhaseUpdate(e, project.id_projects, project.project_phase)}
+                                                        >
+                                                            Update
+                                                        </a>
+                                                    )}
+                                                </td>
+                                                <td>{submissionsNumber}</td>
+                                                <td>
+                                                    {lastCompletedSubmission ? (
+                                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center' }} className="d-grid gap-0 row-gap-3">
+                                                            <div className="score-bar-container">
+                                                                <div
+                                                                    className="score-bar"
+                                                                    style={{
+                                                                        width: `${(lastCompletedSubmission.reports_overall_score_value / lastCompletedSubmission.reports_overall_score_max_value) * 100}%`
+                                                                    }}
+                                                                ></div>
                                                             </div>
-                                                        ) : 'No completed assessments'}
-                                                    </td>
-                                                    <td className={`ps-5 ${(lastCompletedSubmission && submissionsNumber < 3)  ? 'd-flex flex-column' : ''}`}>
-                                                        {submissionsNumber < 3 && (
-                                                            <button
-                                                                onClick={(e) => navigateToAssessement(
-                                                                    e,
-                                                                    project.id_projects,
-                                                                    lastPendingSubmission
-                                                                        ? lastPendingSubmission.id_submissions
-                                                                        : null
-                                                                )}
-                                                                className='new-assessment-button'
-                                                            >
-                                                                {lastPendingSubmission ? (
-                                                                    <p className='m-0 text-decoration-underline'>Resume Latest Assessment</p>
-                                                                ) : (
-                                                                    <p className='m-0 text-decoration-underline'>New Assessment</p>
-                                                                )}
-                                                            </button>
-                                                        )}
-                                                        {lastCompletedSubmission && (
-                                                            <a
-                                                                href={`/report/${lastCompletedSubmission.report_token}`}
-                                                                className='new-assessment-button'
-                                                            >
-                                                                See last report
-                                                            </a>
-                                                        )
-                                                        }
+                                                            <p className='m-0 align-middle' style={{ textAlign: 'center' }}>{`${lastCompletedSubmission.reports_overall_score_value} / ${lastCompletedSubmission.reports_overall_score_max_value}`}</p>
+                                                        </div>
+                                                    ) : 'No completed assessments'}
+                                                </td>
+                                                <td className={`ps-5 ${(lastCompletedSubmission && submissionsNumber < 3) ? 'd-flex flex-column' : ''}`}>
+                                                    {submissionsNumber < 3 && (
+                                                        <button
+                                                            /*  onClick={(e) => navigateToAssessement(
+                                                                 e,
+                                                                 project.id_projects,
+                                                                 lastPendingSubmission
+                                                                     ? lastPendingSubmission.id_submissions
+                                                                     : null
+                                                             )} */
+                                                            onClick={(e) => handleStartNewAssessment(e, idUserProject, projectPhase
+                                                            )}
+                                                            className='new-assessment-button'
+                                                        >
+                                                            {lastPendingSubmission ? (
+                                                                <p className='m-0 text-decoration-underline'>Resume Latest Assessment</p>
+                                                            ) : (
+                                                                <p className='m-0 text-decoration-underline'>New Assessment</p>
+                                                            )}
+                                                        </button>
+                                                    )}
+                                                    {lastCompletedSubmission && (
+                                                        <a
+                                                            href={`/report/${lastCompletedSubmission.report_token}`}
+                                                            className='new-assessment-button'
+                                                        >
+                                                            See last report
+                                                        </a>
+                                                    )
+                                                    }
 
-                                                    </td>
-                                                </>
-                                            )
-                                            }
+                                                </td>
+                                            </>
+                                            {/* )
+                                            } */}
                                         </tr>
                                     );
                                 })}
