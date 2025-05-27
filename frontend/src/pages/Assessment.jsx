@@ -19,8 +19,6 @@ const Assessment = () => {
 
     const navigate = useNavigate();
 
-    console.log('Project ID:', projectName, projectPhase);
-
 
     //GET SUBMISSION ID FROM URL
     const { id } = useParams();
@@ -541,8 +539,6 @@ const Assessment = () => {
                     const matchingStatement = currentDimensionStatements.find(
                         stmt => stmt.id_statements.toString() === key
                     );
-
-                    console.log('Matching Statement:', matchingStatement.scale.scale_levels, 'Value:', value);
 
                     if (
                         matchingStatement &&

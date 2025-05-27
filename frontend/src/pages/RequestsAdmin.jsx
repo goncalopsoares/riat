@@ -11,7 +11,7 @@ const RequestsAdmin = () => {
             setLoading(true);
             try {
                 const response = await api.get('/api/projects/pendingrequests/');
-                console.log(response.data);
+
                 setRequests(response.data);
             } catch (error) {
                 alert(error);

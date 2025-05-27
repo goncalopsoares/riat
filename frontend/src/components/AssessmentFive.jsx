@@ -9,12 +9,6 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
     const [example, setExample] = useState('');
     const [showAlert, setShowAlert] = useState(false);
 
-    useEffect(() => {
-        console.log('Selected Values:', selectedValues);
-        console.log('NA Selected:', naSelected);
-    }, [selectedValues, naSelected]);
-
-
     const subDimensionsInfo = allDimensions.filter(dimension =>
         allDimensions[currentDimension].sub_dimensions.some(subId => subId === dimension.id_dimensions)
     );
@@ -265,8 +259,6 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                         if (allNaSelected) {
                                             totalStatements = totalStatements - 1;
                                         }
-
-                                        console.log('totalStatements:', totalStatements);
 
                                         if (
                                             (selectedValuesCount === totalStatements &&

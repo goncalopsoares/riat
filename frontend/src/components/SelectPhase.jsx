@@ -7,7 +7,6 @@ const SelectPhase = () => {
 
     const [initialPhase] = useState(projectPhase);
 
-    console.log(initialPhase);
 
     return (
         <div className="global-container">

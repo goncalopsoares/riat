@@ -17,8 +17,6 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
 
                             const allNaSelected = Object.values(naSelected).every(v => v === true);
 
-                            console.log("allNaSelected", allNaSelected);
-
                             currentSubDimension++;
                             statementCounter++;
 

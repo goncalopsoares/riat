@@ -4,8 +4,6 @@ const SeeReportsDialog = ({ showingReportsId, setShowingReportsId, submissions }
         return
     };
 
-    console.log(submissions);
-
     return (
         <div id="request-access-project" className="modal">
             <div className="modal-content" style={{ width: '50rem', textAlign: 'start' }}>
