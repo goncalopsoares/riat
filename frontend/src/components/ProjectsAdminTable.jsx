@@ -42,7 +42,7 @@ const ProjectsAdminTable = ({ currentProjects, paginate, totalPages, currentPage
                                 </a>
                             </td>
                             <td style={{ maxWidth: '25rem' }}>{project.project_name}</td>
-                            <td style={{ maxWidth: '5rem' }}>{project.project_acronym}</td>
+                            <td style={{ maxWidth: '8rem' }}>{project.project_acronym}</td>
                             <td>{project.project_phase}</td>
                             <td>{project.project_mrl}</td>
                             <td>{project.project_srl}</td>
