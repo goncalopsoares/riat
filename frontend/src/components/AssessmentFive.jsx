@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import SubDimensions from './SubDimensions';
 import AssessmentAlert from '../components/AssessmentAlert';
 import SaveIcon from '@mui/icons-material/Save';
@@ -19,6 +19,9 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
             allowedTags.includes(tagName.toLowerCase()) ? tag : ''
         );
     }
+
+    console.log('naSelected', naSelected);
+    console.log('selectedValues', selectedValues);
 
     return (
         <>
@@ -260,6 +263,9 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                             totalStatements = totalStatements - 1;
                                         }
 
+                                        console.log('selectedValuesCount', selectedValuesCount);
+                                        console.log('totalStatements', totalStatements);
+
                                         if (
                                             (selectedValuesCount === totalStatements &&
                                                 !Object.values(selectedValues).includes(''))
@@ -286,8 +292,17 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
 
                                             const selectedValuesCount = Object.keys(selectedValues).length;
 
-                                            const totalStatements = topLevelDimensions[currentDimension].statements.length +
+                                            const allNaSelected = Object.values(naSelected).every(v => v === true);
+
+                                            let totalStatements = topLevelDimensions[currentDimension].statements.length +
                                                 subDimensionsInfo.reduce((sum, subDimension) => sum + subDimension.statements.length, 0);
+
+                                            if (allNaSelected) {
+                                                totalStatements = totalStatements - 1;
+                                            }
+
+                                            console.log('selectedValuesCount', selectedValuesCount);
+                                            console.log('totalStatements', totalStatements);
 
                                             if (
                                                 (selectedValuesCount === totalStatements &&
