@@ -282,7 +282,6 @@ const Projects = () => {
                                 {allProjects.map(project => {
 
                                     const lastPendingSubmission = project.submissions.filter(submission => submission.submission_state === 1).slice(-1)[0];
-
                                     const lastCompletedSubmission = project.submissions.filter(submission => submission.submission_state === 2).slice(-1)[0];
                                     const userMeta = project.metadata.find(meta => meta.user_email === user_email);
                                     const idUserProject = userMeta ? userMeta.id_users_has_projects : null;
@@ -378,65 +377,69 @@ const Projects = () => {
                                                     ) : 'No completed assessments'}
                                                 </td>
                                                 <td className={`ps-5 ${(lastCompletedSubmission && submissionsNumber < 3) ? 'd-flex flex-column' : ''}`}>
-                                                    {submissionsNumber < 3 && (
+                                                    {submissionsNumber <= 3 && (
                                                         <button
-                                                            /*  onClick={(e) => navigateToAssessement(
-                                                                 e,
-                                                                 project.id_projects,
-                                                                 lastPendingSubmission
-                                                                     ? lastPendingSubmission.id_submissions
-                                                                     : null
-                                                             )} */
-                                                            onClick={(e) => handleStartNewAssessment(e, idUserProject, projectPhase
-                                                            )}
+                                                            onClick={(e) => {
+                                                                if (!lastPendingSubmission) {
+                                                                    handleStartNewAssessment(e, idUserProject, projectPhase);
+                                                                } else {
+                                                                    navigateToAssessement(
+                                                                        e,
+                                                                        project.id_projects,
+                                                                        lastPendingSubmission.id_submissions
+                                                                    );
+                                                                }
+                                                            }}
                                                             className='new-assessment-button'
                                                         >
-                                                            {lastPendingSubmission ? (
-                                                                <p className='m-0 text-decoration-underline'>Resume Latest Assessment</p>
-                                                            ) : (
-                                                                <p className='m-0 text-decoration-underline'>New Assessment</p>
-                                                            )}
-                                                        </button>
+                                                    {lastPendingSubmission ? (
+                                                        <p className='m-0 text-decoration-underline'>Resume Latest Assessment</p>
+                                                    ) : (
+                                                        <p className='m-0 text-decoration-underline'>New Assessment</p>
                                                     )}
-                                                    {lastCompletedSubmission && (
-                                                        <a
-                                                            onClick={() => setShowingReportsId(project.id_projects)}
-                                                            className='new-assessment-button'
-                                                        >
-                                                            See reports
-                                                        </a>
-                                                    )
-                                                    }
+                                                </button>
+                                                    )}
+                                                {lastCompletedSubmission && (
+                                                    <a
+                                                        onClick={() => setShowingReportsId(project.id_projects)}
+                                                        className='new-assessment-button'
+                                                    >
+                                                        See reports
+                                                    </a>
+                                                )
+                                                }
 
-                                                </td>
-                                            </>
+                                            </td>
+                                        </>
                                             {/* )
                                             } */}
-                                            {showingReportsId === project.id_projects && (
-                                                <tr>
-                                                    <td colSpan={2}>
-                                                        <SeeReportsDialog
-                                                            setShowingReportsId={setShowingReportsId}
-                                                            showingReportsId={showingReportsId}
-                                                            submissions={completedSubmissions}
-                                                        />
-                                                    </td>
-                                                </tr>
-                                            )}
+                                    {
+                                        showingReportsId === project.id_projects && (
+                                            <tr>
+                                                <td colSpan={2}>
+                                                    <SeeReportsDialog
+                                                        setShowingReportsId={setShowingReportsId}
+                                                        showingReportsId={showingReportsId}
+                                                        submissions={completedSubmissions}
+                                                    />
+                                                </td>
+                                            </tr>
+                                        )
+                                    }
                                         </tr>
-                                    );
+                            );
 
                                 })}
 
-                            </tbody>
+                        </tbody>
                         </table>
                     )}
 
-                </div>
-            </div >
-            {showRequestAccess &&
-                <RequestAccessProject showRequestAccess={showRequestAccess} setShowRequestAccess={setShowRequestAccess} accessRequested={accessRequested} setAccessRequested={setAccessRequested} existingProjectCode={existingProjectCode} setExistingProjectCode={setExistingProjectCode} newUserRole={newUserRole} setNewUserRole={setNewUserRole} newUserFunction={newUserFunction} setNewUserFunction={setNewUserFunction} handleRequestAccess={handleRequestAccess} />
-            }
+            </div>
+        </div >
+            { showRequestAccess &&
+            <RequestAccessProject showRequestAccess={showRequestAccess} setShowRequestAccess={setShowRequestAccess} accessRequested={accessRequested} setAccessRequested={setAccessRequested} existingProjectCode={existingProjectCode} setExistingProjectCode={setExistingProjectCode} newUserRole={newUserRole} setNewUserRole={setNewUserRole} newUserFunction={newUserFunction} setNewUserFunction={setNewUserFunction} handleRequestAccess={handleRequestAccess} />
+}
         </>
     );
 }
