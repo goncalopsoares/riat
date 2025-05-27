@@ -1,5 +1,8 @@
 import { useProject } from "../contexts/ProjectContext";
+import { useState } from "react";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import "../styles/forms.css";
 
 const CreateProject = () => {
@@ -62,6 +65,10 @@ const CreateProject = () => {
     "Proof of Scalability - Having contact with the people, internally or externally, who will design and create the solution",
     "Proof of Stability - Solution is being created to solve a defined problem"
   ];
+
+  const [showDefinitionTrl, setShowDefinitionTrl] = useState(false);
+  const [showDefinitionMrl, setShowDefinitionMrl] = useState(false);
+  const [showDefinitionSrl, setShowDefinitionSrl] = useState(false);
 
   return (
     <div className="global-container">
@@ -220,8 +227,24 @@ const CreateProject = () => {
 
         <div className="mb-3 w-100">
           <label className="form-label">
-            Indicate the current TRL of your project
+            <button
+              className="btn btn-link text-black p-0 text-decoration-none"
+              onClick={() => setShowDefinitionTrl(!showDefinitionTrl)}
+              type="button"
+            >
+              Indicate the current TRL of your project
+              {showDefinitionTrl ? (
+                <ArrowDropUpIcon style={{ fontSize: '2rem' }} />
+              ) : (
+                <ArrowDropDownIcon style={{ fontSize: '2rem' }} />
+              )}
+            </button>
           </label>
+          {showDefinitionTrl && (
+            <div className="d-flex align-items-center mb-2">
+              <p className="mb-3" style={{ fontSize: '0.9rem' }}><em>Technology Readiness Levels are a type of measurement system used to assess the maturity level of a particular technology. Each technology project is evaluated against the parameters for each technology level and is then assigned a TRL rating based on the projects progress.</em></p>
+            </div>
+          )}
           <div className="d-flex flex-row gap-5">
             {[...Array(9)].map((_, i) => (
               <div className="tooltip-wrapper" key={`trl-${i + 1}`}>
@@ -244,8 +267,24 @@ const CreateProject = () => {
 
         <div className="mb-3 w-100">
           <label className="form-label">
-            Indicate the current MRL of your project
+            <button
+              className="btn btn-link text-black p-0 text-decoration-none"
+              onClick={() => setShowDefinitionMrl(!showDefinitionMrl)}
+              type="button"
+            >
+              Indicate the current MRL of your project
+              {showDefinitionMrl ? (
+                <ArrowDropUpIcon style={{ fontSize: '2rem' }} />
+              ) : (
+                <ArrowDropDownIcon style={{ fontSize: '2rem' }} />
+              )}
+            </button>
           </label>
+          {showDefinitionMrl && (
+            <div className="d-flex align-items-center mb-2">
+              <p className="mb-3" style={{ fontSize: '0.9rem' }}><em>Market Readiness Level refers to how ready your product or service is to take to market as a commercial offering for a group of customers.</em></p>
+            </div>
+          )}
           <div className="d-flex flex-row gap-5">
             {[...Array(9)].map((_, i) => (
               <div className="tooltip-wrapper" key={`mrl-${i + 1}`}>
@@ -268,8 +307,24 @@ const CreateProject = () => {
 
         <div className="mb-3 w-100">
           <label className="form-label">
-            Indicate the current SRL of your project
+            <button
+              className="btn btn-link text-black p-0 text-decoration-none"
+              onClick={() => setShowDefinitionSrl(!showDefinitionSrl)}
+              type="button"
+            >
+              Indicate the current SRL of your project
+              {showDefinitionSrl ? (
+                <ArrowDropUpIcon style={{ fontSize: '2rem' }} />
+              ) : (
+                <ArrowDropDownIcon style={{ fontSize: '2rem' }} />
+              )}
+            </button>
           </label>
+          {showDefinitionSrl && (
+            <div className="d-flex align-items-center mb-2">
+              <p className="mb-3" style={{ fontSize: '0.9rem' }}><em>Societal Readiness Level is a way of assessing the level of societal adaptation of, for instance, a particular social project, a technology, a product, a process, an intervention, or an innovation (whether social or technical) to be integrated into society.</em></p>
+            </div>
+          )}
           <div className="d-flex flex-row gap-5">
             {[...Array(9)].map((_, i) => (
               <div className="tooltip-wrapper" key={`srl-${i + 1}`}>
