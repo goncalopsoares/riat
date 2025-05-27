@@ -40,6 +40,7 @@ const Assessment = () => {
     const [statementCounter, setStatementCounter] = useState(0);
     const [submittingAssessment, setSubmittingAssessment] = useState(false);
     const [naSelected, setNaSelected] = useState({});
+    const [submitMessage, setSubmitMessage] = useState('');
 
     const firstRender = useRef(true);
 
@@ -576,6 +577,15 @@ const Assessment = () => {
             return typeof value === 'number' ? sum + value : sum;
         }, 0);
 
+        console.log(finalScore)
+
+        if (finalScore === 0) {
+            setSubmitMessage("You responded 'prefer not to answer' to all questions, so the data is insufficient to generate meaningful recommendations. Consider revising your inputs the next time you complete this assessment.")
+            return
+        } else {
+            setSubmitMessage("Generating your results, please wait a moment.")
+        };
+
         const totalStatements = allDimensions.flatMap(dimension => dimension.statements).filter(
             (statement) => statement.statement_name !== 'Provide Examples');
 
@@ -587,7 +597,10 @@ const Assessment = () => {
             return sum + (statement.scale?.scale_levels || 0);
         }, 0);
 
-        const ponderatedScore = Math.round(finalScore / totalStatementsLength);
+        const ponderatedScore = Math.round(((finalScore + Number.EPSILON) / totalStatementsLength) * 100) / 100;
+
+        console.log(ponderatedScore)
+        console.log(totalStatementsLength)
 
         const pointsByDimension = () => {
             return allDimensions.map(dimension => {
@@ -646,7 +659,7 @@ const Assessment = () => {
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
             {isAssessmentReady && (
-                <AssessmentFive loading={loading} projectPhase={projectPhase} allDimensions={allDimensions} topLevelDimensions={topLevelDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} submittingAssessment={submittingAssessment} setSubmittingAssessment={setSubmittingAssessment} naSelected={naSelected} setNaSelected={setNaSelected} />
+                <AssessmentFive loading={loading} projectPhase={projectPhase} allDimensions={allDimensions} topLevelDimensions={topLevelDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} submittingAssessment={submittingAssessment} setSubmittingAssessment={setSubmittingAssessment} naSelected={naSelected} setNaSelected={setNaSelected} submitMessage={submitMessage} />
             )}
 
         </>

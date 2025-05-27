@@ -3,7 +3,7 @@ import SubDimensions from './SubDimensions';
 import AssessmentAlert from '../components/AssessmentAlert';
 import SaveIcon from '@mui/icons-material/Save';
 
-const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, handleAssessmentSubmit, statementCounter, submittingAssessment, setSubmittingAssessment, naSelected, setNaSelected }) => {
+const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit,  handleAssessmentSubmit, statementCounter, submittingAssessment, setSubmittingAssessment, naSelected, setNaSelected, submitMessage}) => {
 
     const [explanation, setExplanation] = useState('');
     const [example, setExample] = useState('');
@@ -19,10 +19,6 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
             allowedTags.includes(tagName.toLowerCase()) ? tag : ''
         );
     }
-
-    console.log('naSelected', naSelected);
-    console.log('selectedValues', selectedValues);
-
 
     return (
         <>
@@ -61,8 +57,6 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                 {topLevelDimensions[currentDimension].statements.map(statement => {
 
                                     const allNaSelected = Object.values(naSelected).every(v => v === true);
-
-                                    console.log(allNaSelected);
 
                                     statementCounter++;
 
@@ -237,7 +231,7 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                     </div>
                                 ) : (
                                     <div>
-                                        <p>Generating your results, please wait a moment.</p>
+                                        <p>{submitMessage}</p>
                                     </div>
                                 )}
                             </div>
