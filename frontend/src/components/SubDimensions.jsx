@@ -14,8 +14,18 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                         </h2>
                         <p className="sub-dimension-description mb-0">{subDimension.dimension_description}</p>
                         {subDimension.statements?.map((statement, statementIndex) => {
+
+                            const allNaSelected = Object.values(naSelected).every(v => v === true);
+
+                            console.log("allNaSelected", allNaSelected);
+
                             currentSubDimension++;
                             statementCounter++;
+
+                            if (!statement.scale.scale_levels > 0 && allNaSelected) {
+                                return null;
+                            }
+
                             return (
                                 <div key={statement.id_statements} className="statement-container">
                                     <h4 className="statement-name">
@@ -23,7 +33,8 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                                             <span className="statement-number">
                                                 {currentDimension + 1}.{subDimensionIndex + 2}.{statementCounter}
                                                 {" "}</span>)}
-                                        {statement.statement_name} *
+
+                                        <>{statement.statement_name} *</>
                                     </h4>
                                     <p
                                         className="statement-description"

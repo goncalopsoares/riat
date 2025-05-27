@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SubDimensions from './SubDimensions';
 import AssessmentAlert from '../components/AssessmentAlert';
 import SaveIcon from '@mui/icons-material/Save';
 
-const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, handleAssessmentSubmit, statementCounter, submittingAssessment, setSubmittingAssessment }) => {
+const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensions, dimensionsNumber, currentDimension, handleDimensionChange, dimensionStage, setDimensionStage, selectedValues, setSelectedValues, handleStatementAnswerSubmit, handleAssessmentSubmit, statementCounter, submittingAssessment, setSubmittingAssessment, naSelected, setNaSelected }) => {
 
-    const [naSelected, setNaSelected] = useState({});
     const [explanation, setExplanation] = useState('');
     const [example, setExample] = useState('');
     const [showAlert, setShowAlert] = useState(false);
+
+    useEffect(() => {
+        console.log('Selected Values:', selectedValues);
+        console.log('NA Selected:', naSelected);
+    }, [selectedValues, naSelected]);
+
 
     const subDimensionsInfo = allDimensions.filter(dimension =>
         allDimensions[currentDimension].sub_dimensions.some(subId => subId === dimension.id_dimensions)
@@ -56,11 +61,18 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                 <p className="dimension-description-small">{topLevelDimensions[currentDimension].dimension_description}</p>
                                 <p style={{ fontSize: '0.9rem' }}><b>*</b> <em>mandatory question</em></p>
                                 {topLevelDimensions[currentDimension].statements.map(statement => {
+
+                                    const allNaSelected = Object.values(naSelected).every(v => v === true);
+
                                     statementCounter++;
 
                                     const scaleLabels = statement.scale.scale_levels > 0
                                         ? statement.scale.scale_labels.split(',').map(label => label.trim())
                                         : [];
+
+                                    if (!statement.scale.scale_levels > 0 && allNaSelected) {
+                                        return null;
+                                    }
 
                                     return (
                                         <>
@@ -233,6 +245,8 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                         if (dimensionStage === 1) {
                                             handleDimensionChange(currentDimension - 1);
                                             setDimensionStage(2);
+                                            setSelectedValues({});
+                                            setNaSelected({});
                                         } else if (dimensionStage === 2) {
                                             setDimensionStage(dimensionStage - 1);
                                         }
@@ -243,8 +257,16 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                     <button onClick={() => {
                                         const selectedValuesCount = Object.keys(selectedValues).length;
 
-                                        const totalStatements = topLevelDimensions[currentDimension].statements.length +
+                                        const allNaSelected = Object.values(naSelected).every(v => v === true);
+
+                                        let totalStatements = topLevelDimensions[currentDimension].statements.length +
                                             subDimensionsInfo.reduce((sum, subDimension) => sum + subDimension.statements.length, 0);
+
+                                        if (allNaSelected) {
+                                            totalStatements = totalStatements - 1;
+                                        }
+
+                                        console.log('totalStatements:', totalStatements);
 
                                         if (
                                             (selectedValuesCount === totalStatements &&
@@ -259,12 +281,14 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                         } else {
                                             setShowAlert(true)
                                         }
-                                    }} className="forms-button">Next</button>
+                                    }
+                                    } className="forms-button">Next</button>
                                 ) : (
                                     <button onClick={() => {
                                         if (dimensionStage === 1) {
                                             setDimensionStage(dimensionStage + 1);
                                             setSelectedValues({});
+                                            setNaSelected({});
                                         } else if (dimensionStage === 2) {
 
 

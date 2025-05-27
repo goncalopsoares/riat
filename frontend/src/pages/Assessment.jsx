@@ -41,6 +41,7 @@ const Assessment = () => {
     const [existingAnswers, setExistingAnswers] = useState([]);
     const [statementCounter, setStatementCounter] = useState(0);
     const [submittingAssessment, setSubmittingAssessment] = useState(false);
+    const [naSelected, setNaSelected] = useState({});
 
     const firstRender = useRef(true);
 
@@ -530,11 +531,39 @@ const Assessment = () => {
 
             if (Object.keys(filteredAnswers).length !== 0) {
                 setSelectedValues(filteredAnswers);
+
+                // 💡 Gerar o novo objeto naSelected com base nos critérios
+                const newNaSelected = {};
+
+                for (const key of Object.keys(filteredAnswers)) {
+                    const value = filteredAnswers[key];
+
+                    const matchingStatement = currentDimensionStatements.find(
+                        stmt => stmt.id_statements.toString() === key
+                    );
+
+                    console.log('Matching Statement:', matchingStatement.scale.scale_levels, 'Value:', value);
+
+                    if (
+                        matchingStatement &&
+                        matchingStatement.scale.scale_levels > 0 &&
+                        typeof value === 'string'
+                    ) {
+                        newNaSelected[key] = true;
+                    } else if (
+                        matchingStatement &&
+                        matchingStatement.scale.scale_levels > 0 &&
+                        typeof value !== 'string'
+                    ) {
+                        newNaSelected[key] = false;
+                    }
+                }
+
+                setNaSelected(newNaSelected);
             }
-
-
         }
     }, [answersLoaded, currentDimension, dimensionStage, loading]);
+
 
     // STEP 5 - SUBMIT ASSESSMENT
 
@@ -621,7 +650,7 @@ const Assessment = () => {
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
             {isAssessmentReady && (
-                <AssessmentFive loading={loading} projectPhase={projectPhase} allDimensions={allDimensions} topLevelDimensions={topLevelDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} submittingAssessment={submittingAssessment} setSubmittingAssessment={setSubmittingAssessment} />
+                <AssessmentFive loading={loading} projectPhase={projectPhase} allDimensions={allDimensions} topLevelDimensions={topLevelDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} submittingAssessment={submittingAssessment} setSubmittingAssessment={setSubmittingAssessment} naSelected={naSelected} setNaSelected={setNaSelected} />
             )}
 
         </>
