@@ -140,7 +140,7 @@ const AssessmentNavigation = ({
                     aria-label={expanded ? "Hide navigation" : "Expand navigation"}
                 >
                     {expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-                    {expanded ? <b>Hide navigation menu</b> : <b>Show navigation menu</b>}
+                    {expanded ? <b>Hide dimensions</b> : <b>Show dimensions</b>}
                 </button>
             </div>
             <div ref={contentRef} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flexWrap: 'wrap' }}>
