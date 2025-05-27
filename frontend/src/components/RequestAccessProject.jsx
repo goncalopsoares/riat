@@ -62,7 +62,7 @@ const RequestAccessProject = ({ showRequestAccess, setShowRequestAccess, accessR
                                     placeholder="Insert your function in the organization"
                                     value={newUserFunction}
                                     onChange={(e) => setNewUserFunction(e.target.value)}
-                                    maxLength={6}
+                                    maxLength={45}
                                 />
                             </div>
                         </div>
