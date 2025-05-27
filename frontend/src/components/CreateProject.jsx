@@ -231,12 +231,13 @@ const CreateProject = () => {
               className="btn btn-link text-black p-0 text-decoration-none"
               onClick={() => setShowDefinitionTrl(!showDefinitionTrl)}
               type="button"
+              style={{ position: 'relative' }}
             >
               Indicate the current TRL of your project
               {showDefinitionTrl ? (
-                <ArrowDropUpIcon style={{ fontSize: '2rem' }} />
+                <ArrowDropUpIcon style={{ fontSize: '2rem', pointerEvents: 'none' }} />
               ) : (
-                <ArrowDropDownIcon style={{ fontSize: '2rem' }} />
+                <ArrowDropDownIcon style={{ fontSize: '2rem', pointerEvents: 'none' }} />
               )}
             </button>
           </label>
@@ -271,12 +272,13 @@ const CreateProject = () => {
               className="btn btn-link text-black p-0 text-decoration-none"
               onClick={() => setShowDefinitionMrl(!showDefinitionMrl)}
               type="button"
+              style={{ position: 'relative' }}
             >
               Indicate the current MRL of your project
               {showDefinitionMrl ? (
-                <ArrowDropUpIcon style={{ fontSize: '2rem' }} />
+                <ArrowDropUpIcon style={{ fontSize: '2rem', pointerEvents: 'none' }} />
               ) : (
-                <ArrowDropDownIcon style={{ fontSize: '2rem' }} />
+                <ArrowDropDownIcon style={{ fontSize: '2rem', pointerEvents: 'none' }} />
               )}
             </button>
           </label>
@@ -311,12 +313,13 @@ const CreateProject = () => {
               className="btn btn-link text-black p-0 text-decoration-none"
               onClick={() => setShowDefinitionSrl(!showDefinitionSrl)}
               type="button"
+              style={{ position: 'relative' }}
             >
               Indicate the current SRL of your project
               {showDefinitionSrl ? (
-                <ArrowDropUpIcon style={{ fontSize: '2rem' }} />
+                <ArrowDropUpIcon style={{ fontSize: '2rem', pointerEvents: 'none' }} />
               ) : (
-                <ArrowDropDownIcon style={{ fontSize: '2rem' }} />
+                <ArrowDropDownIcon style={{ fontSize: '2rem', pointerEvents: 'none' }} />
               )}
             </button>
           </label>
