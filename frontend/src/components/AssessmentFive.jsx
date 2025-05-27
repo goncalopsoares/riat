@@ -54,6 +54,7 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                             <div>
                                 <h1 className="dimension-name-small">{currentDimension + 1}. {topLevelDimensions[currentDimension].dimension_name}</h1>
                                 <p className="dimension-description-small">{topLevelDimensions[currentDimension].dimension_description}</p>
+                                <p style={{ fontSize: '0.9rem' }}><b>*</b> <em>mandatory question</em></p>
                                 {topLevelDimensions[currentDimension].statements.map(statement => {
                                     statementCounter++;
 
@@ -65,9 +66,9 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                         <>
                                             <div key={statement.id_statements} className="statement-container">
                                                 {statement.scale.scale_levels > 0 ? (
-                                                    <h4 className="statement-name"><span className="statement-number">{currentDimension + 1}.{statementCounter}</span> {statement.statement_name}</h4>
+                                                    <h4 className="statement-name"><span className="statement-number">{currentDimension + 1}.{statementCounter}</span> {statement.statement_name} *</h4>
                                                 ) : (
-                                                    <h4 className="statement-name">{statement.statement_name}</h4>
+                                                    <h4 className="statement-name">{statement.statement_name} *</h4>
                                                 )}
                                                 {statement.statement_description &&
                                                     <p
