@@ -52,7 +52,10 @@ class PasswordResetRequestView(APIView):
             user.password_reset_token_date = now()
             user.save()
 
-            reset_link = f"localhost:5173/resetpassword/{token}"
+            # Build reset link dynamically based on request
+            scheme = request.scheme
+            host = request.get_host()
+            reset_link = f"{scheme}://{host}/resetpassword/{token}"
 
             send_mail(
                 'Password Reset',
