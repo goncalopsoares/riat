@@ -22,7 +22,7 @@ const SeeReportsDialog = ({ showingReportsId, setShowingReportsId, submissions }
                             <tbody>
                                 {submissions.map((submission) => (
                                     <tr key={submission.id_submissions}>
-                                        <td>{submission.id_submissions}</td>
+                                        <td style={{padding: '1.5rem 1rem'}}>{submission.id_submissions}</td>
                                         <td>
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center' }} className="d-grid gap-0 row-gap-3">
                                                 <div className="score-bar-container">
@@ -36,8 +36,8 @@ const SeeReportsDialog = ({ showingReportsId, setShowingReportsId, submissions }
                                                 <p className='m-0 align-middle' style={{ textAlign: 'center' }}>{`${submission.reports_overall_score_value} / ${submission.reports_overall_score_max_value}`}</p>
                                             </div>
                                         </td>
-                                        <td>{new Date(submission.submission_ending_time).toLocaleDateString()}</td>
-                                        <td><a href={`report/${submission.report_token}`}>View report</a></td>
+                                        <td style={{padding: '1.5rem 1rem'}}>{new Date(submission.submission_ending_time).toLocaleDateString()}</td>
+                                        <td style={{padding: '1.5rem 1rem'}}><a href={`report/${submission.report_token}`}>View report</a></td>
                                     </tr>
                                 ))}
                             </tbody>

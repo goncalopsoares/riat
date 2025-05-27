@@ -48,7 +48,7 @@ const ProjectsAdminDetail = ({ selectedProject, handleBackClick }) => {
                             {selectedProject.submissions.map((submission, index) => (
                                 <tr key={index}>
                                     <td className='ps-4 py-3'>
-                                        <p>Submission {index + 1}</p>
+                                        <p className="mb-0">Submission {index + 1}</p>
                                     </td>
                                     <td>{submission.id_submissions}</td>
                                     <td>
@@ -64,7 +64,7 @@ const ProjectsAdminDetail = ({ selectedProject, handleBackClick }) => {
                                                 </div>
                                                 <p className='m-0 align-middle' style={{ textAlign: 'center' }}>{`${submission.reports_overall_score_value} / ${submission.reports_overall_score_max_value}`}</p>
                                             </div>) : (
-                                            <p>Assessment not yet concluded</p>
+                                            <p className="mb-0">Assessment not yet concluded</p>
                                         )}
                                     </td>
                                     <td>
@@ -78,7 +78,7 @@ const ProjectsAdminDetail = ({ selectedProject, handleBackClick }) => {
                                                 View Report
                                             </a>
                                         ) : (
-                                            <p>Report not available</p>
+                                            <p className="mb-0">Report not available</p>
                                         )}
                                     </td>
                                     <td>{new Date(submission.submission_starting_time).toLocaleString()}</td>
