@@ -3,6 +3,7 @@ import AssessmentTwo from "../components/AssessmentTwo";
 import AssessmentThree from "../components/AssessmentThree";
 import AssessmentFour from "../components/AssessmentFour";
 import AssessmentFive from "../components/AssessmentFive";
+import AssessmentNavigation from "../components/AssessmentNavigation";
 import { useProject } from "../contexts/ProjectContext";
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -460,11 +461,12 @@ const Assessment = () => {
             const getExistingAnswers = async () => {
                 try {
                     const response = await api.get(`/api/answer/${id}/`);
+
                     const existingAnswers = response.data.reduce((acc, answer) => {
                         acc[answer.statements_id_statements] = {
                             value: answer.value,
                             answer_creation_time: answer.answer_creation_time,
-                            id_dimension: answer.dimensions_id_dimensions
+                            dimension_order: answer.dimension_order
                         };
                         return acc;
                     }, {});
@@ -659,7 +661,10 @@ const Assessment = () => {
                 <AssessmentFour handlePhaseUpdate={handlePhaseUpdate} />
             )}
             {isAssessmentReady && (
-                <AssessmentFive loading={loading} projectPhase={projectPhase} allDimensions={allDimensions} topLevelDimensions={topLevelDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} submittingAssessment={submittingAssessment} setSubmittingAssessment={setSubmittingAssessment} naSelected={naSelected} setNaSelected={setNaSelected} submitMessage={submitMessage} />
+                <>
+                    <AssessmentFive loading={loading} projectPhase={projectPhase} allDimensions={allDimensions} topLevelDimensions={topLevelDimensions} dimensionsNumber={dimensionsNumber} currentDimension={currentDimension} handleDimensionChange={handleDimensionChange} dimensionStage={dimensionStage} setDimensionStage={setDimensionStage} selectedValues={selectedValues} setSelectedValues={setSelectedValues} handleStatementAnswerSubmit={handleStatementAnswerSubmit} existingAnswers={existingAnswers} firstRender={firstRender} handleAssessmentSubmit={handleAssessmentSubmit} statementCounter={statementCounter} submittingAssessment={submittingAssessment} setSubmittingAssessment={setSubmittingAssessment} naSelected={naSelected} setNaSelected={setNaSelected} submitMessage={submitMessage} />
+                    <AssessmentNavigation topLevelDimensions={topLevelDimensions} existingAnswers={existingAnswers} currentIndex={currentDimension} setCurrentDimension={setCurrentDimension} />
+                </>
             )}
 
         </>

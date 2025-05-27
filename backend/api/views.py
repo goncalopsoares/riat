@@ -764,12 +764,18 @@ class AnswerViewSet(viewsets.ModelViewSet):
         result = []
 
         for answer in answers_base:
+            statement = answer.statements_id_statements
+            dimension_id = None
+            if hasattr(statement, 'dimensions_id_dimensions'):
+                dimension_order = getattr(statement.dimensions_id_dimensions, 'dimension_order', None)
+
             answer_data = {
                 'id_answers_base': answer.id_answers_base,
-                'statements_id_statements': answer.statements_id_statements.id_statements,
+                'statements_id_statements': statement.id_statements,
                 'submissions_id_submissions': answer.submissions_id_submissions.id_submissions,
                 'answer_creation_time': answer.answer_creation_time,
-                'value': None
+                'value': None,
+                'dimension_order': dimension_order
             }
 
             try:
