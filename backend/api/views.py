@@ -108,7 +108,9 @@ class AdminAllProjectsView(generics.GenericAPIView):
                         "submission_state": submission.submission_state,
                         "reports_overall_score_value": None,
                         "reports_overall_score_max_value": None,
-                        "report_token": None
+                        "report_token": None,
+                        "submission_starting_time": submission.submission_starting_time,
+                        "submission_ending_time": submission.submission_ending_time,
                     }
                     report = Reports.objects.filter(submissions_id_submissions=submission.id_submissions).first()
                     if report:
@@ -213,7 +215,6 @@ class UserOwnProjectsView(generics.GenericAPIView):
                     "reports_overall_score_max_value": None,
                     "report_token": None,
                     "submission_ending_time": submission.submission_ending_time,
-
                 }
                 report = Reports.objects.filter(submissions_id_submissions=submission.id_submissions).first()
                 if report:

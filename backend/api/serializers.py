@@ -138,6 +138,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             'project_mrl',
             'project_srl',
             'project_unique_code',
+            'project_creation_time',
             'metadata',
             'metadata_data',
         ]
