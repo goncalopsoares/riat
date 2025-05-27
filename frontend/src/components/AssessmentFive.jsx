@@ -23,6 +23,7 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
     console.log('naSelected', naSelected);
     console.log('selectedValues', selectedValues);
 
+
     return (
         <>
             {allDimensions.length > 0 && topLevelDimensions.length > 0 && loading === false && (
@@ -60,6 +61,8 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                 {topLevelDimensions[currentDimension].statements.map(statement => {
 
                                     const allNaSelected = Object.values(naSelected).every(v => v === true);
+
+                                    console.log(allNaSelected);
 
                                     statementCounter++;
 
@@ -175,14 +178,22 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                                             className="textarea"
                                                             placeholder="1000 char. max"
                                                             maxLength={1000}
-                                                            value={example || selectedValues[`${statement.id_statements}`] || ''}
+                                                            value={example || selectedValues[`${statement.id_statements}`]}
                                                             onChange={(e) => {
                                                                 const newValue = e.target.value;
-                                                                setSelectedValues(prev => ({
-                                                                    ...prev,
-                                                                    [statement.id_statements]: newValue
-                                                                }));
+                                                                setSelectedValues(prev => {
+                                                                    const updated = { ...prev };
+
+                                                                    if (allNaSelected || newValue === '') {
+                                                                        delete updated[statement.id_statements];
+                                                                    } else {
+                                                                        updated[statement.id_statements] = newValue;
+                                                                    }
+
+                                                                    return updated;
+                                                                });
                                                             }}
+
                                                         /* onBlur={() => {
                                                             setSelectedValues(prev => ({
                                                                 ...prev,
@@ -252,24 +263,34 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                 )}
                                 {currentDimension === dimensionsNumber - 1 && dimensionStage === 2 ? (
                                     <button onClick={() => {
-                                        const selectedValuesCount = Object.keys(selectedValues).length;
-
                                         const allNaSelected = Object.values(naSelected).every(v => v === true);
 
                                         let totalStatements = topLevelDimensions[currentDimension].statements.length +
                                             subDimensionsInfo.reduce((sum, subDimension) => sum + subDimension.statements.length, 0);
 
+                                        // Clone selectedValues and update locally
+                                        let updatedSelectedValues = { ...selectedValues };
+
                                         if (allNaSelected) {
+                                            // Remove keys for statements with scale_levels < 0
+                                            [...topLevelDimensions[currentDimension].statements, ...subDimensionsInfo.flatMap(sd => sd.statements)]
+                                                .filter(statement => statement.scale.scale_levels <= 0)
+                                                .forEach(statement => {
+                                                    delete updatedSelectedValues[statement.id_statements];
+                                                });
+
                                             totalStatements = totalStatements - 1;
                                         }
 
-                                        console.log('selectedValuesCount', selectedValuesCount);
-                                        console.log('totalStatements', totalStatements);
+                                        const selectedValuesCount = Object.keys(updatedSelectedValues).length;
 
                                         if (
-                                            (selectedValuesCount === totalStatements &&
-                                                !Object.values(selectedValues).includes(''))
+                                            selectedValuesCount === totalStatements &&
+                                            !Object.values(updatedSelectedValues).includes('')
                                         ) {
+                                            // Update state once before submit
+                                            setSelectedValues(updatedSelectedValues);
+
                                             const handleSubmit = async () => {
                                                 await handleStatementAnswerSubmit();
                                                 setSubmittingAssessment(true);
@@ -277,10 +298,12 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                             };
                                             handleSubmit();
                                         } else {
-                                            setShowAlert(true)
+                                            // Also update state if changed to keep consistent
+                                            setSelectedValues(updatedSelectedValues);
+                                            setShowAlert(true);
                                         }
-                                    }
-                                    } className="forms-button">Next</button>
+                                    }} className="forms-button">Next</button>
+
                                 ) : (
                                     <button onClick={() => {
                                         if (dimensionStage === 1) {
@@ -289,24 +312,30 @@ const AssessmentFive = ({ loading, projectPhase, allDimensions, topLevelDimensio
                                             setNaSelected({});
                                         } else if (dimensionStage === 2) {
 
-
-                                            const selectedValuesCount = Object.keys(selectedValues).length;
-
                                             const allNaSelected = Object.values(naSelected).every(v => v === true);
 
                                             let totalStatements = topLevelDimensions[currentDimension].statements.length +
                                                 subDimensionsInfo.reduce((sum, subDimension) => sum + subDimension.statements.length, 0);
 
+                                            // Clone selectedValues and update locally
+                                            let updatedSelectedValues = { ...selectedValues };
+
                                             if (allNaSelected) {
+                                                // Remove keys for statements with scale_levels < 0
+                                                [...topLevelDimensions[currentDimension].statements, ...subDimensionsInfo.flatMap(sd => sd.statements)]
+                                                    .filter(statement => statement.scale.scale_levels <= 0)
+                                                    .forEach(statement => {
+                                                        delete updatedSelectedValues[statement.id_statements];
+                                                    });
+
                                                 totalStatements = totalStatements - 1;
                                             }
 
-                                            console.log('selectedValuesCount', selectedValuesCount);
-                                            console.log('totalStatements', totalStatements);
+                                            const selectedValuesCount = Object.keys(updatedSelectedValues).length;
 
                                             if (
                                                 (selectedValuesCount === totalStatements &&
-                                                    !Object.values(selectedValues).includes(''))
+                                                    !Object.values(updatedSelectedValues).includes(''))
                                             ) {
                                                 handleStatementAnswerSubmit();
                                                 handleDimensionChange(currentDimension + 1);

@@ -131,10 +131,17 @@ const SubDimensions = ({ subDimensionsInfo, selectedValues, setSelectedValues, n
                                             value={example || selectedValues[`${statement.id_statements}`] || ''}
                                             onChange={(e) => {
                                                 const newValue = e.target.value;
-                                                setSelectedValues(prev => ({
-                                                    ...prev,
-                                                    [statement.id_statements]: newValue
-                                                }));
+                                                setSelectedValues(prev => {
+                                                    const updated = { ...prev };
+
+                                                    if  (allNaSelected || newValue === '') {
+                                                        delete updated[statement.id_statements];
+                                                    } else {
+                                                        updated[statement.id_statements] = newValue;
+                                                    }
+
+                                                    return updated;
+                                                });
                                             }}
                                         /* onBlur={() => {
                                             setSelectedValues(prev => ({
