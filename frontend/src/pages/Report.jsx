@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 import api from '../api';
@@ -20,6 +20,7 @@ const Report = () => {
     const [loadedGeneralData, setLoadedGeneralData] = useState(false);
     const [reportCode, setReportCode] = useState('');
     const [projectPhase, setProjectPhase] = useState('');
+    const [projectAcronym, setProjectAcronym] = useState('');
     // chart data
     const [chartCategories, setChartCategories] = useState([]);
     const [chartData, setChartData] = useState([]);
@@ -67,14 +68,18 @@ const Report = () => {
             const projectName = reportData.details.project.name;
             const projectOrganization = reportData.details.project.organization;
             const projectPhase = reportData.details.project.phase;
+            const projectAcronym = reportData.details.project.acronym;
 
             setProjectName(projectName);
             setProjectOrganization(projectOrganization);
             setProjectPhase(projectPhase);
+            setProjectAcronym(projectAcronym);
 
             setLoadedGeneralData(true);
         }
     }, [reportData]);
+
+    console.log(reportData);
 
     //CHART DATA
     const getChartCategories = () => {
@@ -305,6 +310,7 @@ const Report = () => {
                             projectName={projectName}
                             projectOrganization={projectOrganization}
                             projectPhase={projectPhase}
+                            projectAcronym={projectAcronym}
                             series={series}
                             options={options}
                             dimensionsData={dimensionsData}

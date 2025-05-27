@@ -208,6 +208,7 @@ const ReportDocument = ({
     projectName,
     projectOrganization,
     projectPhase,
+    projectAcronym,
     chartImage,
     dimensionsData,
     score,
@@ -343,7 +344,7 @@ const DownloadPDFButton = ({ series, options, ...props }) => {
 
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'relatorio.pdf';
+        link.download = `Report_${props.projectAcronym}_phase${props.projectPhase}.pdf`;
         link.click();
 
         setLoading(false);
