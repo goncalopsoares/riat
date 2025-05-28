@@ -28,7 +28,7 @@ const SelectPhase = () => {
                             id="option1"
                             value="1"
                             checked={projectPhase === "1"}
-                            disabled={parseInt(initialPhase, 10) >= 1}
+                            disabled={parseInt(initialPhase, 10) > 1}
 
                             onChange={(e) => setProjectPhase(e.target.value)}
                         />

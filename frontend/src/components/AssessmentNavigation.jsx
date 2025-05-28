@@ -9,40 +9,36 @@ const AssessmentNavigation = ({
     currentIndex,
     setCurrentDimension
 }) => {
-    const firstRender = useRef(true);
-    const [lastAnsweredIndex, setLastAnsweredIndex] = useState(null);
     const [expanded, setExpanded] = useState(true);
     const contentRef = useRef(null);
     const [maxHeight, setMaxHeight] = useState("0px");
+    const [highestDimensionOrder, setHighestDimensionOrder] = useState(0);
 
-    // Estado para posição fixa
+
     const [position, setPosition] = useState({ top: window.innerHeight * 0.25, right: 16 });
-
-    // Dados para drag
     const dragData = useRef({ isDragging: false, startX: 0, startY: 0, startTop: 0, startRight: 0 });
 
+
     useEffect(() => {
-        if (
-            !existingAnswers ||
-            Object.keys(existingAnswers).length === 0 ||
-            !Array.isArray(topLevelDimensions) ||
-            topLevelDimensions.length === 0 ||
-            !firstRender.current
-        ) return;
-
-        const highestDimensionOrder = Math.max(
-            ...Object.values(existingAnswers).map(answer => answer.dimension_order || 0)
-        );
-
-        const index = topLevelDimensions.findIndex(d => d.dimension_order === highestDimensionOrder);
-
-        if (index !== -1) {
-            setLastAnsweredIndex(index);
-            setCurrentDimension(index);
+        if (!existingAnswers || typeof existingAnswers !== 'object') {
+            setHighestDimensionOrder(0);
+            return;
         }
 
-        firstRender.current = false;
-    }, [existingAnswers, topLevelDimensions, currentIndex, setCurrentDimension]);
+        const values = Object.values(existingAnswers);
+        if (!Array.isArray(values) || values.length === 0) {
+            setHighestDimensionOrder(0);
+            return;
+        }
+
+        const dimensionOrders = values
+            .map(a => typeof a.dimension_order === 'number' ? a.dimension_order : 0);
+
+        const calculatedOrder = Math.max(...dimensionOrders);
+
+        setHighestDimensionOrder(calculatedOrder);
+    }, [existingAnswers]);
+
 
     useEffect(() => {
         if (expanded) {
@@ -52,7 +48,6 @@ const AssessmentNavigation = ({
         }
     }, [expanded, topLevelDimensions]);
 
-    // Drag events
     useEffect(() => {
         const handleMouseMove = (e) => {
             if (!dragData.current.isDragging) return;
@@ -76,7 +71,6 @@ const AssessmentNavigation = ({
 
         window.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("mouseup", handleMouseUp);
-
         return () => {
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseup", handleMouseUp);
@@ -121,7 +115,7 @@ const AssessmentNavigation = ({
             }}
         >
             <div className="d-flex flex-row mb-4">
-                <button onMouseDown={handleMouseDown} className="btn btn-dark" style={{cursor: 'grab'}}><OpenWithIcon /></button>
+                <button onMouseDown={handleMouseDown} className="btn btn-dark" style={{ cursor: 'grab' }}><OpenWithIcon /></button>
                 <button
                     onClick={() => setExpanded(!expanded)}
                     style={{
@@ -134,7 +128,7 @@ const AssessmentNavigation = ({
                         display: "flex",
                         alignItems: "center",
                         gap: "0.25rem",
-                        cursor:'ponter'
+                        cursor: 'pointer'
                     }}
                     aria-expanded={expanded}
                     aria-label={expanded ? "Hide navigation" : "Expand navigation"}
@@ -145,14 +139,15 @@ const AssessmentNavigation = ({
             </div>
             <div ref={contentRef} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flexWrap: 'wrap' }}>
                 {topLevelDimensions.map((dim, idx) => {
-
                     const isCurrent = idx === currentIndex;
-                    const isEnabled = lastAnsweredIndex !== null ? idx <= lastAnsweredIndex : false;
+                    const isEnabled = dim.dimension_order <= highestDimensionOrder;
+
+                    console.log(isEnabled, currentIndex, dim.dimension_order, highestDimensionOrder)
 
                     return (
                         <button
                             key={dim.id || idx}
-                            onClick={() => setCurrentDimension(idx)}
+                            onClick={() => isEnabled && setCurrentDimension(idx)}
                             disabled={!isEnabled}
                             style={{
                                 fontWeight: isCurrent ? 'bold' : 'normal',

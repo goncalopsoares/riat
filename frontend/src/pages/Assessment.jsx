@@ -533,7 +533,6 @@ const Assessment = () => {
             if (Object.keys(filteredAnswers).length !== 0) {
                 setSelectedValues(filteredAnswers);
 
-                // 💡 Gerar o novo objeto naSelected com base nos critérios
                 const newNaSelected = {};
 
                 for (const key of Object.keys(filteredAnswers)) {
@@ -571,8 +570,6 @@ const Assessment = () => {
         e.preventDefault();
 
         setLoading(true);
-
-
 
         const finalScore = Object.values(existingAnswers).reduce((sum, object) => {
             const value = object.value;
