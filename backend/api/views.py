@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.utils.timezone import now
-from .serializers import AnswerBaseSerializer, UserRegistrationSerializer, LoginSerializer, SurveySerializer, ProjectSerializer, ScaleSerializer, DimensionSerializer, StatementSerializer, SubmissionsSerializer, ReportSerializer, PasswordResetRequestSerializer, PasswordResetSerializer
-from .models import AnswersBase, Surveys, Projects, Scales, Dimensions, Statements, UsersHasProjects, AnswersInteger, AnswersBoolean, AnswersText, Reports, Submissions, ReportsOverallScore
+from .serializers import AnswerBaseSerializer, UserRegistrationSerializer, LoginSerializer, SurveySerializer, ProjectSerializer, ScaleSerializer, DimensionSerializer, StatementSerializer, SubmissionsSerializer, ReportSerializer, PasswordResetRequestSerializer, PasswordResetSerializer,  OverallRecommendationSerializer
+from .models import AnswersBase, Surveys, Projects, Scales, Dimensions, Statements, UsersHasProjects, AnswersInteger, AnswersBoolean, AnswersText, Reports, Submissions, ReportsOverallScore, OverallRecommendations
 from rest_framework.permissions import  AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
@@ -14,6 +14,8 @@ from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import status
 from .permissions import IsAdminUser
+from rest_framework.generics import RetrieveAPIView
+from collections import defaultdict
 
 User = get_user_model()
 
@@ -837,3 +839,44 @@ class ReportViewSet(viewsets.ModelViewSet):
         except Reports.DoesNotExist:
             return Response({"error": "Report not found"}, status=status.HTTP_404_NOT_FOUND)
 
+
+# RECOMMENDATIONS
+
+
+class GetOverallRecommendationsView(generics.ListAPIView):
+    serializer_class = OverallRecommendationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return OverallRecommendations.objects.select_related('surveys_id_surveys').all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        grouped = defaultdict(list)
+        for recommendation in queryset:
+            data = OverallRecommendationSerializer(recommendation).data
+            survey = getattr(recommendation, 'surveys_id_surveys', None)
+            survey_name = survey.survey_name if survey else None
+            data['id_surveys'] = survey.id_surveys if survey else None
+            data['survey_name'] = survey_name
+            grouped[survey_name].append(data)
+        # Convert to list of dicts for easier frontend consumption
+        result = [
+            {"survey_name": survey_name, "recommendations": recs}
+            for survey_name, recs in grouped.items()
+        ]
+        return Response(result, status=status.HTTP_200_OK)
+
+class UpdateOverallRecommendationsView(UpdateAPIView):
+    queryset = OverallRecommendations.objects.all()
+    serializer_class = OverallRecommendationSerializer
+    lookup_field = 'id_overall_recommendations'
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        overall_recommendations_description = request.data.get('overall_recommendations_description')
+        if overall_recommendations_description is not None:
+            instance.overall_recommendations_description = overall_recommendations_description
+            instance.save()
+            return Response({"message": "Overall recommendations updated successfully"}, status=status.HTTP_200_OK)
+        return Response({"error": "overall_recommendations_description is required"}, status=status.HTTP_400_BAD_REQUEST)

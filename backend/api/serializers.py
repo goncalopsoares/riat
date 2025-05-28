@@ -580,12 +580,13 @@ class OverallScoreLevelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OverallRecommendationSerializer(serializers.ModelSerializer):
+    id_overall_recommendations = serializers.CharField
     recommendation_name = serializers.CharField(source='overall_recommendation_name')
     recommendation_description = serializers.CharField(source='overall_recommendations_description')
 
     class Meta:
         model = OverallRecommendations
-        fields = ['recommendation_name', 'recommendation_description']
+        fields = ['id_overall_recommendations', 'recommendation_name', 'recommendation_description']
 
 class ReportsOverallScoreSerializer(serializers.ModelSerializer):
     overall_recommendation = OverallRecommendationSerializer(source='overall_recommendations_id_overall_recommendations')

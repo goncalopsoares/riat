@@ -54,8 +54,8 @@ const ToolBarAdmin = () => {
                         </li>
                         <li>
                             <a
-                                href="#"
-                                className={`nav-link ${currentPage === 'recommendations' ? 'selected-toolbar' : 'link-body-emphasis'
+                                href="/recommendationtools"
+                                className={`nav-link ${currentPage === 'recommendationtools' ? 'selected-toolbar' : 'link-body-emphasis'
                                     }`}
                                 aria-current={currentPage === 'recommendations' ? 'page' : undefined}
                             >

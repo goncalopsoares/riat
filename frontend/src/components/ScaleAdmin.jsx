@@ -3,7 +3,7 @@ import ScaleNumberInputs from './ScaleNumberInputs';
 const ScaleAdmin = ({ scaleName, setScaleName, scaleLevels, scaleLabels, setScaleLevels, setNumberInputs, setLabelsArray }) => {
 
     return (
-        <div className='mt-5'>
+        <div className='mt-5 mx-3'>
             <h1 className='mb-3'>Create a new scale</h1>
             <div className='d-flex flex-row gap-5'>
                 <input

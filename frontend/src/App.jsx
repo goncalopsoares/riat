@@ -25,6 +25,7 @@ import Report from './pages/Report';
 import RequestsAdmin from './pages/RequestsAdmin';
 import Footer from './components/Footer';
 import Reports from './pages/Reports';
+import RecommendationTools from './pages/RecommendationTools';
 
 const Logout = () => {
   localStorage.clear();
@@ -106,10 +107,17 @@ function App() {
                   </ProjectProvider>
                 </ProtectedRoute>}
               />
-               <Route path='/adminrequests'
+              <Route path='/adminrequests'
                 element={<ProtectedRoute>
                   <ProjectProvider>
                     <RequestsAdmin />
+                  </ProjectProvider>
+                </ProtectedRoute>}
+              />
+              <Route path='/recommendationtools'
+                element={<ProtectedRoute>
+                  <ProjectProvider>
+                    <RecommendationTools />
                   </ProjectProvider>
                 </ProtectedRoute>}
               />

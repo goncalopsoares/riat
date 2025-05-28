@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, use } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import api from '../api';
 import ScaleAdmin from '../components/ScaleAdmin';
 import EditScaleDialog from '../components/EditScaleDialog';
@@ -109,7 +109,7 @@ const ScaleTools = () => {
 
     return (
         <div className="container mt-5" style={{ marginLeft: '16rem', maxWidth: 'calc(100% - 16rem)', overflowX: 'auto', minHeight: 'calc(100vh - 20vh)' }}>
-            <div>
+            <div className='mx-3'>
                 {loading ? (
                     <p>Loading...</p>
                 ) : (
